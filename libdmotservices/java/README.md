@@ -8,8 +8,8 @@ The repository is organized as Maven modules but orchestrated by Ant for conveni
 
 ## Modules
 
-- **[dmot-core](java/dmot-core)**: Dependency-light core utilities (I/O, time, URIs, regex, collections).
-- **[dmot-servlet-javax](java/dmot-servlet-javax)**: Legacy servlet helpers targeting `javax.servlet` 3.1
+- **[dmot-core](dmot-core)**: Dependency-light core utilities (I/O, time, URIs, regex, collections).
+- **[dmot-servlet-javax](dmot-servlet-javax)**: Legacy servlet helpers targeting `javax.servlet` 3.1
   (kept separate from the core module).
 
 > Jakarta note: modern stacks (e.g., Spring Boot 3+) use `jakarta.servlet`.
