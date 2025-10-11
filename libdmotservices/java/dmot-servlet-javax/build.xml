@@ -1,0 +1,47 @@
+<project name="dmot-servlet-javax" default="dist" basedir=".">
+    <description>
+        Builds dmot-servlet-javax.
+    </description>
+    <!-- default values; can be overridden with -D on the command line -->
+    <property name="libdmotservices.version" value="SNAPSHOT"/>
+    <property name="project.java.home" location="/usr/lib/jvm/java-17-openjdk-amd64"/>
+    <property name="build" location="build"/>
+    <property name="dep" location="dep"/>
+    <property name="mvn" location="mvn"/>
+    <target name="init">
+        <tstamp/>
+    </target>
+    <target name="clean" depends="init">
+        <delete dir="${build}"/>
+        <mkdir dir="${build}"/>
+    </target>
+    <target name="compile" depends="clean" description="compile the source">
+        <echo message="libdmotservices.version: ${libdmotservices.version}"/>
+        <echo message="mvn: ${mvn}"/>
+        <echo message="project.java.home: ${project.java.home}"/>
+        <exec executable="${mvn}">
+            <env key="JAVA_HOME" value="${project.java.home}"/>
+            <arg value="clean"/>
+            <arg value="install"/>
+            <arg value="-U"/>
+            <arg value="-DskipTests"/>
+            <arg value="-Drevision=${libdmotservices.version}"/>
+        </exec>
+    </target>
+    <target name="dist" depends="compile" description="generate the distribution">
+        <!-- JARs -->
+        <copy todir="${build}" flatten="true" verbose="yes">
+            <fileset dir="${dep}/jars">
+                <include name="*.jar"/>
+            </fileset>
+            <fileset dir="target">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
+        <copy todir="${build}" flatten="true" verbose="yes">
+            <fileset dir="target">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+</project>
