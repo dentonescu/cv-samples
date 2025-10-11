@@ -12,7 +12,7 @@ The main page for the live samples can be found [here](https://cv-samples.vercel
 
 | Project                                    | Skills                              |
 |--------------------------------------------|-------------------------------------|
-| [skip-cipher](skip-cipher)                 | Bootstrap, CSS, HTML, JavaScript    |
+| [null-cipher](null-cipher)                 | Bootstrap, CSS, HTML, JavaScript    |
 | [slideshow-server](slideshow-server)       | CSS, HTML, JavaScript, Python       |
 
 
