@@ -1,0 +1,58 @@
+openapi: "3.0.3"
+info:
+    title: 'Libdmotservices API'
+    description: "Just a sample API definition for unit tests."
+    version: "1.0"
+    termsOfService: "https://gitlab.com/dmotservices"
+    contact:
+        name: "dmotservices"
+        url: "https://gitlab.com/dmotservices"
+        email: "dmotservices@gmail.com"
+    license:
+        name: "MIT License"
+        url: "https://gitlab.com/dmotservices/LICENSE"
+
+servers:
+    - url: "https://localhost/api/1.0"
+
+paths:
+    /alpha:
+        get:
+            summary: "Announces that endpoint alpha is running."
+            description: "Announces that endpoint alpha is running."
+            operationId: sayAlpha
+            responses:
+                '200':
+                    description: "A JSON object"
+                    content:
+                        application/json: {}
+                '400':
+                    description: "Bad request"
+                    content: {}
+    /bravo:
+        get:
+            summary: "Announces that endpoint bravo is running."
+            description: "Announces that endpoint bravo is running."
+            operationId: sayBravo
+            responses:
+                '200':
+                    description: "A JSON object"
+                    content:
+                        application/json: { }
+                '400':
+                    description: "Bad request"
+                    content: {}
+    /charlie:
+        get:
+            summary: "Announces that endpoint charlie is running."
+            description: "Announces that endpoint charlie is running."
+            operationId: sayCharlie
+            responses:
+                '200':
+                    description: "A JSON object"
+                    content:
+                        application/json: { }
+                '400':
+                    description: "Bad request"
+                    content: {}
+

@@ -1,0 +1,33 @@
+<project name="libdmotservices" default="dist" basedir=".">
+    <description>
+        Builds libdmotservices.
+    </description>
+    <!-- default values; can be overridden with -D on the command line -->
+    <property name="libdmotservices.version" value="1.0.0"/>
+    <property name="project.java.home" location="/usr/lib/jvm/java-17-openjdk-amd64"/>
+    <property name="build" location="build"/>
+    <property name="dep" location="dep"/>
+    <property name="mvn" location="mvn"/>
+    <target name="init">
+        <tstamp/>
+    </target>
+    <target name="clean" depends="init">
+        <delete dir="${build}"/>
+        <mkdir dir="${build}"/>
+    </target>
+    <target name="compile" depends="clean" description="compiles the projects">
+	    <ant dir="dmot-core" antfile="build.xml" target="compile" inheritAll="true" inheritRefs="true" />
+	    <ant dir="dmot-servlet-javax" antfile="build.xml" target="compile" inheritAll="true" inheritRefs="true" />
+    </target>
+    <target name="dist" depends="compile" description="generate the distribution">
+        <!-- JARs -->
+        <copy todir="${build}" flatten="true" verbose="yes">
+            <fileset dir="dmot-core/target">
+                <include name="*.jar"/>
+            </fileset>
+            <fileset dir="dmot-servlet-javax/target">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+</project>

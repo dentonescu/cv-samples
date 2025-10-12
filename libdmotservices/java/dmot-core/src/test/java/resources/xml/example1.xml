@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<countries>
+    <country id="de">
+        <countryName>Germany</countryName>
+        <provinces>
+            <province name="Bavaria">
+                <capital>Munich</capital>
+            </province>
+        </provinces>
+    </country>
+    <country id="ro">
+        <countryName>Romania</countryName>
+        <provinces>
+            <province name="Transylvania" status="historic">
+                <capital>Sibiu</capital>
+            </province>
+        </provinces>
+    </country>
+</countries>

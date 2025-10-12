@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Null Cipher</title>
+    <base href="./" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+	<script>
+	// In the live preview landing on /null-cipher instead of /null-cipher/ will load the JS incorrectly from the root context.
+	if (window.location.pathname === '/null-cipher' &&
+		!window.location.pathname.endsWith("/")) {
+		window.location.replace(window.location.pathname + "/" + window.location.search);
+	}
+	</script>
+	<script defer src="null-cipher.js"></script>
+  </head>
+  <body>
+   
+   <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div class="container">
+     <a class="navbar-brand" href="#">Null Cipher</a>
+    </div>
+   </nav>
+   
+   <main class="container py-4">
+      <div class="row">
+        <div class="col-12 col-lg-10 col-xl-8 mx-auto">
+          <div class="mb-4">
+            <h1 class="h3">Null cipher example</h1>
+            <p class="text-muted mb-0">
+             This is just a demo. This cipher is <strong>NOT</strong> cryptographically secure!
+            </p>
+            <p class="text-muted mt-1">
+              <strong>Encryption</strong>: Each digit of the numerical key determines how many random characters
+              to add between each letter of the input. <br/>
+            </p>
+            <p class="text-muted mt-1">
+              <em>Example:</em> Input "HELLO" and key "12345" might produce "HGEKGLXMMLCVETO".
+            </p>
+          </div>
+
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <form id="nullCipherForm" class="row g-4">
+                <div class="col-12 col-md-6">
+                  <div class="mb-3">
+                    <label for="input" class="form-label">Input text</label>
+                    <textarea id="input" class="form-control" rows="6" placeholder="Type or paste plaintext/ciphertext here"></textarea>
+                    <div class="form-text">Enter plaintext to encrypt, or ciphertext to decrypt.</div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="cipherKey" class="form-label">Key (digits)</label>
+                    <textarea
+                    	id="cipherKey"
+                    	class="form-control"
+                    	rows="2"
+                    	placeholder="e.g., 12345">
+                    </textarea>
+                    <div class="form-text">Each digit controls how many random characters are inserted.</div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <label for="output" class="form-label">Output</label>
+                  <textarea id="output" class="form-control" aria-live="polite" rows="10" readonly></textarea>
+                  <div class="form-text">Result of encryption or decryption appears here.</div>
+                </div>
+
+                <div class="col-12 d-flex gap-2">
+                  <button id="btnReset" type="button" class="btn btn-outline-secondary">Reset</button>
+                  <button id="btnEncrypt" type="button" class="btn btn-primary">Encrypt</button>
+                  <button id="btnDecrypt" type="button" class="btn btn-success">Decrypt</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <p class="text-center text-muted mt-3 mb-0">
+            Bootstrap and JavaScript example.
+          </p>
+        </div>
+      </div>
+    </main>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  </body>
+</html>
