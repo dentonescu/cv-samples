@@ -20,7 +20,7 @@ make
 make clean
 ```
 
-## Build all run tests and examples
+## Run tests and examples
 ```bash
 make clean all test example-demo
 ```
