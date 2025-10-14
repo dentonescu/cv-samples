@@ -42,11 +42,15 @@ build/
 .DS_Store 
 
 ## Custom
-**/.sync*
-**/*.log
-**/*.secret
+**/bin/
 **/log/
 **/logs/
+**/.sync*
+**/*.a
+**/*.d
+**/*.o
+**/*.log
+**/*.secret
 **/access.token
 **/connection.properties
 **/connection*.properties
