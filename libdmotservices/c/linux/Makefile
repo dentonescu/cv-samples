@@ -21,9 +21,6 @@ LIB 		:= libdmotservices_c.a
 
 
 ## sources
-#SRC := \
-#  src/math/signals.c \
-#  src/util/log.c
 SRC		:= $(shell find src -type f -name '*.c')
 OBJ 	:= $(SRC:.c=.o)
 DEPS	:= $(OBJ:.o=.d)
