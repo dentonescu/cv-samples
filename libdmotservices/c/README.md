@@ -1,4 +1,4 @@
-# libdmotservices.c
+# libdmotservices (C)
 
 Portable C utilities.
 

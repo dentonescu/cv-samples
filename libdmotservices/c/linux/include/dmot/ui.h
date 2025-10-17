@@ -8,6 +8,14 @@ extern "C"
 {
 #endif
 
+#define DMOT_UI_EQU_CHAR_WIDTH 40
+#define DMOT_UI_EQU_DBM_LOWEST -100.0
+#define DMOT_UI_EQU_DBM_HIGHEST 0.0
+#define DMOT_UI_EQU_DBM_AMPLITUDE (DMOT_UI_EQU_DBM_HIGHEST - DMOT_UI_EQU_DBM_LOWEST)
+#define DMOT_UI_EQU_REFRESH_WAIT_MS 50
+#define DMOT_UI_EQU_SMOOTHING_CONSTRAINT (0.1 * DMOT_UI_EQU_DBM_AMPLITUDE) // no input can cause a jump greater than this value
+#define DMOT_UI_EQU_MAX_CHAN 16
+
     struct dmot_ui_eq_channel
     {
         int id;          // channel id: 1-16
@@ -15,11 +23,37 @@ extern "C"
         double smoothed; // averaged out reading in smooth mode (dBm)
     };
 
-    typedef struct
+    struct dmot_ui_screen_size
     {
         int rows;
         int cols;
-    } dmot_ui_screen_size;
+    };
+
+    struct dmot_ui_equ_properties
+    {
+        size_t channels_available;
+        size_t char_width;
+        struct dmot_ui_eq_channel channels[DMOT_UI_EQU_MAX_CHAN];
+        bool forever_mode;
+        bool permit_rendering;
+        long refresh_wait_ms;
+        double smoothing_constraint;
+    };
+
+    // Equalizer handle for creating and using an equalizer.
+    // @param id            Equalizer ID.
+    // @param forever_mode  Continuous rendering option.
+    // @param out           Output stream.
+    // @param refresh_ms    Wait period between redraws.
+    typedef struct
+    {
+        FILE *out;
+        struct dmot_ui_equ_properties equ_properties;
+    } dmot_ui_eq;
+
+    /*
+     * ANSI graphics functions
+     */
 
     // Clears the entire row in the console.
     void dmot_ui_ansi_clear_row();
@@ -38,58 +72,59 @@ extern "C"
 
     // Determines the size of the console window and returns the number of rows and columns.
     // @return          dmot_ui_screen_size struct containing the rows and columns.
-    dmot_ui_screen_size dmot_ui_get_console_size();
+    struct dmot_ui_screen_size dmot_ui_get_console_size();
+
+    /*
+     * Multi-channel equalizer functions
+     */
 
     // Initializes the equalizer.
-    void dmot_ui_equalizer_init();
+    // param eq         Equalizer handle.
+    void dmot_ui_equalizer_init(dmot_ui_eq *eq);
 
     // Forbids the equalizer from being rendered.
-    void dmot_ui_equalizer_forbid_rendering();
+    // param eq         Equalizer handle.
+    void dmot_ui_equalizer_forbid_rendering(dmot_ui_eq *eq);
 
     // Permits the equalizer to be rendered.
-    void dmot_ui_equalizer_permit_rendering();
+    // param eq         Equalizer handle.
+    void dmot_ui_equalizer_permit_rendering(dmot_ui_eq *eq);
 
     // Renders a text mode equalizer using the raw inputs.
-    // @param forever_mode  A value of true causes the method to redraw forever.
-    // @param out           Output stream. e.g. stdout.
-    void dmot_ui_equalizer_render(FILE *out, bool forever_mode);
+    // @param eq        Equalizer handle.
+    void dmot_ui_equalizer_render(dmot_ui_eq *eq);
 
     // Renders a text mode equalizer using the smoothed inputs.
-    // @param forever_mode  A value of true causes the method to redraw forever.
-    // @param out       Output stream. e.g. stdout.
-    void dmot_ui_equalizer_render_smoothed(FILE *out, bool forever_mode);
+    // @param eq        Equalizer handle.
+    void dmot_ui_equalizer_render_smoothed(dmot_ui_eq *eq);
 
     // Sets the input value of a particular channel.
+    // @param eq        Equalizer handle.
     // @param channel   Channel id: 1-16.
     // @param value     Input value in dBm.
     // @return          true if the value was set, false otherwise.
-    bool dmot_ui_equalizer_set_channel_input_value(int channel, double value);
+    bool dmot_ui_equalizer_set_channel_input_value(dmot_ui_eq *eq, int channel, double value);
 
     // Sets how many columns wide the equalizer should be.
     // @param cols      Columns: e.g. 100
     // @return          true if the value was set, false otherwise.
-    bool dmot_ui_equalizer_set_width(int cols);
+    bool dmot_ui_equalizer_set_width(dmot_ui_eq *eq, int cols);
+
+    /*
+     * Output stream functions
+     */
 
     // Writes a pattern to the output stream n number of times.
-    // @param out       Outputstream. e.g. stdout.
+    // @param out       Output stream. e.g. stdout.
     // @param p         Pattern to be repeated. eg. "foo"
     // @param n         Number of repetitions.
-    void dmot_ui_repeat_pattern(FILE *out, const char *p, size_t n);
+    void dmot_ui_ostream_repeat_pattern(FILE *out, const char *p, size_t n);
 
     // Writes a pattern to the output stream n number of times. Prints a new line after.
     // @param out       Outputstream. e.g. stdout.
     // @param p         Pattern to be repeated. eg. "foo"
     // @param n         Number of repetitions.
-    void dmot_ui_repeat_pattern_endl(FILE *out, const char *p, size_t n);
-
-
-#define DMOT_UI_EQU_CHAR_WIDTH 40
-#define DMOT_UI_EQU_DBM_LOWEST -100.0
-#define DMOT_UI_EQU_DBM_HIGHEST 0.0
-#define DMOT_UI_EQU_DBM_AMPLITUDE (DMOT_UI_EQU_DBM_HIGHEST - DMOT_UI_EQU_DBM_LOWEST)
-#define DMOT_UI_EQU_SLEEP_MS 50
-#define DMOT_UI_EQU_SMOOTHING_CONSTRAINT (0.1 * DMOT_UI_EQU_DBM_AMPLITUDE)  // no input can cause a jump greater than this value
-#define DMOT_UI_EQU_MAX_CHAN 16
+    void dmot_ui_ostream_repeat_pattern_endl(FILE *out, const char *p, size_t n);
 
 #ifdef __cplusplus
 }

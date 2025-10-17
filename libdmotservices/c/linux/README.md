@@ -1,8 +1,6 @@
-# libdmotservices.c.linux
+# libdmotservices (C/Linux)
 
-Small, reusable C/Java utilities I keep around for demos, tests, and real projects.
-This repo includes a C module that builds on Linux and ships a few visual examples,
-including a terminal **equalizer** that displays channel power in dBm (ASCII bars).
+Static C library for Linux, featuring a terminal equalizer and utility modules.
 
 ## Build prerequisites
 
@@ -18,9 +16,9 @@ sudo apt install -y build-essential libcmocka-dev
 - Builds a static library: `libdmotservices_c.a`
 - Unit tests with CMocka
 - Equalizer demo: raw vs smoothed signals; threaded sources
-- ASCII by default (works everywhere); optional Unicode skin later
+- ASCII by default (works everywhere)
 
-## Quick start (C on Linux)
+## Build
 
 ```bash
 # from libdmotservices/c/linux
@@ -30,14 +28,8 @@ make test           # runs unit tests
 make example-demo   # runs examples
 ```
 
-## Screenshots
-
-Screenshots of the library in action.
-
-### make
-
 ![C/Linux build screenshot](libdmotservices-c-linux.png)
 
-## equalizer
+## Examples
 
-![Text-mode equalizer](img/equalizer.png)
+[Examples](examples/README.md)

@@ -1,4 +1,4 @@
-# libdmotservices.java
+# libdmotservices (Java)
 
 Small, reusable Java utilities I’ve built and refined over time.
 The repository is organized as Maven modules but orchestrated by Ant for convenience
