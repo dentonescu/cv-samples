@@ -4,7 +4,17 @@
 #include <stddef.h>
 #include <string.h>
 #include <cmocka.h>
+#include "dmot/datatypes.h"
 #include "dmot/log.h"
+
+static void null_fp_yields_stdout(void **state)
+{
+    (void)state;
+    dmot_log_set_level(DMOT_LOG_INFO);
+    dmot_log_set_file(NULL);
+    assert_true(dmot_log_cmp_fp(stdout));
+    DMOT_LOGI("stdout was used instead of the NULL file pointer.");
+}
 
 static void test_logger_levels_respected(void **state)
 {
@@ -30,16 +40,17 @@ static void test_logger_levels_respected(void **state)
     buf[n] = '\0';
     fclose(fpLog);
 
-    assert_non_null(strstr(buf, lvl_str[DMOT_LOG_ERROR]));
-    assert_non_null(strstr(buf, lvl_str[DMOT_LOG_WARN]));
-    assert_null(strstr(buf, lvl_str[DMOT_LOG_INFO]));
-    assert_null(strstr(buf, lvl_str[DMOT_LOG_DEBUG]));
+    assert_non_null(strstr(buf, dmot_log_level_name(DMOT_LOG_ERROR)));
+    assert_non_null(strstr(buf, dmot_log_level_name(DMOT_LOG_WARN)));
+    assert_null(strstr(buf, dmot_log_level_name(DMOT_LOG_INFO)));
+    assert_null(strstr(buf, dmot_log_level_name(DMOT_LOG_DEBUG)));
 }
 
 int main(void)
 {
     const struct CMUnitTest tests[] =
         {
+            cmocka_unit_test(null_fp_yields_stdout),
             cmocka_unit_test(test_logger_levels_respected),
         };
     return cmocka_run_group_tests(tests, NULL, NULL);

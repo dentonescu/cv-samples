@@ -1,0 +1,24 @@
+## .gitignore for C
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store 
+
+## Custom
+**/bin/
+**/log/
+**/logs/
+**/.sync*
+**/*.a
+**/*.d
+**/*.o
+**/*.log
+**/*.secret
+**/access.token
+**/Thumbs.db*
+build.bat
+build.cmd
+build.ps1
+build.sh

@@ -3,7 +3,7 @@
         Builds libdmotservices.
     </description>
     <!-- default values; can be overridden with -D on the command line -->
-    <property name="libdmotservices.version" value="1.0.0"/>
+    <property name="libdmotservices.version" value="0.1.0"/>
     <property name="project.java.home" location="/usr/lib/jvm/java-17-openjdk-amd64"/>
     <property name="build" location="build"/>
     <property name="dep" location="dep"/>

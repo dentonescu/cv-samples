@@ -1,9 +1,19 @@
 #include "dmot/signals.h"
 #include <math.h>
 
+/*
+ * internals
+ */
+
+// no internals yet
+
+/*
+ * externally exposed
+ */
+
 double dmot_signal_sine_wave(double A, double k, double theta, double offset)
 {
-    return A * sin(k * theta) + offset;    
+    return A * sin(k * theta) + offset;
 }
 
 double dmot_signal_sine_wave_dbm(double k, double theta)
