@@ -30,6 +30,8 @@ import static org.mockito.Mockito.when;
 
 public class APIServerTests {
 
+    public static final String YAML_PATH = "yaml/libdmotservices.yaml";
+
     protected static final String ENDPOINT_CONTEXT_PATH = "/tests/endpoint";
     protected static final String JSON_TEST_STRING = "{\"test\": \"this is a test\"}";
     protected static final String HTML_TEST_STRING = "<html><body><p>Hello, World!</p></body></html>";
@@ -240,7 +242,7 @@ public class APIServerTests {
 
         @Override
         public void registerEndpoints() {
-            YAMLContextPathFinder yamlContextPathFinder = new YAMLContextPathFinder("resources/yaml/libdmotservices.yaml");
+            YAMLContextPathFinder yamlContextPathFinder = new YAMLContextPathFinder(YAML_PATH);
             yamlContextPathFinder.setBaseContextPath("/public/api/1.0");
             registerPackage("dev.dmotservices.tests.api.endpoints", yamlContextPathFinder);
         }

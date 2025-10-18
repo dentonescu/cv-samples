@@ -1,32 +1,41 @@
 # libdmotservices (C/Linux)
 
-Static C library for Linux, featuring a terminal equalizer and utility modules.
+A Linux-focused static C library built on **libdmotservices-c**, featuring signal utilities, logging, and a text-mode equalizer demo.
 
-## Build prerequisites
+## Project Summary
+This module demonstrates my ability to:
+- Deliver robust Linux command-line applications.
+- Manage platform-specific builds using `make`.
+- Apply modular software engineering principles in C.
 
+## Highlights
+- Static library: `libdmotservices_c.a`
+- Unit tests: CMocka framework
+- Equalizer demo: multithreaded, smooth visual feedback
+- Designed for clarity and performance
+
+## Build Prerequisites
 ```bash
-# Ubuntu / Debian
 sudo apt update
 sudo apt install -y build-essential libcmocka-dev
 ```
 
-## Highlights
-
-- Clean C layout: `include/`, `src/`, `tests/`, `examples/`
-- Builds a static library: `libdmotservices_c.a`
-- Unit tests with CMocka
-- Equalizer demo: raw vs smoothed signals; threaded sources
-- ASCII by default (works everywhere)
-
-## Build
-
+## Build & Run
 ```bash
-# from libdmotservices/c/linux
 make clean all      # builds the static library
+make tests          # builds test binaries
 make examples       # builds example binaries
 make test           # runs unit tests
-make example-demo   # runs examples
+make example-demo   # runs example demos
 ```
+
+## What this demonstrates
+- Confident use of GNU toolchains and build automation.
+- Test integration in native Linux environments.
+- Hands-on understanding of signal processing and visualization in C.
+
+
+## Screenshot
 
 ![C/Linux build screenshot](libdmotservices-c-linux.png)
 

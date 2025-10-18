@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 public class FileTests {
 
-    public static final String TEST_RESOURCE = "resources/txt/loremipsum.txt";
+    public static final String TEST_RESOURCE = "txt/loremipsum.txt";
 
     @org.junit.jupiter.api.Test
     public void testLoadLocalResourceAsString() throws IOException {

@@ -3,7 +3,7 @@
         Builds libdmotservices.
     </description>
     <!-- default values; can be overridden with -D on the command line -->
-    <property name="libdmotservices.version" value="0.1.0"/>
+    <loadfile property="libdmotservices.version" srcFile="../VERSION" />
     <property name="project.java.home" location="/usr/lib/jvm/java-17-openjdk-amd64"/>
     <property name="build" location="build"/>
     <property name="dep" location="dep"/>
@@ -29,5 +29,13 @@
                 <include name="*.jar"/>
             </fileset>
         </copy>
+    </target>
+    <target name="test-compile" description="compile the unit tests">
+        <ant dir="dmot-core" antfile="build.xml" target="test-compile" inheritAll="true" inheritRefs="true" />
+        <ant dir="dmot-servlet-javax" antfile="build.xml" target="test-compile" inheritAll="true" inheritRefs="true" />
+    </target>
+    <target name="test" description="run the unit tests">
+        <ant dir="dmot-servlet-javax" antfile="build.xml" target="test" inheritAll="true" inheritRefs="true" />
+        <ant dir="dmot-core" antfile="build.xml" target="test" inheritAll="true" inheritRefs="true" />
     </target>
 </project>

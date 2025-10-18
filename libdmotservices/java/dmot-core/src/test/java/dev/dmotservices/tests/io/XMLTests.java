@@ -20,7 +20,7 @@ import java.util.List;
 
 public class XMLTests {
 
-    public static final String TEST_RESOURCE = "resources/xml/example1.xml";
+    public static final String TEST_RESOURCE = "xml/example1.xml";
 
     @org.junit.jupiter.api.Test
     public void testNodeProcessor() throws IOException, ParserConfigurationException, SAXException {

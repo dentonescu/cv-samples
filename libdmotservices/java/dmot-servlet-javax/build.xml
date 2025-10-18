@@ -44,4 +44,24 @@
             </fileset>
         </copy>
     </target>
+    <target name="test-compile" description="compile the unit tests">
+     <echo message="libdmotservices.version: ${libdmotservices.version}"/>
+        <echo message="mvn: ${mvn}"/>
+        <echo message="project.java.home: ${project.java.home}"/>
+        <exec executable="${mvn}">
+            <env key="JAVA_HOME" value="${project.java.home}"/>
+            <arg value="test-compile"/>
+            <arg value="-Dmaven.main.skip=true"/>
+        </exec>
+    </target>
+    <target name="test" description="run the unit tests">
+     <echo message="libdmotservices.version: ${libdmotservices.version}"/>
+        <echo message="mvn: ${mvn}"/>
+        <echo message="project.java.home: ${project.java.home}"/>
+        <exec executable="${mvn}">
+            <env key="JAVA_HOME" value="${project.java.home}"/>
+            <arg value="surefire:test"/>
+            <arg value="-Duser.dir=${basedir}/src/test/java"/>
+        </exec>
+    </target>
 </project>

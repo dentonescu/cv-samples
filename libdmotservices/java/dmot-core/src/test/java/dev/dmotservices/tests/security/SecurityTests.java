@@ -67,7 +67,7 @@ public class SecurityTests {
     public void testEncryptDecryptUsingSecretFile() {
         System.out.println("\n\ntestEncryptDecryptUsingSecretFile():");
         Security.SecretFile secretFile = new Security.SecretFile();
-        secretFile.setFilename("src/test/java/resources/secret/payload.secret");
+        secretFile.setFilename("src/test/resources/secret/payload.secret");
         secretFile.setEncryptionAlgorithm("AES");
         final String payload = "The text to be encrypted.";
         System.out.format("payload=%s\n", payload);

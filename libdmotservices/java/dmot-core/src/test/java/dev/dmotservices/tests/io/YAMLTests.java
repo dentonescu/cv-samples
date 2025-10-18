@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class YAMLTests {
 
-    protected static final String YAML_PATH = "resources/yaml/libdmotservices.yaml";
+    protected static final String YAML_PATH = "yaml/libdmotservices.yaml";
 
     @org.junit.jupiter.api.Test
     public void testYAMLContextPathFinder() {

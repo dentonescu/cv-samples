@@ -1,4 +1,9 @@
-# libdmotservices/c/Makefile
+#################################################
+## libdmotservices/c/linux/Makefile
+#################################################
+
+## prevents these targets from being treated as file names
+.PHONY: all clean example-demo examples prebuild test tests
 
 ## tools
 AR			?= ar
@@ -27,9 +32,8 @@ DEPS	:= $(OBJ:.o=.d)
 
 
 prebuild:
-	cat libdmotservices.logo
-	mkdir -p "$(BIN_DIR)"
-	mkdir -p "$(LOG_DIR)"
+	@mkdir -p "$(BIN_DIR)"
+	@mkdir -p "$(LOG_DIR)"
                                                                                                                                           
 
 #####################################################################################
@@ -56,21 +60,21 @@ TEST_BINS := $(TEST_SRCS:.c=)
 
 $(TEST_BINS): %: %.c $(LIB)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ $< $(LIB) $(LDLIBS)
+	@chmod +x "$@";
+	@[ ! "$@" ] || mv -v "$@" "$(BIN_DIR)";
 
 tests: $(TEST_BINS)
 
 ## executes each test case after building
 test: tests
 	@set -e; \
-	for t in $(TEST_BINS); \
+	for t in $(wildcard $(BIN_DIR)/test_*); \
 	do \
 		printf "\n\n"; \
 		printf "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n"; \
 		printf "* RUN $$t\n"; \
 		printf "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n"; \
 		printf "\n\n"; \
-		chmod +x "$$t"; \
-		[ ! "$$t" ] || mv -v "$$t" "$(BIN_DIR)"; \
 		"$(BIN_DIR)/`basename "$$t"`"; \
 	done
 	find -name "*.log" -not -path "**/logs/*" -exec mv "{}" "$(LOG_DIR)" \;
@@ -83,13 +87,17 @@ EX_BINS := $(EX_SRCS:.c=)
 
 $(EX_BINS): %: %.c $(LIB)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ $< $(LIB) $(LDLIBS)
+	@if [ -f "$@" ]; then \
+		chmod +x "$@"; \
+		mv -v "$@" "$(BIN_DIR)"; \
+	fi
 
 examples: $(EX_BINS)
 
 ## demonstrates the examples
 example-demo: examples
 	@set -e; \
-	for t in $(EX_BINS); \
+	for t in $(wildcard $(BIN_DIR)/ex_*); \
 	do \
 		printf "\n\n"; \
 		printf "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n"; \
@@ -97,7 +105,6 @@ example-demo: examples
 		printf "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n"; \
 		printf "\n\n"; \
 		chmod +x "$$t"; \
-		[ ! "$$t" ] || mv -v "$$t" "$(BIN_DIR)"; \
 		"$(BIN_DIR)/`basename "$$t"`"; \
 	done
 	find -name "*.log" -not -path "**/logs/*" -exec mv "{}" "$(LOG_DIR)" \;
@@ -109,6 +116,6 @@ clean:
 	$(RM) $(BIN_DIR)/* $(LOG_DIR)/* $(OBJ) $(LIB) $(DEPS) $(TEST_BINS) $(EX_BINS)
 	find examples -name "*.d" -exec $(RM) {} \;
 	find tests -name "*.d" -exec $(RM) {} \;
+	rm -Rf "$(BIN_DIR)"
+	rm -Rf "$(LOG_DIR)"
 
-## prevents these targets from being treated as file names
-.PHONY: all tests test clean examples example-demo

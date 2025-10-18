@@ -1,30 +1,59 @@
 # libdmotservices
 
-**libdmotservices** is a personal, multi-language library of small, reusable utilities I’ve built to make everyday programming tasks easier.  
-Each module includes unit tests and minimal examples.
+**libdmotservices** is my personal multi-language code library — a curated collection of small, reusable utilities written in **C** and **Java** (with more languages to come).  
+It showcases how I approach **cross-language API design**, **version management**, and **clean software architecture** across ecosystems.
 
-Although the project began with Java utilities, my long-term goal is to populate it with reusable code from **every language I work with**.
-Each language resides in its own subdirectory.
+## Project Summary
+This project demonstrates my ability to:
+- Design modular, testable libraries in multiple languages.
+- Centralize versioning across heterogeneous builds using a top-level `Makefile` and `VERSION` file.
+- Automate builds, tests, and examples for consistency and reproducibility.
+- Write maintainable documentation aimed at clarity and professional presentation.
 
-**License:** [MIT](LICENSE)
+## Structure
+| Path | Description |
+|------|--------------|
+| `c/` | Portable C modules (signals, logging, terminal equalizer). |
+| `java/` | Java modules (`dmot-core` and `dmot-servlet-javax`) with Ant/Maven builds. |
+| `VERSION` | Central version file used across all subprojects. |
+| `Makefile` | Top-level orchestrator that builds, tests, and runs examples across languages. |
 
-## Languages
+## Highlights
+- Portable codebases: compiles cleanly across Linux systems.
+- Full test coverage with CMocka (C) and JUnit (Java).
+- Minimal dependencies and clear build instructions.
+- API-first mindset: code is structured for reusability and clarity.
 
-- [C](c) — portable utilities with a Linux build (signals, logging, ANSI helpers)
-- [Java](java) — core helpers and a legacy `javax.servlet` module
+## Build Overview
+```bash
+# Build everything (C + Java)
+make clean all
 
-## What’s here (high level)
+# Run tests and examples
+make test
+make example-demo
+```
 
-- **Signals:** small math helpers (e.g., bounded sine “dBm” generator) used by demos like WiFiEqu (coming soon).
-- **Logging:** tiny `printf`-style logger with levels.
-- **Examples / Tests:** each language has self-contained examples and unit tests.
+Each subproject can also be built individually from its directory.
+
+## What this demonstrates
+- Cross-language integration and build orchestration.
+- A disciplined, maintainable approach to multi-language software design.
+- Documentation and automation skills relevant to API development roles.
+
 
 ## Why this exists
 
 This repo collects tiny, battle-tested snippets I reach for repeatedly.  
 They’re intentionally small, readable, and dependency-light to work well as CV samples.
 
+## Screenshot
+
+![Build screenshot](libdmotservices.png)
+
 ## Status
 
 Active work-in-progress. APIs may evolve. Each subproject has its own README with build instructions.
 
+---
+**License:** [MIT](LICENSE)

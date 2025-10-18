@@ -1,4 +1,33 @@
-# Examples
+# libdmotservices (C/Linux Examples)
+
+Runnable demos built on **libdmotservices-c**.
+
+## Project Summary
+This section demonstrates my ability to:
+- Create educational, testable examples to illustrate library behavior.
+- Present output in readable, visually engaging formats.
+- Write maintainable and platform-independent C demo programs.
+
+## Examples
+| Example | Description |
+|----------|--------------|
+| `ex_signals` | Generates mock sine-wave signal data. |
+| `ex_ui` | Minimal UI rendering test using ANSI sequences. |
+
+## Run
+```bash
+cd bin
+./ex_signals
+./ex_ui
+```
+
+All examples are self-contained and depend only on the static library.
+
+## What this demonstrates
+- Interactive terminal programming in C.
+- Educational demos for technical interviews or client presentations.
+- Portability-focused development mindset.
+
 
 Runnable demos built on top of **libdmotservices-c**.
 
@@ -8,17 +37,6 @@ Runnable demos built on top of **libdmotservices-c**.
 | `ex_ui` | Minimal UI rendering test. |
 
 
-
-## How to run
-
-```bash
-cd bin
-./ex_signals
-./ex_ui
-```
-
-All examples are self-contained and rely only on the static library.
-
 ## Screenshots
 
 Screenshots.
@@ -26,11 +44,5 @@ Screenshots.
 ### equalizer
 
 ![Text-mode equalizer](../img/equalizer.png)
-
-
-## Notes
-
-- Demonstrates real-time terminal visualization in pure C.
-- Auto-detects terminal width.  
-- ASCII characters ensure portability (`#` and `-`).  
+ 
 
