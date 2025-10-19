@@ -1,19 +1,30 @@
 # cv-samples
 
-A collection of coding samples to complement my CV.
+A compact portfolio of small, self‑contained code projects that complement my CV. Each folder contains either a standalone app or a minimal library with examples and tests. The focus is clarity, correctness, and cross‑language thinking.
 
-## Notice
+> Live previews and links: **cv‑samples.vercel.app**
 
-None of the code in this repository has been used in production on client systems.
-All examples are small, self-contained pieces of code that I wrote either for personal exploration or as part of my studies.
+## About me
+I’m a software engineer who enjoys building neat, well‑scoped utilities and visual demos across languages (C, Java, Python, TypeScript/JavaScript, and Angular). I care about readable code, reproducible builds, and pragmatic architecture.
 
-You can view a few live, interactive samples [here](https://cv-samples.vercel.app).
+## Projects
 
-| Project | Description | Skills |
-|----------|--------------|--------|
-| [libdmotservices](libdmotservices) | A lightweight library of reusable programming utilities. | C, Java, Makefile, Unit Testing, Systems Programming |
-| [null-cipher](null-cipher) | Demonstrates a simple algorithm for encryption and decryption with a visual interface. | Bootstrap, CSS, HTML, JavaScript |
-| [slideshow-server](slideshow-server) | A small web server that generates slideshows from user-specified media. | CSS, HTML, JavaScript, Python |
+| Project | What it is | Primary skills |
+|---|---|---|
+| **libdmotservices** | Personal multi‑language utility library with unit tests and examples. | C, Java, Makefile, Unit Testing |
+| **null-cipher** | Single‑page visual demo of a simple cipher (encrypt/decrypt) in the browser. | JavaScript, HTML, CSS |
+| **slideshow-server** | Tiny Python web server that generates responsive media slideshows. | Python, HTML, JS |
+| **WiFiEqu** (in progress) | Terminal Wi‑Fi channel “equalizer” visualizer with a C JSON daemon, Windows client, and Angular web UI. | C, ANSI/terminal, JSON APIs, C#, Angular |
+| **Terraglean** (planned) | Interactive map showing world data layers (time, weather, country stats). | Java, Spring Boot, Leaflet.js |
+
+## How to use this repository
+- Every project folder has its own `README.md` with quick build or run instructions.
+- Code is intentionally small and instructional—suited for reading and discussion.
+- Nothing here is used in production customer systems.
+
+## License
+All content is provided under the license in `/LICENSE`. You’re free to read and learn from the code. If you use parts of it, please include attribution.
+
 
 ---
 
