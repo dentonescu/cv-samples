@@ -15,15 +15,13 @@ CSTANDARD	?= c11
 CFLAGS  	?= -O2 -Wall -Wextra -std=$(CSTANDARD) -MMD -MP
 CPPFLAGS	?= -Iinclude
 ARFLAGS 	:= rcs
-
-## 
 LDLIBS 		:= -lcmocka -lm		# link with cmocka, math
 
 ## outputs
 BIN_DIR		:= $(CURDIR)/bin
 LOG_DIR		:= $(CURDIR)/logs
-LIB 		:= libdmotservices_c.a
-
+LIB_DIR		:= $(CURDIR)/lib
+LIB 		:= $(LIB_DIR)/libdmotservices_c.a
 
 ## sources
 SRC		:= $(shell find src -type f -name '*.c')
@@ -33,17 +31,18 @@ DEPS	:= $(OBJ:.o=.d)
 
 prebuild:
 	@mkdir -p "$(BIN_DIR)"
+	@mkdir -p "$(LIB_DIR)"
 	@mkdir -p "$(LOG_DIR)"
                                                                                                                                           
 
 #####################################################################################
 ## default target; creates the objects and the object archive
 #####################################################################################
-all: prebuild $(LIB)
+all: prebuild lib
 
-$(LIB): $(OBJ)
-	@echo "AR $@"
-	$(AR) $(ARFLAGS) $@ $(OBJ)
+lib: $(OBJ)
+	@echo "AR $(LIB)"
+	$(AR) $(ARFLAGS) $(LIB) $(OBJ)
 
 %.o: %.c
 	@mkdir -p $(dir $@)
@@ -58,7 +57,7 @@ $(LIB): $(OBJ)
 TEST_SRCS := $(wildcard tests/*.c)
 TEST_BINS := $(TEST_SRCS:.c=)
 
-$(TEST_BINS): %: %.c $(LIB)
+$(TEST_BINS): %: %.c lib
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ $< $(LIB) $(LDLIBS)
 	@chmod +x "$@";
 	@[ ! "$@" ] || mv -v "$@" "$(BIN_DIR)";
@@ -68,16 +67,8 @@ tests: $(TEST_BINS)
 ## executes each test case after building
 test: tests
 	@set -e; \
-	for t in $(wildcard $(BIN_DIR)/test_*); \
-	do \
-		printf "\n\n"; \
-		printf "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n"; \
-		printf "* RUN $$t\n"; \
-		printf "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n"; \
-		printf "\n\n"; \
-		"$(BIN_DIR)/`basename "$$t"`"; \
-	done
-	find -name "*.log" -not -path "**/logs/*" -exec mv "{}" "$(LOG_DIR)" \;
+	find "$(BIN_DIR)" -name "test_*" -exec sh -c 'chmod +x "$$1" && "$$1"' _ {} \;;
+	@find -name "*.log" -not -path "**/logs/*" -exec mv "{}" "$(LOG_DIR)" \;
 
 #####################################################################################
 ## builds the examples
@@ -85,7 +76,7 @@ test: tests
 EX_SRCS := $(wildcard examples/*.c)
 EX_BINS := $(EX_SRCS:.c=)
 
-$(EX_BINS): %: %.c $(LIB)
+$(EX_BINS): %: %.c lib
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ $< $(LIB) $(LDLIBS)
 	@if [ -f "$@" ]; then \
 		chmod +x "$@"; \
@@ -97,25 +88,17 @@ examples: $(EX_BINS)
 ## demonstrates the examples
 example-demo: examples
 	@set -e; \
-	for t in $(wildcard $(BIN_DIR)/ex_*); \
-	do \
-		printf "\n\n"; \
-		printf "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n"; \
-		printf "* RUN $$t\n"; \
-		printf "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n"; \
-		printf "\n\n"; \
-		chmod +x "$$t"; \
-		"$(BIN_DIR)/`basename "$$t"`"; \
-	done
-	find -name "*.log" -not -path "**/logs/*" -exec mv "{}" "$(LOG_DIR)" \;
+	find "$(BIN_DIR)" -name "ex_*" -exec sh -c 'chmod +x "$$1" && "$$1"' _ {} \;;
+	@find -name "*.log" -not -path "**/logs/*" -exec mv "{}" "$(LOG_DIR)" \;
 
 #####################################################################################
 ## housekeeping
 #####################################################################################
 clean:
-	$(RM) $(BIN_DIR)/* $(LOG_DIR)/* $(OBJ) $(LIB) $(DEPS) $(TEST_BINS) $(EX_BINS)
-	find examples -name "*.d" -exec $(RM) {} \;
-	find tests -name "*.d" -exec $(RM) {} \;
-	rm -Rf "$(BIN_DIR)"
-	rm -Rf "$(LOG_DIR)"
+	@$(RM) $(BIN_DIR)/* $(LOG_DIR)/* $(OBJ) $(LIB) $(DEPS) $(TEST_BINS) $(EX_BINS)
+	@find examples -name "*.d" -exec $(RM) {} \;
+	@find tests -name "*.d" -exec $(RM) {} \;
+	@rm -Rf "$(BIN_DIR)"
+	@rm -Rf "$(LIB_DIR)"
+	@rm -Rf "$(LOG_DIR)"
 
