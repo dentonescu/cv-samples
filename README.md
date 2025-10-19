@@ -2,7 +2,7 @@
 
 A compact portfolio of small, self‑contained code projects that complement my CV. Each folder contains either a standalone app or a minimal library with examples and tests. The focus is clarity, correctness, and cross‑language thinking.
 
-> Live previews and links: **cv‑samples.vercel.app**
+> Live previews and links: [**cv‑samples.vercel.app**](https://cv-samples.vercel.app)
 
 ## About me
 I’m a software engineer who enjoys building neat, well‑scoped utilities and visual demos across languages (C, Java, Python, TypeScript/JavaScript, and Angular). I care about readable code, reproducible builds, and pragmatic architecture.
