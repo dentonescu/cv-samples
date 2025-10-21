@@ -28,7 +28,8 @@ DEPS			:= $(OBJ:.o=.d)
 CSTANDARD		?= c11
 CFLAGS  		?= -O2 -g -Wall -Wextra -std=$(CSTANDARD) -MMD -MP -D_POSIX_C_SOURCE=200809L
 CPPFLAGS     	:= -I./include -I../../libdmotservices/c/linux/include
-LDLIBS 			:= -L$(ARCHIVE_DIR) -ldmotservices_c -lcmocka -lm		# link with cmocka, math
+LDLIBS 			:= -L$(ARCHIVE_DIR) -ldmotservices_c -lm -lmicrohttpd
+LDLIBS_TEST		:= -lcmocka
 
 ## commands
 CC      	?= gcc
@@ -82,7 +83,7 @@ TEST_SRCS := $(wildcard tests/*.c)
 TEST_BINS := $(TEST_SRCS:.c=)
 
 $(TEST_BINS): %: %.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(OBJ) -o $@ $< $(ARCHIVE) $(LDLIBS)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(OBJ) -o $@ $< $(ARCHIVE) $(LDLIBS) $(LDLIBS_TEST)
 	@chmod +x "$@";
 	@[ ! "$@" ] || mv -v "$@" "$(BIN_DIR)";
 

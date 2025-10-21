@@ -2,6 +2,12 @@
 
 Builds the Linux daemon (`wifiequd`) and terminal client examples.
 
+## Build Prerequisites
+```bash
+sudo apt update
+sudo apt install -y build-essential libcmocka-dev libmicrohttpd-dev
+```
+
 ## Build
 ```sh
 make clean all              # or simply: make
@@ -22,3 +28,7 @@ make example-demo           # runs the demos
 ```
 
 Artifacts and logs are written under `bin/` and `logs/`.
+
+## Screenshots
+
+![Readings logged in the WiFiEqu daemon](img/wfq-daemon-readings.png)

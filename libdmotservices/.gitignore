@@ -51,6 +51,7 @@ build/
 **/*.o
 **/*.log
 **/*.secret
+**/*.swp
 **/access.token
 **/connection.properties
 **/connection*.properties
