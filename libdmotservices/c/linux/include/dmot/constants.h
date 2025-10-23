@@ -10,7 +10,7 @@ extern "C"
 {
 #endif
 
-// no functions declared yet
+    // no declarations yet
 
 #ifdef __cplusplus
 }

@@ -5,29 +5,36 @@
 ## prevents these targets from being treated as file names
 .PHONY: all clean example-demo examples prebuild test tests
 
+## project
+VERSION			:= $(strip $(shell cat ../../VERSION))
+
 ## tools
-AR			?= ar
-CC      	?= gcc
-RM			?= rm -f
+AR				?= ar
+CC      		?= gcc
+RM				?= rm -f
 
 ## parameters
-CSTANDARD	?= c11
-CFLAGS  	?= -O2 -Wall -Wextra -std=$(CSTANDARD) -MMD -MP
-CPPFLAGS	?= -Iinclude
-ARFLAGS 	:= rcs
-LDLIBS 		:= -lcmocka -lm		# link with cmocka, math
+CSTANDARD		?= c11
+CFLAGS  		?= -O2 -Wall -Wextra -std=$(CSTANDARD) -MMD -MP
+CPPFLAGS		?= -Iinclude
+ARFLAGS 		:= rcs
+LDLIBS 			:= -lcmocka -lm		# link with cmocka, math
 
 ## outputs
-BIN_DIR		:= $(CURDIR)/bin
-LOG_DIR		:= $(CURDIR)/logs
-LIB_DIR		:= $(CURDIR)/lib
-LIB 		:= $(LIB_DIR)/libdmotservices_c.a
+BIN_DIR			:= $(CURDIR)/bin
+LOG_DIR			:= $(CURDIR)/logs
+LIB_DIR			:= $(CURDIR)/lib
+LIB 			:= $(LIB_DIR)/libdmotservices_c-$(VERSION).a
+TESTS_FAILED	:= $(LOG_DIR)/tests.failed
 
 ## sources
-SRC		:= $(shell find src -type f -name '*.c')
-OBJ 	:= $(SRC:.c=.o)
-DEPS	:= $(OBJ:.o=.d)
+SRC				:= $(shell find src -type f -name '*.c')
+OBJ 			:= $(SRC:.c=.o)
+DEPS			:= $(OBJ:.o=.d)
 
+## ANSI
+ANSI_RED	:= \e[0;31m
+ANSI_RESET	:= \e[0m
 
 prebuild:
 	@mkdir -p "$(BIN_DIR)"
@@ -66,9 +73,15 @@ tests: $(TEST_BINS)
 
 ## executes each test case after building
 test: tests
-	@set -e; \
-	find "$(BIN_DIR)" -name "test_*" -exec sh -c 'chmod +x "$$1" && "$$1"' _ {} \;;
-	@find -name "*.log" -not -path "**/logs/*" -exec mv "{}" "$(LOG_DIR)" \;
+	@[ ! -f "$(TESTS_FAILED)" ] || rm "$(TESTS_FAILED)"
+	@find "$(BIN_DIR)" -name "test_*" -exec sh -c 'chmod +x "$$1" && "$$1" || touch "$(TESTS_FAILED)"' _ {} \;;
+	@if [ -f "$(TESTS_FAILED)" ]; then \
+		rm "$(TESTS_FAILED)"; \
+		echo "$(ANSI_RESET)$(ANSI_RED)ERROR: At least one unit test failed.$(ANSI_RESET)"; \
+		exit 1; \
+	fi
+	@find -name "*.log" -not -path "**/logs/*" -exec mv -v "{}" "$(LOG_DIR)" \;;
+
 
 #####################################################################################
 ## builds the examples
@@ -89,10 +102,10 @@ examples: $(EX_BINS)
 example-demo: examples
 	@set -e; \
 	find "$(BIN_DIR)" -name "ex_*" -exec sh -c 'chmod +x "$$1" && "$$1"' _ {} \;;
-	@find -name "*.log" -not -path "**/logs/*" -exec mv "{}" "$(LOG_DIR)" \;
+	@find -name "*.log" -not -path "**/logs/*" -exec mv -v "{}" "$(LOG_DIR)" \;
 
 #####################################################################################
-## housekeeping
+## Housekeeping
 #####################################################################################
 clean:
 	@$(RM) $(BIN_DIR)/* $(LOG_DIR)/* $(OBJ) $(LIB) $(DEPS) $(TEST_BINS) $(EX_BINS)

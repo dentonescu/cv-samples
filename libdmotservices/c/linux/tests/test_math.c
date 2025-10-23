@@ -6,7 +6,7 @@
 #include <cmocka.h>
 #include <math.h>
 #include "dmot/constants.h"
-#include "dmot/mathx.h"
+#include "dmot/math.h"
 
 static void double_random_properly_bounded(void **state)
 {
@@ -15,7 +15,7 @@ static void double_random_properly_bounded(void **state)
     {
         for (double b = a; b <= 10.0; ++b)
         {
-            double d = dmot_mathx_rand_double(a, b);
+            double d = dmot_math_rand_double(a, b);
             assert_true(d + __DBL_EPSILON__ >= a);
             assert_true(d <= b + __DBL_EPSILON__);
         }

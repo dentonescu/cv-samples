@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "dmot/datatypes.h"
-#include "dmot/mathx.h"
+#include "dmot/math.h"
 
 /*
  * internals
@@ -20,10 +20,10 @@ static void auto_seed_prng()
 }
 
 /*
- * externally exposed
+ * externals
  */
 
-double dmot_mathx_rand_double(double a, double b)
+double dmot_math_rand_double(double a, double b)
 {
     if (a > b)
         return NAN;

@@ -1,13 +1,16 @@
 #ifndef WFQ_WIFIEQU_H
 #define WFQ_WIFIEQU_H
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-#define WFQ_PORT 8080
+// defaults
 #define WFQ_EQU_N_CHANNELS 13
+#define WFQ_MOCK_MODE false
+#define WFQ_PORT 8080
 #define WFQ_REFRESH_WAIT_MS 500
 
     typedef struct

@@ -8,7 +8,7 @@
 // no internals yet
 
 /*
- * externally exposed
+ * externals
  */
 
 double dmot_signal_sine_wave(double A, double k, double theta, double offset)

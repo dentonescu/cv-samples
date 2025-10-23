@@ -8,12 +8,11 @@
  * internals
  */
 
-
 static dmot_log_level g_lvl = DMOT_LOG_WARN;
 static FILE *g_fp = NULL;
 
 /*
- * externally exposed
+ * externals
  */
 
 void dmot_log(dmot_log_level lvl, const char *fmt, ...)

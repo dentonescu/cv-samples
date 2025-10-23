@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include "dmot/ui.h"
 #include "dmot/log.h"
-#include "dmot/timex.h"
+#include "dmot/time.h"
 
 /*
  * internals
@@ -87,8 +87,8 @@ static void equ_render(dmot_ui_eq *eq, bool smoothed, int redraws)
         {
             fprintf(eq->out, "%2zu | ", chan);
             const double value = smoothed ? equ_read_channel_smoothed(eq, chan) : equ_read_channel_raw(eq, chan);
-            const double power_position = value / (double)(DMOT_UI_EQU_DBM_AMPLITUDE); // [-1.0, 0.0]
-            const double normalized_power_position = power_position + 1.0;             // [0.0, 1.0]
+            const double power_position = value / (double)(DMOT_UI_EQU_DBM_AMPLITUDE);                // [-1.0, 0.0]
+            const double normalized_power_position = power_position + 1.0;                            // [0.0, 1.0]
             const int power_bars = 0.9 * (normalized_power_position * eq->equ_properties.char_width); // only use 90% of the available width
             fputs(dmot_ui_ansi_esc_seq_fg(equ_power_color(value)), eq->out);
             dmot_ui_ostream_repeat_pattern(eq->out, draw_block_full, power_bars);
@@ -103,12 +103,12 @@ static void equ_render(dmot_ui_eq *eq, bool smoothed, int redraws)
                 ansi_green, ansi_reset,
                 ansi_blue, ansi_reset);
         fprintf(eq->out, "%s\n", ansi_reset);
-        sleep_ms((redraws <= 1) ? 0 : eq->equ_properties.refresh_wait_ms);
+        dmot_time_sleep_ms((redraws <= 1) ? 0 : eq->equ_properties.refresh_wait_ms);
     }
 }
 
 /*
- * externally exposed
+ * externals
  */
 
 void dmot_ui_ansi_clear_row()

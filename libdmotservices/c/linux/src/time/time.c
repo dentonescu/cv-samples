@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include "dmot/datatypes.h"
-#include "dmot/mathx.h"
-#include "dmot/timex.h"
+#include "dmot/math.h"
+#include "dmot/time.h"
 
 /*
  * internals
@@ -15,10 +15,10 @@
 // no internals yet
 
 /*
- * externally exposed
+ * externals
  */
 
-void sleep_ms(long ms)
+void dmot_time_sleep_ms(long ms)
 {
    struct timespec ts;
    ts.tv_sec = ms / 1000;
@@ -26,7 +26,7 @@ void sleep_ms(long ms)
    nanosleep(&ts, NULL);
 }
 
-uint64_t timestamp_ms(void)
+uint64_t dmot_time_now_ms(void)
 {
    struct timespec ts;
    clock_gettime(CLOCK_REALTIME, &ts);

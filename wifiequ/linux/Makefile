@@ -9,8 +9,11 @@
 ROOT 			:= $(strip $(shell pwd))
 LIB_DIR			:= ../../libdmotservices/c/linux
 ARCHIVE_DIR  	:= $(LIB_DIR)/lib
-ARCHIVE			:= $(ARCHIVE_DIR)/libdmotservices_c.a
-SERVICE_DIR		:= $(ROOT)/etc/systemd/system
+ARCHIVE			:= $(ARCHIVE_DIR)/libdmotservices_c-0.2.0.a
+CONFIG_DIR		:= $(ROOT)/etc
+CONFIG_FILE		:= wifiequd.conf
+CONFIG			:= $(CONFIG_DIR)/$(CONFIG_FILE)
+SERVICE_DIR		:= $(CONFIG_DIR)/systemd/system
 SERVICE_FILE	:= wifiequd.service
 SERVICE			:= $(SERVICE_DIR)/$(SERVICE_FILE)
 
@@ -18,6 +21,7 @@ SERVICE			:= $(SERVICE_DIR)/$(SERVICE_FILE)
 BIN_DIR			:= $(CURDIR)/bin
 LOG_DIR			:= $(CURDIR)/logs
 BIN				:= wifiequd
+TESTS_FAILED    := $(LOG_DIR)/tests.failed
 
 ## sources
 SRC				:= $(shell find src -type f -name '*.c')
@@ -26,15 +30,19 @@ DEPS			:= $(OBJ:.o=.d)
 
 ## parameters
 CSTANDARD		?= c11
-CFLAGS  		?= -O2 -g -Wall -Wextra -std=$(CSTANDARD) -MMD -MP -D_POSIX_C_SOURCE=200809L
+CFLAGS  		?= -O2 -g -Wall -Wextra -std=$(CSTANDARD) -MMD -MP -D_GNU_SOURCE
 CPPFLAGS     	:= -I./include -I../../libdmotservices/c/linux/include
-LDLIBS 			:= -L$(ARCHIVE_DIR) -ldmotservices_c -lm -lmicrohttpd
+LDLIBS 			:= -L$(ARCHIVE_DIR) -lm -lmicrohttpd
 LDLIBS_TEST		:= -lcmocka
 
 ## commands
 CC      	?= gcc
 RM			?= rm -f
 MILESTONE	:= echo === 
+
+## ANSI
+ANSI_RED        := \e[0;31m
+ANSI_RESET      := \e[0m
 
 #####################################################################################
 ## default target; creates the objects
@@ -73,6 +81,7 @@ setup-user:
 deploy:
 	@$(MILESTONE) "Deploying wifiequd..."
 	@cp -v $(SERVICE) /etc/systemd/system/$(SERVICE_FILE)
+	@cp -v $(CONFIG) /etc/$(CONFIG_FILE)
 	@cp -v $(BIN_DIR)/$(BIN) /usr/local/bin/$(BIN)
 	@chmod +x /usr/local/bin/$(BIN)
 
@@ -91,9 +100,15 @@ tests: $(TEST_BINS)
 
 ## executes each test case after building
 test: tests
-	@set -e; \
-	find "$(BIN_DIR)" -name "test_*" -exec sh -c 'chmod +x "$$1" && "$$1"' _ {} \;;
-	@find -name "*.log" -not -path "**/logs/*" -exec mv "{}" "$(LOG_DIR)" \;
+	@[ ! -f "$(TESTS_FAILED)" ] || rm "$(TESTS_FAILED)"
+	@find "$(BIN_DIR)" -name "test_*" -exec sh -c 'chmod +x "$$1" && "$$1" || touch "$(TESTS_FAILED)"' _ {} \;;
+	@if [ -f "$(TESTS_FAILED)" ]; then \
+			rm "$(TESTS_FAILED)"; \
+			echo "$(ANSI_RESET)$(ANSI_RED)ERROR: At least one unit test failed.$(ANSI_RESET)"; \
+			exit 1; \
+	fi
+	@find -name "*.log" -not -path "**/logs/*" -exec mv -v "{}" "$(LOG_DIR)" \;;
+
 
 #####################################################################################
 ## builds the examples
@@ -114,7 +129,7 @@ examples: $(EX_BINS)
 example-demo: examples
 	@set -e; \
 	find "$(BIN_DIR)" -name "ex_*" -exec sh -c 'chmod +x "$$1" && "$$1"' _ {} \;;
-	@find -name "*.log" -not -path "**/logs/*" -exec mv "{}" "$(LOG_DIR)" \;
+	@find -name "*.log" -not -path "**/logs/*" -exec mv -v "{}" "$(LOG_DIR)" \;
 
 
 #####################################################################################

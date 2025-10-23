@@ -19,7 +19,7 @@ extern "C"
 {
 #endif
 
-// no functions declared yet
+    // no functions declared yet
 
 #ifdef __cplusplus
 }

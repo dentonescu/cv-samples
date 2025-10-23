@@ -4,8 +4,8 @@
 #include <pthread.h>
 #include <time.h>
 #include "dmot/constants.h"
-#include "dmot/mathx.h"
-#include "dmot/timex.h"
+#include "dmot/math.h"
+#include "dmot/time.h"
 #include "dmot/signals.h"
 #include "dmot/ui.h"
 
@@ -34,10 +34,10 @@ void *task_random_values(void *arg)
     {
         for (int chan = 1; chan <= channels; ++chan)
         {
-            const double input_dbm = dmot_mathx_rand_double(DMOT_UI_EQU_DBM_LOWEST, DMOT_UI_EQU_DBM_HIGHEST);
+            const double input_dbm = dmot_math_rand_double(DMOT_UI_EQU_DBM_LOWEST, DMOT_UI_EQU_DBM_HIGHEST);
             dmot_ui_equalizer_set_channel_input_value(&eq, chan, input_dbm);
         }
-        sleep_ms(default_sleep_ms);
+        dmot_time_sleep_ms(default_sleep_ms);
     }
     dmot_ui_equalizer_forbid_rendering(&eq);
     return NULL;
@@ -54,7 +54,7 @@ void *task_sine_values(void *arg)
             const double input_dbm = dmot_signal_sine_wave_dbm(1.0 / chan, i);
             dmot_ui_equalizer_set_channel_input_value(&eq, chan, input_dbm);
         }
-        sleep_ms(default_sleep_ms);
+        dmot_time_sleep_ms(default_sleep_ms);
     }
     dmot_ui_equalizer_forbid_rendering(&eq);
     return NULL;

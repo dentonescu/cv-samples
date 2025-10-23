@@ -10,6 +10,5 @@ int main(void)
         double v = dmot_signal_sine_wave_dbm(0.5, t);
         printf("t=%.1f -> %.1f dBm\n", t, v);
     }
-    
     return 0;
 }
