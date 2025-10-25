@@ -43,4 +43,5 @@ wfq_sample wfq_wifi_signal_read(void)
     pthread_mutex_lock(&sample_mx);
     out = sample; // avoid data race while reading
     pthread_mutex_unlock(&sample_mx);
+    return out;
 }

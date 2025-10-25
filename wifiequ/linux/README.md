@@ -5,7 +5,7 @@ Builds the Linux daemon (`wifiequd`) and terminal client examples.
 ## Build Prerequisites
 ```bash
 sudo apt update
-sudo apt install -y build-essential libcmocka-dev libmicrohttpd-dev
+sudo apt install -y build-essential libcmocka-dev libmicrohttpd-dev libnl-3-dev libnl-genl-3-dev
 ```
 
 ## Build

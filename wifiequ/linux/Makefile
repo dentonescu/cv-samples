@@ -26,13 +26,15 @@ TESTS_FAILED    := $(LOG_DIR)/tests.failed
 ## sources
 SRC				:= $(shell find src -type f -name '*.c')
 OBJ 			:= $(SRC:.c=.o)
+MAIN_OBJ		:= src/wifiequd.o
+CORE_OBJ		:= $(filter-out $(MAIN_OBJ), $(OBJ))
 DEPS			:= $(OBJ:.o=.d)
 
 ## parameters
 CSTANDARD		?= c11
 CFLAGS  		?= -O2 -g -Wall -Wextra -std=$(CSTANDARD) -MMD -MP -D_GNU_SOURCE
-CPPFLAGS     	:= -I./include -I../../libdmotservices/c/linux/include
-LDLIBS 			:= -L$(ARCHIVE_DIR) -lm -lmicrohttpd
+CPPFLAGS     	:= -I./include -I../../libdmotservices/c/linux/include -I/usr/include/libnl3
+LDLIBS 			:= -L$(ARCHIVE_DIR) -lm -lmicrohttpd -lnl-3 -lnl-genl-3
 LDLIBS_TEST		:= -lcmocka
 
 ## commands
@@ -61,7 +63,7 @@ prebuild:
 	$(MAKE) -C "$(LIB_DIR)"
 
 $(BIN): $(OBJ)
-	@$(MILESTONE) "Linking objects and libraries..."
+	@$(MILESTONE) "Linking all objects and libraries to produce wifiequd..."
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o "$(BIN_DIR)/$@" $(OBJ) $(ARCHIVE) $(LDLIBS)
 
 #####################################################################################
@@ -92,7 +94,8 @@ TEST_SRCS := $(wildcard tests/*.c)
 TEST_BINS := $(TEST_SRCS:.c=)
 
 $(TEST_BINS): %: %.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(OBJ) -o $@ $< $(ARCHIVE) $(LDLIBS) $(LDLIBS_TEST)
+	@$(MILESTONE) "Linking core objects and libraries to produce test binaries..."
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(CORE_OBJ) -o $@ $< $(ARCHIVE) $(LDLIBS) $(LDLIBS_TEST)
 	@chmod +x "$@";
 	@[ ! "$@" ] || mv -v "$@" "$(BIN_DIR)";
 
@@ -116,8 +119,9 @@ test: tests
 EX_SRCS := $(wildcard examples/*.c)
 EX_BINS := $(EX_SRCS:.c=)
 
-$(EX_BINS): %: %.c lib
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(OBJ) -o $@ $< $(ARCHIVE) $(LDLIBS)
+$(EX_BINS): %: %.c
+	@$(MILESTONE) "Linking core objects and libraries to produce example binaries..."
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(CORE_OBJ) -o $@ $< $(ARCHIVE) $(LDLIBS)
 	@if [ -f "$@" ]; then \
 		chmod +x "$@"; \
 		mv -v "$@" "$(BIN_DIR)"; \
