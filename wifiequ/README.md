@@ -10,6 +10,12 @@ WiFiEqu demonstrates how system services on different operating systems can expo
 - Aggregates signal strength into a simple per‑channel bar view (“equalizer”).
 - Exposes a minimal JSON API so other clients (CLI, Windows desktop, Angular web) can display the same data.
 
+## Project overview
+- [Linux daemon](linux/README.md) — daemon and CLI (C, Makefiles, systemd unit install).
+- [Windows service](windows/README.md) — Windows service (C#) (stub).
+- [Angular frontend](web-angular/README.md) — Angular client (stub).
+- [API specification](api/README.md) — API specifications and examples.
+
 ## Architecture
 
 
@@ -29,7 +35,7 @@ WiFiEqu demonstrates how system services on different operating systems can expo
 +-----------------------+               +------------------------+
 | Linux Daemon (C)      |               | Windows Service (C#)   |
 |     wifiequd          |               |      WiFiEquD          |
-| • Scans nearby Wi-Fi  |               | • Uses WLAN API        |
+| • Uses Netlink API    |               | • Uses WLAN API        |
 | • Aggregates RSSI     |               | • Aggregates RSSI      |
 | • Serves JSON API     |               | • Serves JSON API      |
 +-----------------------+               +------------------------+
@@ -70,13 +76,6 @@ make example-demo           # runs the demos
 - `GET /api/v1/stats`
 
 Exact schemas will be documented in `/api/README.md` as the daemon stabilises.
-
-## Folder guide
-- `linux/` — daemon and CLI (C, Makefiles, systemd unit install).
-- `windows/` — Windows service (C#) (stub).
-- `web-angular/` — Angular client (stub).
-- `api/` — API specifications and examples.
-- `VERSION` / `gen-version.py` — single source of truth for versioning.
 
 ## Roadmap
 - [ ] Finalise JSON schema and add contract tests.
