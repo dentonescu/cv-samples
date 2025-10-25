@@ -227,12 +227,48 @@ wfq_signal *wfq_scan_wlan(const char *ifname)
         goto cleanup;
     }
 
+    // set the valid response callback
+    rc = nl_socket_modify_cb(ctx.sock, NL_CB_VALID, NL_CB_CUSTOM, wfq_cb_get_scan_valid, &ctx);
+    if (rc != 0)
+    {
+        DMOT_LOGE("wfq_scan_wlan: unable to set valid callback: %s", nl_geterror(rc));
+        goto cleanup;
+    }
+
+    // set the error response callback
+    rc = nl_socket_modify_err_cb(ctx.sock, NL_CB_CUSTOM, wfq_cb_get_scan_error, &ctx);
+    if (rc != 0)
+    {
+        DMOT_LOGE("wfq_scan_wlan: unable to set error callback: %s", nl_geterror(rc));
+        goto cleanup;
+    }
+
+    // set the completion callback
+    rc = nl_socket_modify_cb(ctx.sock, NL_CB_FINISH, NL_CB_CUSTOM, wfq_cb_get_scan_finish, &ctx);
+    if (rc != 0)
+    {
+        DMOT_LOGE("wfq_scan_wlan: unable to set finish callback: %s", nl_geterror(rc));
+        goto cleanup;
+    }
+
+    struct nl_msg *msg;
     int loop_counter = 0;
     bool trigger_scan_required = true;
+    bool msg_dealloc_required = false;
     long retrigger_iterations = 100;
     long wait_start_ms = dmot_time_now_ms();
+
     do
     {
+        // allocate an expandable Netlink message buffer
+        msg = nlmsg_alloc();
+        if (!msg)
+        {
+            DMOT_LOGE("wfq_scan_wlan: nlmsg_alloc failed");
+            goto cleanup;
+        }
+        msg_dealloc_required = true;
+
         if (trigger_scan_required)
         {
             trigger_scan_required = false;
@@ -247,20 +283,11 @@ wfq_signal *wfq_scan_wlan(const char *ifname)
                       loop_counter, scan_results_index, largest_scan_results_index);
         }
 
-        // allocate an expandable Netlink message buffer
-        struct nl_msg *msg = nlmsg_alloc();
-        if (!msg)
-        {
-            DMOT_LOGE("wfq_scan_wlan: nlmsg_alloc failed");
-            goto cleanup;
-        }
-
         // write the generic-netlink header into the message buffer and request a scan and dump
         void *hdr = genlmsg_put(msg, 0, 0, ctx.family_id, 0, NLM_F_DUMP, NL80211_CMD_GET_SCAN, 0);
         if (hdr == NULL)
         {
             DMOT_LOGE("wfq_scan_wlan: genlmsg_put failed");
-            nlmsg_free(msg);
             goto cleanup;
         }
 
@@ -269,34 +296,6 @@ wfq_signal *wfq_scan_wlan(const char *ifname)
         if (rc != 0)
         {
             DMOT_LOGE("wfq_scan_wlan: nla_put_u32 failed: %s", nl_geterror(rc));
-            nlmsg_free(msg);
-            goto cleanup;
-        }
-
-        // set the valid response callback
-        rc = nl_socket_modify_cb(ctx.sock, NL_CB_VALID, NL_CB_CUSTOM, wfq_cb_get_scan_valid, &ctx);
-        if (rc != 0)
-        {
-            DMOT_LOGE("wfq_scan_wlan: unable to set valid callback: %s", nl_geterror(rc));
-            nlmsg_free(msg);
-            goto cleanup;
-        }
-
-        // set the error response callback
-        rc = nl_socket_modify_err_cb(ctx.sock, NL_CB_CUSTOM, wfq_cb_get_scan_error, &ctx);
-        if (rc != 0)
-        {
-            DMOT_LOGE("wfq_scan_wlan: unable to set error callback: %s", nl_geterror(rc));
-            nlmsg_free(msg);
-            goto cleanup;
-        }
-
-        // set the completion callback
-        rc = nl_socket_modify_cb(ctx.sock, NL_CB_FINISH, NL_CB_CUSTOM, wfq_cb_get_scan_finish, &ctx);
-        if (rc != 0)
-        {
-            DMOT_LOGE("wfq_scan_wlan: unable to set finish callback: %s", nl_geterror(rc));
-            nlmsg_free(msg);
             goto cleanup;
         }
 
@@ -305,12 +304,8 @@ wfq_signal *wfq_scan_wlan(const char *ifname)
         if (rc < 0)
         {
             DMOT_LOGE("wfq_scan_wlan: nl_send_auto failed: %s", nl_geterror(rc));
-            nlmsg_free(msg);
             goto cleanup;
         }
-
-        // release the message buffer
-        nlmsg_free(msg);
 
         // block until the completion callback or error callback returns
         while (!ctx.done && ctx.error == 0)
@@ -344,6 +339,9 @@ wfq_signal *wfq_scan_wlan(const char *ifname)
             trigger_scan_required = true;
         }
 
+        nlmsg_free(msg);
+        msg_dealloc_required = false;
+
     } while (
         (largest_scan_results_index <= 1) || // This will run forever if there is only one signal or none
         ((dmot_time_now_ms() - wait_start_ms) < WFQ_WLAN_SCAN_TIMEOUT_MS &&
@@ -355,6 +353,8 @@ wfq_signal *wfq_scan_wlan(const char *ifname)
         DMOT_LOGE("wfq_scan_wlan: scan failed: %s", nl_geterror(ctx.error));
 
 cleanup:
+    if (msg_dealloc_required)
+        nlmsg_free(msg);
     wfq_cleanup_socket(&ctx.sock);
     return largest_scan_results;
 }
