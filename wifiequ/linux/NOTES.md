@@ -1,5 +1,10 @@
 # NOTES
 
+## JSON example
+```json
+{ "timestamp_ms": 1734760118123, "channels_dbm": [-45.0, -10.0, ...] }
+```
+
 ## Frequencies and signals
 
 ```bash

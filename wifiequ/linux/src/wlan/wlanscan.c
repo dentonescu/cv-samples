@@ -27,11 +27,6 @@
  * internals
  */
 
-static volatile wfq_signal largest_scan_results[WFQ_WLAN_SCAN_MAX_RESULTS + 1];
-static volatile size_t largest_scan_results_index = 0;
-static volatile wfq_signal scan_results[WFQ_WLAN_SCAN_MAX_RESULTS + 1];
-static volatile size_t scan_results_index = 0;
-
 static void wfq_cleanup_socket(struct nl_sock **sock)
 {
     if (*sock != NULL)
@@ -84,13 +79,87 @@ static int wfq_trigger_scan(struct nl_sock *sock, int family_id, int ifindex)
         nlmsg_free(msg);
         return -NLE_NOMEM;
     }
-    nla_put(ssids, 1 /* entry index */, 0, "");
-    nla_put_nested(msg, NL80211_ATTR_SCAN_SSIDS, ssids);
+    int rc_put_1 = nla_put(ssids, 1 /* entry index */, 0, "");
+    if (rc_put_1 < 0)
+    {
+        nlmsg_free(msg);
+        nlmsg_free(ssids);
+        return rc_put_1;
+    }
+
+    int rc_put_2 = nla_put_nested(msg, NL80211_ATTR_SCAN_SSIDS, ssids);
     nlmsg_free(ssids);
+    if (rc_put_2 < 0)
+    {
+        nlmsg_free(msg);
+        return rc_put_2;
+    }
 
     rc = nl_send_auto(sock, msg);
     nlmsg_free(msg);
-    return (rc < 0) ? rc : 0;
+
+    if (rc < 0)
+        return rc;
+
+    return 0;
+}
+
+// Blocks execution until NL is finished or there was an error.
+// @return          true if success, false if error.
+static bool wfq_block_until_called(wfq_scan_context *ctx)
+{
+    int rc;
+    if (!ctx)
+    {
+        DMOT_LOGD("The context is empty. Blocking unnecessary.");
+        return true;
+    }
+    while (!ctx->done && ctx->error == 0)
+    {
+        rc = nl_recvmsgs_default(ctx->sock);
+        if (rc < 0)
+            ctx->error = rc;
+    }
+    if (ctx->error < 0)
+    {
+        DMOT_LOGE("wfq_scan_wlan: nl_recvmsgs_default failed: %s", nl_geterror(ctx->error));
+        return false;
+    }
+    return true;
+}
+
+static void wfq_iteration_clear_trackers(wfq_scan_context *ctx)
+{
+    if (!ctx)
+        return;
+    ctx->done = false;
+    ctx->error = 0;
+    ctx->n_count_results = 0;
+    ctx->current_scan_results_index = 0;
+}
+
+static void wfq_init_context(wfq_scan_context *ctx)
+{
+    if (!ctx)
+    {
+        DMOT_LOGE("The context supplied was empty.");
+        return;
+    }
+    memset(ctx->current_scan_results, 0, sizeof(ctx->current_scan_results));
+    ctx->current_scan_results_index = 0;
+    memset(ctx->largest_scan_results, 0, sizeof(ctx->largest_scan_results));
+    ctx->largest_scan_results_index = 0;
+    ctx->sock = NULL;
+    ctx->family_id = -1;
+    ctx->ifindex = 0;
+    ctx->results = ctx->current_scan_results;
+    ctx->n_max_results = WFQ_WLAN_SCAN_MAX_RESULTS;
+    ctx->n_count_results = ctx->current_scan_results_index;
+    ctx->done = false;
+    ctx->error = 0;
+    ctx->overflow = false;
+    ctx->msg_dealloc_required = false;
+    ctx->msg = NULL;
 }
 
 /*
@@ -175,30 +244,18 @@ static int wfq_cb_get_scan_valid(struct nl_msg *msg, void *arg)
 
 wfq_signal *wfq_scan_wlan(const char *ifname)
 {
+    static wfq_scan_context ctx; // static because we return a member to the outside world and need it in memory
     const char *device = (ifname && ifname[0] != '\0') ? ifname : WFQ_DEFAULT_WLAN_IFACE;
 
     // initialize our context
-    memset(scan_results, 0, sizeof(scan_results));
-    scan_results_index = 0;
-    wfq_scan_context ctx =
-        {
-            .sock = NULL,
-            .family_id = -1,
-            .ifindex = 0,
-            .results = scan_results,
-            .n_max_results = WFQ_WLAN_SCAN_MAX_RESULTS,
-            .n_count_results = scan_results_index,
-            .done = false,
-            .error = 0,
-            .overflow = false,
-        };
+    wfq_init_context(&ctx);
 
     // retrieve the numeric index of the wireless interface
     ctx.ifindex = if_nametoindex(device);
     if (ctx.ifindex == 0)
     {
         DMOT_LOGE("wfq_scan_wlan: unknown interface '%s': %s", device, strerror(errno));
-        return scan_results;
+        return ctx.current_scan_results;
     }
 
     // allocate and initalize a nl_sock struct
@@ -206,7 +263,7 @@ wfq_signal *wfq_scan_wlan(const char *ifname)
     if (!ctx.sock)
     {
         DMOT_LOGE("wfq_scan_wlan: nl_socket_alloc failed");
-        return scan_results;
+        return ctx.current_scan_results;
     }
 
     // bind nl_sock struct to the generic Netlink subsystem in the kernel
@@ -251,23 +308,23 @@ wfq_signal *wfq_scan_wlan(const char *ifname)
         goto cleanup;
     }
 
-    struct nl_msg *msg;
     int loop_counter = 0;
     bool trigger_scan_required = true;
-    bool msg_dealloc_required = false;
     long retrigger_iterations = 100;
     long wait_start_ms = dmot_time_now_ms();
 
     do
     {
+        wfq_iteration_clear_trackers(&ctx);
+
         // allocate an expandable Netlink message buffer
-        msg = nlmsg_alloc();
-        if (!msg)
+        ctx.msg = nlmsg_alloc();
+        if (!ctx.msg)
         {
             DMOT_LOGE("wfq_scan_wlan: nlmsg_alloc failed");
             goto cleanup;
         }
-        msg_dealloc_required = true;
+        ctx.msg_dealloc_required = true;
 
         if (trigger_scan_required)
         {
@@ -280,19 +337,19 @@ wfq_signal *wfq_scan_wlan(const char *ifname)
                 goto cleanup;
             }
             DMOT_LOGD("Fresh scan triggered. loop_counter=%d, scan_results_index=%d, largest_scan_results_index=%d",
-                      loop_counter, scan_results_index, largest_scan_results_index);
+                      loop_counter, ctx.current_scan_results_index, ctx.largest_scan_results_index);
         }
 
         // write the generic-netlink header into the message buffer and request a scan and dump
-        void *hdr = genlmsg_put(msg, 0, 0, ctx.family_id, 0, NLM_F_DUMP, NL80211_CMD_GET_SCAN, 0);
-        if (hdr == NULL)
+        void *hdr = genlmsg_put(ctx.msg, 0, 0, ctx.family_id, 0, NLM_F_DUMP, NL80211_CMD_GET_SCAN, 0);
+        if (!hdr)
         {
             DMOT_LOGE("wfq_scan_wlan: genlmsg_put failed");
             goto cleanup;
         }
 
         // append the right metadata to the message so that the kernel can parse it
-        rc = nla_put_u32(msg, NL80211_ATTR_IFINDEX, (uint32_t)ctx.ifindex);
+        rc = nla_put_u32(ctx.msg, NL80211_ATTR_IFINDEX, (uint32_t)ctx.ifindex);
         if (rc != 0)
         {
             DMOT_LOGE("wfq_scan_wlan: nla_put_u32 failed: %s", nl_geterror(rc));
@@ -300,32 +357,27 @@ wfq_signal *wfq_scan_wlan(const char *ifname)
         }
 
         // finalize the message (padding, header lengths) and send it through the socket
-        rc = nl_send_auto(ctx.sock, msg);
+        rc = nl_send_auto(ctx.sock, ctx.msg);
         if (rc < 0)
         {
             DMOT_LOGE("wfq_scan_wlan: nl_send_auto failed: %s", nl_geterror(rc));
             goto cleanup;
         }
 
-        // block until the completion callback or error callback returns
-        while (!ctx.done && ctx.error == 0)
-        {
-            rc = nl_recvmsgs_default(ctx.sock);
-            if (rc < 0)
-                ctx.error = rc;
-        }
+        if (!wfq_block_until_called(&ctx))
+            goto cleanup;
 
-        scan_results_index = ctx.n_count_results;
-        scan_results[scan_results_index] = (wfq_signal){0.0, 0.0}; // sentinel
+        ctx.current_scan_results_index = ctx.n_count_results;
+        ctx.current_scan_results[ctx.current_scan_results_index] = (wfq_signal){0.0, 0.0}; // sentinel
 
-        if (scan_results_index > largest_scan_results_index)
+        if (ctx.current_scan_results_index > ctx.largest_scan_results_index)
         {
-            for (size_t i = 0; i < scan_results_index; ++i)
+            for (size_t i = 0; i < ctx.current_scan_results_index; ++i)
             {
-                largest_scan_results[i].freq_mhz = scan_results[i].freq_mhz;
-                largest_scan_results[i].strength_dbm = scan_results[i].strength_dbm;
+                ctx.largest_scan_results[i].freq_mhz = ctx.current_scan_results[i].freq_mhz;
+                ctx.largest_scan_results[i].strength_dbm = ctx.current_scan_results[i].strength_dbm;
             }
-            largest_scan_results_index = scan_results_index;
+            ctx.largest_scan_results_index = ctx.current_scan_results_index;
         }
 
         // I had trouble with the initial scan's callback, hence sleep-based logic.
@@ -339,22 +391,21 @@ wfq_signal *wfq_scan_wlan(const char *ifname)
             trigger_scan_required = true;
         }
 
-        nlmsg_free(msg);
-        msg_dealloc_required = false;
+        nlmsg_free(ctx.msg);
+        ctx.msg_dealloc_required = false;
 
     } while (
-        (largest_scan_results_index <= 1) || // This will run forever if there is only one signal or none
         ((dmot_time_now_ms() - wait_start_ms) < WFQ_WLAN_SCAN_TIMEOUT_MS &&
-         largest_scan_results_index < WFQ_WLAN_SCAN_QUOTA_MIN / 2));
+         ctx.largest_scan_results_index < WFQ_WLAN_SCAN_QUOTA_MIN / 2));
 
     if (ctx.error == 0)
-        DMOT_LOGD("wfq_scan_wlan: captured %zu signals.", scan_results_index);
+        DMOT_LOGD("wfq_scan_wlan: captured %zu signals.", ctx.current_scan_results_index);
     else
         DMOT_LOGE("wfq_scan_wlan: scan failed: %s", nl_geterror(ctx.error));
 
 cleanup:
-    if (msg_dealloc_required)
-        nlmsg_free(msg);
+    if (ctx.msg_dealloc_required)
+        nlmsg_free(ctx.msg);
     wfq_cleanup_socket(&ctx.sock);
-    return largest_scan_results;
+    return ctx.largest_scan_results;
 }
