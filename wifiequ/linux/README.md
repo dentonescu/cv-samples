@@ -13,7 +13,7 @@ sudo apt install -y build-essential libcmocka-dev libmicrohttpd-dev libnl-3-dev 
 make clean all              # or simply: make
 ```
 
-## Install -- SystemD (optional)
+## Install -- systemd (optional)
 
 Unit installs to `linux/etc/systemd/system/wifiequd.service` and makes sure the `wifiequ` user exists.
 
@@ -44,5 +44,5 @@ Artifacts and logs are written under `bin/` and `logs/`.
 
 ## Screenshots
 
-SystemD service logs incoming JSON readings:
+systemd service logs incoming JSON readings:
 ![Readings logged in the WiFiEqu daemon](img/wfq-daemon-readings.png)
