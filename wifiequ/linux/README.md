@@ -38,6 +38,10 @@ Artifacts and logs are written under `bin/` and `logs/`.
 - Notes I made during development of this project can be found here: [Development notes](NOTES.md)
 - Live sampler uses nl80211 scan dump; aggregates **max dBm** per frequency and maps into configured bins. (*in progress*)
 
+## Examples
+
+[Documentation](examples/README.md) for the examples provided with this project.
+
 ## Screenshots
 
 SystemD service logs incoming JSON readings:
