@@ -12,8 +12,8 @@ This module demonstrates my ability to:
 ## Modules
 | Module | Description |
 |---------|--------------|
-| `dmot-core` | Core utilities: I/O, time, URIs, regex, and collections. |
-| `dmot-servlet-javax` | Legacy `javax.servlet` helpers, isolated from Jakarta-specific code. |
+| [dmot-core](dmot-core/README.md) | Core utilities: I/O, time, URIs, regex, and collections. |
+| [dmot-servlet-javax](dmot-servlet-javax/README.md) | Legacy `javax.servlet` helpers, isolated from Jakarta-specific code. |
 
 ## Build & Versioning
 Ant is used as an orchestrator in this project. However, the individual sub-projects can be built directly with Maven.
