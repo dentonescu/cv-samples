@@ -22,7 +22,7 @@ nl80211 scan  -->  scanner (wlanscan.c)  -->  channel bins (config.c)
 |------|--------|------------------|
 | Scanner | `src/wlan/wlanscan.c` | Builds `wfq_signal` snapshots using libnl, handles scan retries, and smooths callbacks. |
 | Configuration | `src/config/config.c` | Reads `etc/wifiequd.conf`, validates channel bins, and provides frequency-to-channel lookups. |
-| UI integration | `examples/ex_wlanscan.c` | Bridges scanner output into the `dmot_ui_equalizer` from [libdmotservices](../README.md), including label management per channel. |
+| UI integration | `examples/ex_wlanscan.c` | Bridges scanner output into the `dmot_ui_equalizer` from [libdmotservices](../../libdmotservices/README.md), including label management per channel. |
 | Mock/live data | `src/mock/mocksignal.c`, `src/wlan/wifisignal.c` | Provide interchangeable data sources for demos and daemon mode. |
 | Daemon | `src/wifiequd.c` | Hosts the refresh loop, publishes JSON, and manages signal sources. |
 
