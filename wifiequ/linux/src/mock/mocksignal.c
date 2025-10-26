@@ -43,6 +43,7 @@ void *wfq_task_sine_wave_generator(void *arg)
         pthread_mutex_unlock(&sample_mx);
         dmot_time_sleep_ms(refresh_wait_ms);
     }
+    return NULL;
 }
 
 void wfq_sine_wave_generator_init(void)
@@ -64,7 +65,13 @@ void wfq_sine_wave_generator_init_with_options(wfq_mock_signal_options *options)
         return;
     }
     wfq_sine_wave_generator_stop();
-    for (int chan = 1; chan <= n_channels; ++chan)
+    int requested = options->n_channels;
+    if (requested < 1)
+        requested = 1;
+    if (requested > WFQ_EQU_N_CHANNELS)
+        requested = WFQ_EQU_N_CHANNELS;
+    n_channels = requested;
+    for (int chan = 1; chan <= requested; ++chan)
     {
         sample.channels_dbm[chan - 1] = DMOT_UI_EQU_DBM_LOWEST;
     }

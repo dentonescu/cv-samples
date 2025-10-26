@@ -24,7 +24,7 @@
 
 static volatile sig_atomic_t g_running = 1;
 static volatile sig_atomic_t g_reload = 0;
-static wfq_options s_options;
+static wfq_config_context s_config_ctx;
 
 static void on_signal(int sig)
 {
@@ -57,8 +57,8 @@ static void daemon_announce(FILE *out)
     dmot_ui_ostream_repeat_pattern_endl(out, "=", 80);
     fputs("wifiequd\n", out);
     dmot_ui_ostream_repeat_pattern_endl(out, "-", 80);
-    fprintf(out, "%-25s %s\n", WFQ_PARAM_MOCK, (s_options.mock ? "true" : "false"));
-    fprintf(out, "%-25s %d\n", WFQ_PARAM_HTTP_PORT, s_options.port);
+    fprintf(out, "%-25s %s\n", WFQ_PARAM_MOCK, (s_config_ctx.opt.mock ? "true" : "false"));
+    fprintf(out, "%-25s %d\n", WFQ_PARAM_HTTP_PORT, s_config_ctx.opt.port);
     dmot_ui_ostream_repeat_pattern_endl(out, "=", 80);
     fputs("\n", out);
 }
@@ -66,7 +66,7 @@ static void daemon_announce(FILE *out)
 static void set_up_signal_source(void)
 {
     DMOT_LOGD("Setting up the signal source...");
-    if (s_options.mock)
+    if (s_config_ctx.opt.mock)
     {
         wfq_mock_signal_options o;
         o.n_channels = WFQ_EQU_N_CHANNELS;
@@ -84,7 +84,7 @@ static void set_up_signal_source(void)
 static void tear_down_signal_source(void)
 {
     DMOT_LOGD("Tearing down the signal source...");
-    if (s_options.mock)
+    if (s_config_ctx.opt.mock)
     {
         wfq_sine_wave_generator_stop();
     }
@@ -98,7 +98,7 @@ static void publish_reading(void)
 {
     static long long prev_timestamp = -1;
     char json[8192];
-    wfq_sample sample = (s_options.mock ? wfq_sine_wave_generator_read() : wfq_wifi_signal_read());
+    wfq_sample sample = (s_config_ctx.opt.mock ? wfq_sine_wave_generator_read() : wfq_wifi_signal_read());
     wfq_sample2json(&sample, json, sizeof json);
     if (sample.timestamp_ms > prev_timestamp)
     {
@@ -109,7 +109,7 @@ static void publish_reading(void)
 
 static void load_config(void)
 {
-    if (!wfq_config_read(&s_options)) {
+    if (!wfq_config_read(&s_config_ctx)) {
         DMOT_LOGE("Failed to read the configuration file at: %s", WFQ_CONFIG_PATH);
         exit(EXIT_FAILURE);
     }

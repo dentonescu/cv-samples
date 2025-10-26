@@ -15,7 +15,8 @@ extern "C"
 #define DMOT_UI_EQU_DBM_AMPLITUDE (DMOT_UI_EQU_DBM_HIGHEST - DMOT_UI_EQU_DBM_LOWEST)
 #define DMOT_UI_EQU_REFRESH_WAIT_MS 50
 #define DMOT_UI_EQU_SMOOTHING_CONSTRAINT (0.1 * DMOT_UI_EQU_DBM_AMPLITUDE) // no input can cause a jump greater than this value
-#define DMOT_UI_EQU_MAX_CHAN 16
+#define DMOT_UI_EQU_DEFAULT_N_CHAN 16
+#define DMOT_UI_EQU_MAX_CHAN 1024
 
     // Represents a single channel of the equalizer
     // @param id            Channel ID. E.g., 1
@@ -46,15 +47,17 @@ extern "C"
     // @param forever_mode              If true, continuously redraws the equalizer until a stop signal is received. Otherwise, draws only once.
     // @param permit_rendering          If true, allows the equalizer to be drawn. Otherwise, stops rendering of the equalizer.
     // @param refresh_wait_ms           Delay between each redraw cycle.
+    // @param render_only_named_chans   Render only named channels.
     // @param smoothing_constraint      Maximum single movement in dBm permitted for a channel. Prevents jerky equalizer movements.
     struct dmot_ui_equ_properties
     {
         size_t channels_available;
         size_t col_width;
-        struct dmot_ui_eq_channel channels[DMOT_UI_EQU_MAX_CHAN];
+        struct dmot_ui_eq_channel channels[DMOT_UI_EQU_MAX_CHAN + 1];
         bool forever_mode;
         bool permit_rendering;
         long refresh_wait_ms;
+        bool render_only_named_chans;
         double smoothing_constraint;
     };
 
@@ -104,6 +107,12 @@ extern "C"
     // param eq         Equalizer handle.
     void dmot_ui_equalizer_forbid_rendering(dmot_ui_eq *eq);
 
+    // Hides or reveals channels without labels. By default, channels without labels are visible.
+    // @param eq        Equalizer handle.
+    // @param hide      If true, hides channels without labels. Otherwise, all channels will be rendered.
+    // @return          true if the value was set, false otherwise.
+    bool dmot_ui_equalizer_hide_chans_without_labels(dmot_ui_eq *eq, bool hide);
+
     // Permits the equalizer to be rendered.
     // param eq         Equalizer handle.
     void dmot_ui_equalizer_permit_rendering(dmot_ui_eq *eq);
@@ -121,17 +130,23 @@ extern "C"
     // @param channel   Channel id: 1-16.
     // @param value     Input value in dBm.
     // @return          true if the value was set, false otherwise.
-    bool dmot_ui_equalizer_set_channel_input_value(dmot_ui_eq *eq, int channel, double value);
+    bool dmot_ui_equalizer_set_channel_input_value(dmot_ui_eq *eq, size_t channel, double value);
 
     // Sets a short name for a channel with a maximum length of DMOT_UI_EQU_CH_NAME_WIDTH
     // @param eq        Equalizer handle.
     // @param chan      Channel number. E.g. 1, 2, 3 ...
     // @param name      Label for the channel.
     // @return          true if the name was set, false otherwise.
-    bool dmot_ui_equalizer_set_chanel_name(dmot_ui_eq *eq, int chan, const char *name);
+    bool dmot_ui_equalizer_set_channel_name(dmot_ui_eq *eq, size_t chan, const char *name);
 
+    // Set the number of channels available.
+    // @param eq        Equalizer handle.
+    // @param n_chan    Number of channels available. E.g. 16
+    // @return          true if the value was set, false otherwise.
+    bool dmot_ui_equalizer_set_channels_available(dmot_ui_eq *eq, size_t n_chan);
 
     // Sets how many columns wide the equalizer should be.
+    // @param eq        Equalizer handle.
     // @param cols      Columns: e.g. 100
     // @return          true if the value was set, false otherwise.
     bool dmot_ui_equalizer_set_width(dmot_ui_eq *eq, int cols);

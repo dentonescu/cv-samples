@@ -1,7 +1,7 @@
 
 #ifndef DMOT_VERSION_H
 #define DMOT_VERSION_H
-#define DMOT_VERSION "0.2.1"
+#define DMOT_VERSION "0.2.8"
 
 #ifdef __cplusplus
 extern "C"

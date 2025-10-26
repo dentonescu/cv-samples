@@ -5,6 +5,7 @@
 #include <strings.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include "dmot/datatypes.h"
 #include "dmot/ui.h"
 #include "dmot/log.h"
 #include "dmot/time.h"
@@ -29,14 +30,14 @@ static const char *ansi_reset = "\e[0m";
 static const char *ansi_yellow = "\e[0;33m";
 static const char *ansi_white = "\e[0;37m";
 
-static double equ_read_channel_raw(dmot_ui_eq *eq, int channel)
+static double equ_read_channel_raw(dmot_ui_eq *eq, size_t channel)
 {
     if (channel < 1 || channel > DMOT_UI_EQU_MAX_CHAN)
         return NAN;
     return eq->equ_properties.channels[channel - 1].value;
 }
 
-static double equ_read_channel_smoothed(dmot_ui_eq *eq, int channel)
+static double equ_read_channel_smoothed(dmot_ui_eq *eq, size_t channel)
 {
     if (channel < 1 || channel > DMOT_UI_EQU_MAX_CHAN)
         return NAN;
@@ -54,7 +55,7 @@ static char *equ_power_color(double value_dbm)
     return "red";
 }
 
-static void equ_write_channel(dmot_ui_eq *eq, int channel, double value, double smoothed)
+static void equ_write_channel(dmot_ui_eq *eq, size_t channel, double value, double smoothed)
 {
     eq->equ_properties.channels[channel - 1].id = channel;
     eq->equ_properties.channels[channel - 1].value = value;
@@ -63,7 +64,7 @@ static void equ_write_channel(dmot_ui_eq *eq, int channel, double value, double 
 
 static void equ_render(dmot_ui_eq *eq, bool smoothed, int redraws)
 {
-    const int rows_used = eq->equ_properties.channels_available + 6;
+    int rendered_rows = 0;
     for (int i = 0; i < redraws; ++i)
     {
         if (!eq->equ_properties.permit_rendering)
@@ -71,16 +72,19 @@ static void equ_render(dmot_ui_eq *eq, bool smoothed, int redraws)
         // if this is a redraw, clear the previous drawing and go back to the start position
         if (i > 0)
         {
-            for (int j = 0; j < rows_used; ++j)
+            for (int j = 0; j < rendered_rows; ++j)
             {
                 dmot_ui_ansi_move_cursor_up(1);
                 dmot_ui_ansi_clear_row();
             }
             dmot_ui_ansi_move_cursor_to_start_of_row();
         }
+        rendered_rows = 0;
         fprintf(eq->out, "%s\n", ansi_reset);
+        ++rendered_rows;
         // fixed width channel column, so fixed width header
         dmot_ui_ostream_repeat_pattern_endl(eq->out, draw_horiz_thin_line, eq->equ_properties.col_width);
+        ++rendered_rows;
         const char *signal_raw = "Raw signal";
         const char *signal_smoothed = "Smoothed signal";
         char channel_header[DMOT_UI_EQU_CH_NAME_WIDTH + 1];
@@ -91,15 +95,23 @@ static void equ_render(dmot_ui_eq *eq, bool smoothed, int redraws)
         fprintf(eq->out, "%s | %s (dBm)\n",
                 channel_header,
                 (smoothed ? signal_smoothed : signal_raw));
+        ++rendered_rows;
         dmot_ui_ostream_repeat_pattern_endl(eq->out, draw_horiz_thin_line, eq->equ_properties.col_width);
+        ++rendered_rows;
         // display the channels and the power bars
         for (size_t chan = 1; chan <= eq->equ_properties.channels_available; ++chan)
         {
             char channel_label[DMOT_UI_EQU_CH_NAME_WIDTH + 1];
             if (eq->equ_properties.channels[chan - 1].ch_name[0] == '\0')
-                snprintf(channel_label, sizeof channel_label, "%zu", chan);
+            {
+                if (eq->equ_properties.render_only_named_chans)
+                    continue;                                               // skip this channel if we shouldn't render channels without labels
+                snprintf(channel_label, sizeof channel_label, "%zu", chan); // just show the channel number
+            }
             else
+            {
                 snprintf(channel_label, sizeof channel_label, "%s", eq->equ_properties.channels[chan - 1].ch_name);
+            }
             const int label_len = strlen(channel_label);
             if (label_len < DMOT_UI_EQU_CH_NAME_WIDTH)
             {
@@ -116,14 +128,17 @@ static void equ_render(dmot_ui_eq *eq, bool smoothed, int redraws)
             fputs(ansi_reset, eq->out);
             fprintf(eq->out, " %0.1f dBm", value);
             fputc('\n', eq->out);
+            ++rendered_rows;
         }
         dmot_ui_ostream_repeat_pattern_endl(eq->out, draw_horiz_thin_line, eq->equ_properties.col_width);
+        ++rendered_rows;
         fprintf(eq->out, "Legend:  %sweak%s  •  %smoderate%s  •  %sstrong%s  •  %svery strong%s",
                 ansi_red, ansi_reset,
                 ansi_yellow, ansi_reset,
                 ansi_green, ansi_reset,
                 ansi_blue, ansi_reset);
         fprintf(eq->out, "%s\n", ansi_reset);
+        ++rendered_rows;
         dmot_time_sleep_ms((redraws <= 1) ? 0 : eq->equ_properties.refresh_wait_ms);
     }
 }
@@ -203,17 +218,26 @@ void dmot_ui_ostream_repeat_pattern_endl(FILE *out, const char *p, size_t n)
     fputc('\n', out);
 }
 
+bool dmot_ui_equalizer_hide_chans_without_labels(dmot_ui_eq *eq, bool hide)
+{
+    if (!eq)
+        return false;
+    eq->equ_properties.render_only_named_chans = hide;
+    return true;
+}
+
 void dmot_ui_equalizer_init(dmot_ui_eq *eq)
 {
     eq->out = stdout;
-    eq->equ_properties.channels_available = DMOT_UI_EQU_MAX_CHAN;
-    for (int chan = 1; chan <= DMOT_UI_EQU_MAX_CHAN; ++chan)
+    eq->equ_properties.channels_available = DMOT_UI_EQU_DEFAULT_N_CHAN;
+    for (size_t chan = 1; chan <= DMOT_UI_EQU_MAX_CHAN; ++chan)
     {
         memset(eq->equ_properties.channels[chan - 1].ch_name, '\0', sizeof eq->equ_properties.channels[chan - 1].ch_name);
         equ_write_channel(eq, chan, DMOT_UI_EQU_DBM_LOWEST, DMOT_UI_EQU_DBM_LOWEST);
     }
     eq->equ_properties.col_width = DMOT_UI_EQU_COL_WIDTH;
     eq->equ_properties.forever_mode = true;
+    eq->equ_properties.render_only_named_chans = false;
     eq->equ_properties.permit_rendering = true;
     eq->equ_properties.refresh_wait_ms = DMOT_UI_EQU_REFRESH_WAIT_MS;
     eq->equ_properties.smoothing_constraint = DMOT_UI_EQU_SMOOTHING_CONSTRAINT;
@@ -234,7 +258,7 @@ void dmot_ui_equalizer_render_smoothed(dmot_ui_eq *eq)
     equ_render(eq, true, redraws);
 }
 
-bool dmot_ui_equalizer_set_channel_input_value(dmot_ui_eq *eq, int channel, double value)
+bool dmot_ui_equalizer_set_channel_input_value(dmot_ui_eq *eq, size_t channel, double value)
 {
     if (channel < 1 || channel > DMOT_UI_EQU_MAX_CHAN)
         return false;
@@ -254,12 +278,20 @@ bool dmot_ui_equalizer_set_channel_input_value(dmot_ui_eq *eq, int channel, doub
     return true;
 }
 
-bool dmot_ui_equalizer_set_chanel_name(dmot_ui_eq *eq, int chan, const char *name)
+bool dmot_ui_equalizer_set_channel_name(dmot_ui_eq *eq, size_t chan, const char *name)
 {
     if (!name || chan < 1 || chan > DMOT_UI_EQU_MAX_CHAN || strlen(name) > DMOT_UI_EQU_CH_NAME_WIDTH)
         return false;
     strncpy(eq->equ_properties.channels[chan - 1].ch_name, name, sizeof(eq->equ_properties.channels[chan - 1].ch_name));
     eq->equ_properties.channels[chan - 1].ch_name[sizeof eq->equ_properties.channels[chan - 1].ch_name - 1] = '\0';
+    return true;
+}
+
+bool dmot_ui_equalizer_set_channels_available(dmot_ui_eq *eq, size_t n_chan)
+{
+    if (n_chan < 1 || n_chan > DMOT_UI_EQU_MAX_CHAN) // set up to the buffer size
+        return false;
+    eq->equ_properties.channels_available = n_chan;
     return true;
 }
 

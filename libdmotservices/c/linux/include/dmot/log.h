@@ -10,6 +10,7 @@ extern "C"
 
     typedef enum
     {
+        DMOT_LOG_OFF = -1,
         DMOT_LOG_ERROR = 0,
         DMOT_LOG_WARN = 1,
         DMOT_LOG_INFO = 2,

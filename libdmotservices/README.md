@@ -13,8 +13,8 @@ This project demonstrates my ability to:
 ## Structure
 | Path | Description |
 |------|--------------|
-| `c/` | Portable C modules (signals, logging, terminal equalizer). |
-| `java/` | Java modules (`dmot-core` and `dmot-servlet-javax`) with Ant/Maven builds. |
+| [`c/`](c/README.md) | Portable C modules (signals, logging, terminal equalizer). |
+| [`java/`](java/README.md) | Java modules (`dmot-core` and `dmot-servlet-javax`) with Ant/Maven builds. |
 | `VERSION` | Central version file used across all subprojects. |
 | `Makefile` | Top-level orchestrator that builds, tests, and runs examples across languages. |
 
@@ -23,6 +23,7 @@ This project demonstrates my ability to:
 - Full test coverage with CMocka (C) and JUnit (Java).
 - Minimal dependencies and clear build instructions.
 - API-first mindset: code is structured for reusability and clarity.
+- Featured sample: an ANSI equalizer capable of labelled channels, also used in my WiFiEqu Linux monitor project.
 
 ## Build Overview
 ```bash

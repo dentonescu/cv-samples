@@ -1,7 +1,7 @@
 
 #ifndef WFQ_VERSION_H
 #define WFQ_VERSION_H
-#define WFQ_VERSION "0.2.2"
+#define WFQ_VERSION "0.2.7"
 
 #ifdef __cplusplus
 extern "C"

@@ -21,24 +21,24 @@ static void test_logger_levels_respected(void **state)
     (void)state;
     char buf[8192];
 
-    FILE *fpLog = fopen("test_log.log", "w+");
-    assert_non_null(fpLog);
+    FILE *fp_log = fopen("test_log.log", "w+");
+    assert_non_null(fp_log);
 
-    dmot_log_level testLvl = DMOT_LOG_WARN;
+    dmot_log_level test_level = DMOT_LOG_WARN;
     dmot_log_set_level(DMOT_LOG_WARN);
-    dmot_log_set_file(fpLog);
+    dmot_log_set_file(fp_log);
 
-    DMOT_LOGD("debug line for log level %d should NOT appear", testLvl);
-    DMOT_LOGI("info line for log level %d should NOT appear", testLvl);
-    DMOT_LOGW("warn line for log level %d should appear", testLvl);
-    DMOT_LOGE("error line for log level %d should appear", testLvl);
+    DMOT_LOGD("debug line for log level %d should NOT appear", test_level);
+    DMOT_LOGI("info line for log level %d should NOT appear", test_level);
+    DMOT_LOGW("warn line for log level %d should appear", test_level);
+    DMOT_LOGE("error line for log level %d should appear", test_level);
 
-    fflush(fpLog);
-    fseek(fpLog, 0, SEEK_SET);
+    fflush(fp_log);
+    fseek(fp_log, 0, SEEK_SET);
 
-    size_t n = fread(buf, 1, sizeof(buf) - 1, fpLog);
+    size_t n = fread(buf, 1, sizeof(buf) - 1, fp_log);
     buf[n] = '\0';
-    fclose(fpLog);
+    fclose(fp_log);
 
     assert_non_null(strstr(buf, dmot_log_level_name(DMOT_LOG_ERROR)));
     assert_non_null(strstr(buf, dmot_log_level_name(DMOT_LOG_WARN)));

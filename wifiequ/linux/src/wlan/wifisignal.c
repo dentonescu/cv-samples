@@ -35,6 +35,7 @@ void *wfq_task_wifi_poll(void *arg)
         pthread_mutex_unlock(&sample_mx);
         dmot_time_sleep_ms(refresh_wait_ms);
     }
+    return NULL;
 }
 
 wfq_sample wfq_wifi_signal_read(void)

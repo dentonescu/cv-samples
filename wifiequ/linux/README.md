@@ -1,48 +1,57 @@
 # WiFiEqu (Linux)
 
-Builds the Linux daemon (`wifiequd`) and terminal client examples.
+WiFiEqu is a console-first Wi-Fi spectrum monitor for Linux.  
+It pairs a scanning daemon (`wifiequd`) with ANSI-rendered visualisations powered by the `libdmotservices` equalizer.
 
-## Build Prerequisites
+- [Architecture overview](ARCHITECTURE.md)
+- [Example walkthroughs](examples/README.md)
+- [Development notes](NOTES.md)
+
+## Quick start
+
+### Prerequisites
 ```bash
 sudo apt update
-sudo apt install -y build-essential libcmocka-dev libmicrohttpd-dev libnl-3-dev libnl-genl-3-dev
+sudo apt install -y build-essential libcmocka-dev \
+     libmicrohttpd-dev libnl-3-dev libnl-genl-3-dev
 ```
 
-## Build
-```sh
-make clean all              # or simply: make
+### Build
+```bash
+make            # builds the daemon, library, and examples
+make clean all  # full rebuild
 ```
 
-## Install -- systemd (optional)
+### Run the demos
+```bash
+make examples       # builds CLI examples, including ex_wlanscan
+make example-demo   # launches the highlight demos
+```
 
-Unit installs to `linux/etc/systemd/system/wifiequd.service` and makes sure the `wifiequ` user exists.
+Artifacts land in `bin/`, logs in `logs/`.
 
-```sh
-sudo setup-user             # create 'wifiequ' user and 'wifieq' group
-sudo make install           # creates user and group and installs systemd unit and binary
+## Optional systemd install
+
+The helper target installs a service unit and ensures the `wifiequ` user/group exist:
+
+```bash
+sudo ./setup-user          # create service account
+sudo make install          # install binaries, config, and systemd unit
 sudo systemctl enable --now wifiequd
 ```
 
-## Test & Demos
-```sh
-make tests                  # builds the tests
-make examples               # builds the examples
-make test                   # runs the unit tests
-make example-demo           # runs the demos
-```
+Remove with `sudo make uninstall`.
 
-Artifacts and logs are written under `bin/` and `logs/`.
+## Core components
 
-## Development notes
+- **Daemon (`src/wifiequd.c`)** – gathers Wi-Fi samples, publishes JSON, and optionally serves HTTP via libmicrohttpd.
+- **Scanner (`src/wlan/wlanscan.c`)** – drives `nl80211` via libnl, aggregates the strongest signal per configured channel bin, and exposes the results to the UI.
+- **Configuration (`src/config/config.c`)** – parses `etc/wifiequd.conf`, validates channel ranges, and maps frequencies to Wi-Fi channels.
+- **Equalizer UI (`examples/ex_wlanscan.c`)** – renders live channel strengths using the reusable terminal equalizer from libdmotservices.
 
-- Notes I made during development of this project can be found here: [Development notes](NOTES.md)
-- Live sampler uses nl80211 scan dump; aggregates **max dBm** per frequency and maps into configured bins. (*in progress*)
-
-## Examples
-
-[Documentation](examples/README.md) for the examples provided with this project.
+See [ARCHITECTURE.md](ARCHITECTURE.md) for the data flow between these pieces.
 
 ## Screenshots
 
-systemd service logs incoming JSON readings:
+`wifiequd` logging JSON readings:
 ![Readings logged in the WiFiEqu daemon](img/wfq-daemon-readings.png)

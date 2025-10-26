@@ -17,6 +17,8 @@ static FILE *g_fp = NULL;
 
 void dmot_log(dmot_log_level lvl, const char *fmt, ...)
 {
+    if (lvl <= DMOT_LOG_OFF)
+        return;
     if (lvl > g_lvl)
         return;
     FILE *fp = g_fp ? g_fp : stderr;
@@ -43,6 +45,8 @@ const char *dmot_log_level_name(dmot_log_level level)
         return "WARN";
     if (level == DMOT_LOG_ERROR)
         return "ERROR";
+    if (level == DMOT_LOG_OFF)
+        return "OFF";
     return "";
 }
 

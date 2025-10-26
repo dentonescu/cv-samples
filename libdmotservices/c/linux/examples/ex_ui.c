@@ -9,7 +9,8 @@
 #include "dmot/signals.h"
 #include "dmot/ui.h"
 
-static const int channels = DMOT_UI_EQU_MAX_CHAN;
+static const int n_chan_smoothed = 16;
+static const int n_chan_raw = 20;
 static const int default_cycles = 50;
 static const long default_sleep_ms = 150;
 static dmot_ui_eq eq;
@@ -32,7 +33,7 @@ void *task_random_values(void *arg)
     dmot_ui_equalizer_permit_rendering(&eq);
     for (int i = 0; i < default_cycles; ++i)
     {
-        for (int chan = 1; chan <= channels; ++chan)
+        for (int chan = 1; chan <= n_chan_smoothed; ++chan)
         {
             const double input_dbm = dmot_math_rand_double(DMOT_UI_EQU_DBM_LOWEST, DMOT_UI_EQU_DBM_HIGHEST);
             dmot_ui_equalizer_set_channel_input_value(&eq, chan, input_dbm);
@@ -49,7 +50,7 @@ void *task_sine_values(void *arg)
     dmot_ui_equalizer_permit_rendering(&eq);
     for (int i = 0; i < default_cycles; ++i)
     {
-        for (int chan = 1; chan <= channels; ++chan)
+        for (int chan = 1; chan <= n_chan_raw; ++chan)
         {
             const double input_dbm = dmot_signal_sine_wave_dbm(1.0 / chan, i);
             dmot_ui_equalizer_set_channel_input_value(&eq, chan, input_dbm);
@@ -73,11 +74,12 @@ void example_equalizer_raw()
     puts("\n\n[equalizer_raw]\n");
     dmot_ui_equalizer_init(&eq);
     dmot_ui_equalizer_set_width(&eq, (int)(c_screen.cols * 0.8));
-    for (int chan = 1; chan <= DMOT_UI_EQU_MAX_CHAN; ++chan)
+    dmot_ui_equalizer_set_channels_available(&eq, n_chan_raw);
+    for (int chan = 1; chan <= n_chan_raw; ++chan)
     {
         char ch_name[DMOT_UI_EQU_CH_NAME_WIDTH + 1];
         snprintf(ch_name, sizeof ch_name, "sinwv%02d", chan);
-        dmot_ui_equalizer_set_chanel_name(&eq, chan, ch_name);
+        dmot_ui_equalizer_set_channel_name(&eq, chan, ch_name);
     }
     dmot_ui_equalizer_permit_rendering(&eq);
     pthread_t thread;
@@ -91,6 +93,7 @@ void example_equalizer_smoothed()
     puts("\n\n[equalizer_smoothed]\n");
     dmot_ui_equalizer_init(&eq);
     dmot_ui_equalizer_set_width(&eq, (int)(c_screen.cols * 0.8));
+    dmot_ui_equalizer_set_channels_available(&eq, n_chan_smoothed);
     dmot_ui_equalizer_permit_rendering(&eq);
     pthread_t thread;
     pthread_create(&thread, NULL, task_random_values, NULL);
