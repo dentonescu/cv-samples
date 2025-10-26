@@ -62,7 +62,7 @@ void *task_sine_values(void *arg)
 
 void example_console_details()
 {
-    fputs("\n\n[console_details]\n", stdout);
+    puts("\n\n[console_details]\n");
     const struct dmot_ui_screen_size c_screen = dmot_ui_get_console_size();
     printf("Console: rows = %d, columns = %d\n\n", c_screen.rows, c_screen.cols);
 }
@@ -70,9 +70,15 @@ void example_console_details()
 void example_equalizer_raw()
 {
     const struct dmot_ui_screen_size c_screen = dmot_ui_get_console_size();
-    fputs("\n\n[equalizer_raw]\n", stdout);
+    puts("\n\n[equalizer_raw]\n");
     dmot_ui_equalizer_init(&eq);
     dmot_ui_equalizer_set_width(&eq, (int)(c_screen.cols * 0.8));
+    for (int chan = 1; chan <= DMOT_UI_EQU_MAX_CHAN; ++chan)
+    {
+        char ch_name[DMOT_UI_EQU_CH_NAME_WIDTH + 1];
+        snprintf(ch_name, sizeof ch_name, "sinwv%02d", chan);
+        dmot_ui_equalizer_set_chanel_name(&eq, chan, ch_name);
+    }
     dmot_ui_equalizer_permit_rendering(&eq);
     pthread_t thread;
     pthread_create(&thread, NULL, task_sine_values, NULL);
@@ -82,7 +88,7 @@ void example_equalizer_raw()
 void example_equalizer_smoothed()
 {
     const struct dmot_ui_screen_size c_screen = dmot_ui_get_console_size();
-    fputs("\n\n[equalizer_smoothed]\n", stdout);
+    puts("\n\n[equalizer_smoothed]\n");
     dmot_ui_equalizer_init(&eq);
     dmot_ui_equalizer_set_width(&eq, (int)(c_screen.cols * 0.8));
     dmot_ui_equalizer_permit_rendering(&eq);
@@ -94,7 +100,8 @@ void example_equalizer_smoothed()
 int main(void)
 {
     example_console_details();
-    example_equalizer_smoothed();
     example_equalizer_raw();
+    example_equalizer_smoothed();
+    puts("\n");
     return 0;
 }

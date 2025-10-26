@@ -5,6 +5,7 @@
 
 int main(void)
 {
+    puts("[ ex_wlanscan ]");
     const char *iface = getenv("WFQ_IFACE");
     if (!iface)
     {
@@ -20,7 +21,8 @@ int main(void)
         puts("FAILED to retrieve signal information.");
         return EXIT_FAILURE;
     }
-    printf("%-10s %-12s\n", "freq (MHz)", "signal (dBm)");
+    puts("");
+    printf("%-10s %-12s\n", "Freq (MHz)", "Signal (dBm)");
     printf("%-10s %-12s\n", "==========", "============");
     int i = 0;
     while (signals[i].freq_mhz > 0)
@@ -30,5 +32,6 @@ int main(void)
                signals[i].strength_dbm);
         ++i;
     }
+    puts("");
     return EXIT_SUCCESS;
 }

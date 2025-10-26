@@ -5,6 +5,7 @@
 
 int main(void)
 {
+    puts("[ex_signals]");
     for (double t = 0; t < 2 * M_PI; t += 0.4)
     {
         double v = dmot_signal_sine_wave_dbm(0.5, t);

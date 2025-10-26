@@ -8,7 +8,8 @@ extern "C"
 {
 #endif
 
-#define DMOT_UI_EQU_CHAR_WIDTH 40
+#define DMOT_UI_EQU_CH_NAME_WIDTH 8
+#define DMOT_UI_EQU_COL_WIDTH 40
 #define DMOT_UI_EQU_DBM_LOWEST -100.0
 #define DMOT_UI_EQU_DBM_HIGHEST 0.0
 #define DMOT_UI_EQU_DBM_AMPLITUDE (DMOT_UI_EQU_DBM_HIGHEST - DMOT_UI_EQU_DBM_LOWEST)
@@ -16,23 +17,40 @@ extern "C"
 #define DMOT_UI_EQU_SMOOTHING_CONSTRAINT (0.1 * DMOT_UI_EQU_DBM_AMPLITUDE) // no input can cause a jump greater than this value
 #define DMOT_UI_EQU_MAX_CHAN 16
 
+    // Represents a single channel of the equalizer
+    // @param id            Channel ID. E.g., 1
+    // @param ch_name       When set labels the channel with a short name intead of a number.
+    // @param value         Current signal strength on this channel (dBm).
+    // @param smoothed      Average of the past signal strengths with an incremental movement towards the current value.
     struct dmot_ui_eq_channel
     {
-        int id;          // channel id: 1-16
-        double value;    // reading (dBm)
-        double smoothed; // averaged out reading in smooth mode (dBm)
+        int id;
+        char ch_name[DMOT_UI_EQU_CH_NAME_WIDTH + 1];
+        double value;
+        double smoothed;
     };
 
+    // Represents the size of the console window.
+    // @params rows             height in rows
+    // @params cols             width in columns
     struct dmot_ui_screen_size
     {
         int rows;
         int cols;
     };
 
+    // Equalizer properties.
+    // @param channels_available        Number of channels available.
+    // @param col_width                 Number of columns to be used for rendering.
+    // @param channels                  Array of channels.
+    // @param forever_mode              If true, continuously redraws the equalizer until a stop signal is received. Otherwise, draws only once.
+    // @param permit_rendering          If true, allows the equalizer to be drawn. Otherwise, stops rendering of the equalizer.
+    // @param refresh_wait_ms           Delay between each redraw cycle.
+    // @param smoothing_constraint      Maximum single movement in dBm permitted for a channel. Prevents jerky equalizer movements.
     struct dmot_ui_equ_properties
     {
         size_t channels_available;
-        size_t char_width;
+        size_t col_width;
         struct dmot_ui_eq_channel channels[DMOT_UI_EQU_MAX_CHAN];
         bool forever_mode;
         bool permit_rendering;
@@ -104,6 +122,14 @@ extern "C"
     // @param value     Input value in dBm.
     // @return          true if the value was set, false otherwise.
     bool dmot_ui_equalizer_set_channel_input_value(dmot_ui_eq *eq, int channel, double value);
+
+    // Sets a short name for a channel with a maximum length of DMOT_UI_EQU_CH_NAME_WIDTH
+    // @param eq        Equalizer handle.
+    // @param chan      Channel number. E.g. 1, 2, 3 ...
+    // @param name      Label for the channel.
+    // @return          true if the name was set, false otherwise.
+    bool dmot_ui_equalizer_set_chanel_name(dmot_ui_eq *eq, int chan, const char *name);
+
 
     // Sets how many columns wide the equalizer should be.
     // @param cols      Columns: e.g. 100
