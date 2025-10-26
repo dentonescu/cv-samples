@@ -3,6 +3,10 @@
 **libdmotservices-c** provides portable C utilities designed to be simple, reusable, and illustrative.  
 It includes a logging subsystem, signal generation helpers, and a terminal equalizer demo.
 
+### Operating Systems
+
+- [Linux](linux/README.md): C library for Linux
+
 
 ### Project Summary
 This module demonstrates my ability to:
