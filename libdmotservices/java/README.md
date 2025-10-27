@@ -1,7 +1,6 @@
 # libdmotservices (Java)
 
-**libdmotservices-java** contains reusable Java utilities and legacy servlet helpers, built with a focus on clean APIs and minimal dependencies.  
-It’s designed to mirror the structure and maintainability of the C modules while demonstrating multi-language consistency.
+**libdmotservices-java** contains reusable Java utilities and legacy servlet helpers, built with a focus on clean APIs and minimal dependencies. It mirrors the structure of the C modules while demonstrating multi-language consistency.
 
 ## Project Summary
 This module demonstrates my ability to:
@@ -25,16 +24,17 @@ Alternatively, use the top-level `Makefile` to build all components.
 
 **Java baseline:** 17 (compiled with `--release 17`)
 
+Small, reusable Java utilities I’ve built and refined over time. The repository is organized as Maven modules but orchestrated by Ant for convenience (artifact collection, filesystem moves, and centralized `${revision}` propagation).
+
 ## What this demonstrates
 - API-oriented design and modular Java development.
 - Compatibility management between legacy and modern servlet APIs.
 - Build orchestration and cross-language design discipline.
 
-
-Small, reusable Java utilities I’ve built and refined over time.
-The repository is organized as Maven modules but orchestrated by Ant for convenience
-(artifact collection, filesystem moves, and centralized `${revision}` propagation).
-
 ## Screenshot
 ![Java build screenshot](libdmotservices-java.png)
 
+## Related
+
+- Explore [dmot-core](dmot-core/README.md) and [dmot-servlet-javax](dmot-servlet-javax/README.md)
+- Back to [libdmotservices overview](../README.md)

@@ -33,6 +33,7 @@ bool wfq_config_read(wfq_config_context *ctx)
     // defaults
     ctx->opt.port = WFQ_PORT;
     ctx->opt.mock = WFQ_MOCK_MODE;
+    ctx->opt.interface[0] = '\0';
 
     // initialize channel bins
     ctx->n_chan_defined = 0;
@@ -92,6 +93,8 @@ bool wfq_config_read(wfq_config_context *ctx)
                 }
             }
         }
+        else if (strcmp(key, WFQ_PARAM_INTERFACE) == 0)
+            snprintf(ctx->opt.interface, sizeof ctx->opt.interface, "%s", val);
         else if (strcmp(key, WFQ_PARAM_MOCK) == 0)
             ctx->opt.mock = atoi(val) != 0;
         else if (strcmp(key, WFQ_PARAM_HTTP_PORT) == 0)

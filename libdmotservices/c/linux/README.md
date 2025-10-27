@@ -1,6 +1,6 @@
 # libdmotservices (C/Linux)
 
-A Linux-focused static C library built on **libdmotservices-c**, featuring signal utilities, logging, and a text-mode equalizer demo.
+Linux-focused build of **libdmotservices-c**, featuring signal utilities, logging, and a text-mode equalizer demo.
 
 ## Project Summary
 This module demonstrates my ability to:
@@ -41,4 +41,9 @@ make example-demo   # runs example demos
 
 ## Examples
 
-[Examples](examples/README.md)
+- [Example walkthroughs](examples/README.md)
+
+## Related
+
+- Back to [libdmotservices (C)](../README.md)
+- See how the equalizer is used in [WiFiEqu](../../../wifiequ/README.md)

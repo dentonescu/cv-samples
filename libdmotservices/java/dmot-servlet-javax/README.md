@@ -1,8 +1,6 @@
 # libdmotservices-servlet-javax
 
-Utilities for `javax.servlet` environments (Servlet 3.1).  
-This module isolates legacy servlet code for compatibility with older deployments.
-This module is deliberately `javax` for compatibility with older deployments.
+Utilities for `javax.servlet` environments (Servlet 3.1). This module isolates legacy servlet code for compatibility with older deployments.
 
 ## Project Summary
 This submodule demonstrates my ability to:
@@ -29,3 +27,9 @@ _Maven_
   <artifactId>libdmotservices-servlet-javax</artifactId>
   <version>0.1.0</version>
 </dependency>
+```
+
+## Related
+
+- Back to [libdmotservices (Java)](../README.md)
+- Modern utilities live in [dmot-core](../dmot-core/README.md)

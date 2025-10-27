@@ -30,12 +30,13 @@ static long refresh_wait_ms = WFQ_MOCK_SIGNAL_REFRESH_WAIT_MS;
 void *wfq_task_sine_wave_generator(void *arg)
 {
     (void)arg;
-    wfq_sample tmp;
     while (g_running)
     {
+        wfq_sample tmp = {0};
         for (int chan = 1; chan <= n_channels; ++chan)
         {
-            tmp.channels_dbm[chan - 1] = dmot_math_rand_double(DMOT_UI_EQU_DBM_LOWEST, DMOT_UI_EQU_DBM_HIGHEST);
+            tmp.readings[chan - 1].chan_id = chan;
+            tmp.readings[chan - 1].chan_dbm = dmot_math_rand_double(DMOT_UI_EQU_DBM_LOWEST, DMOT_UI_EQU_DBM_HIGHEST);
         }
         tmp.timestamp_ms = dmot_time_now_ms();
         pthread_mutex_lock(&sample_mx);
@@ -52,7 +53,8 @@ void wfq_sine_wave_generator_init(void)
     refresh_wait_ms = WFQ_MOCK_SIGNAL_REFRESH_WAIT_MS;
     for (int chan = 1; chan <= n_channels; ++chan)
     {
-        sample.channels_dbm[chan - 1] = DMOT_UI_EQU_DBM_LOWEST;
+        sample.readings[chan - 1].chan_id = 0;
+        sample.readings[chan - 1].chan_dbm = DMOT_UI_EQU_DBM_LOWEST;
     }
     sample.timestamp_ms = dmot_time_now_ms();
 }
@@ -73,7 +75,8 @@ void wfq_sine_wave_generator_init_with_options(wfq_mock_signal_options *options)
     n_channels = requested;
     for (int chan = 1; chan <= requested; ++chan)
     {
-        sample.channels_dbm[chan - 1] = DMOT_UI_EQU_DBM_LOWEST;
+        sample.readings[chan - 1].chan_id = 0;
+        sample.readings[chan - 1].chan_dbm = DMOT_UI_EQU_DBM_LOWEST;
     }
     refresh_wait_ms = options->refresh_wait_ms;
     sample.timestamp_ms = dmot_time_now_ms();

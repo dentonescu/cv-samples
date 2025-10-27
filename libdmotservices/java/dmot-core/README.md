@@ -31,4 +31,9 @@ _Maven_
   <artifactId>libdmotservices-core</artifactId>
   <version>0.1.0</version>
 </dependency>
+```
 
+## Related
+
+- Back to [libdmotservices (Java)](../README.md)
+- Legacy servlet helpers live in [dmot-servlet-javax](../dmot-servlet-javax/README.md)

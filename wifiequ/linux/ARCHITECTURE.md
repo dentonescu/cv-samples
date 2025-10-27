@@ -44,3 +44,9 @@ nl80211 scan  -->  scanner (wlanscan.c)  -->  channel bins (config.c)
 - Add HTTP streaming in `wifiequd` so the equalizer can power a web UI.
 - Expand `wfq_wifi_signal_read` to poll the real driver instead of the mock generator.
 - Persist configuration samples so scans can be replayed offline.
+
+## Related
+
+- Back to [WiFiEqu (Linux)](README.md)
+- [Developer notes](NOTES.md)
+- [Examples](examples/README.md)

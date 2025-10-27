@@ -53,5 +53,17 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for the data flow between these pieces.
 
 ## Screenshots
 
-`wifiequd` logging JSON readings:
-![Readings logged in the WiFiEqu daemon](img/wfq-daemon-readings.png)
+### Mock source
+
+![JSON readings logged in the WiFiEqu daemon](img/wfq-daemon-readings--mock.png)
+
+### Live source
+
+![JSON readings logged in the WiFiEqu daemon](img/wfq-daemon-readings--live.png)
+
+## Related
+
+- [Architecture overview](ARCHITECTURE.md)
+- [Examples](examples/README.md)
+- [Developer notes](NOTES.md)
+- Back to [WiFiEqu overview](../README.md)

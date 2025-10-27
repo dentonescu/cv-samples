@@ -1,7 +1,6 @@
 # libdmotservices
 
-**libdmotservices** is my personal multi-language code library — a curated collection of small, reusable utilities written in **C** and **Java** (with more languages to come).  
-It showcases how I approach **cross-language API design**, **version management**, and **clean software architecture** across ecosystems.
+**libdmotservices** is my personal multi-language code library — a curated collection of small, reusable utilities written in **C** and **Java** (with more languages to come). It showcases how I approach **cross-language API design**, **version management**, and **clean software architecture** across ecosystems.
 
 ## Project Summary
 This project demonstrates my ability to:
@@ -35,26 +34,24 @@ make test
 make example-demo
 ```
 
-Each subproject can also be built individually from its directory.
+Each subproject ships with its own README and can be built independently.
+
+## Why this exists
+
+This repo collects tiny, battle-tested snippets I reach for repeatedly. They’re intentionally small, readable, and dependency-light to work well as CV samples.
 
 ## What this demonstrates
 - Cross-language integration and build orchestration.
 - A disciplined, maintainable approach to multi-language software design.
 - Documentation and automation skills relevant to API development roles.
 
+## Status
 
-## Why this exists
-
-This repo collects tiny, battle-tested snippets I reach for repeatedly.  
-They’re intentionally small, readable, and dependency-light to work well as CV samples.
+Active work-in-progress. APIs may evolve as other portfolio samples (like [WiFiEqu](../wifiequ/README.md)) grow.
 
 ## Screenshot
 
 ![Build screenshot](libdmotservices.png)
-
-## Status
-
-Active work-in-progress. APIs may evolve. Each subproject has its own README with build instructions.
 
 ---
 **License:** [MIT](LICENSE)

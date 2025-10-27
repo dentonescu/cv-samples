@@ -19,4 +19,6 @@ Service scaffolding in progress.
 JSON API compatibility and network access patterns will follow the Linux implementation.
 
 ## Related
-See `../linux` for the C implementation of the daemon and shared API design notes in `../api`.
+- [Linux daemon](../linux/README.md)
+- [API notes](../api/README.md)
+- Back to [WiFiEqu overview](../README.md)

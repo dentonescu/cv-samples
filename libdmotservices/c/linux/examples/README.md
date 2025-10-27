@@ -28,21 +28,11 @@ All examples are self-contained and depend only on the static library.
 - Educational demos for technical interviews or client presentations.
 - Portability-focused development mindset.
 
-
-Runnable demos built on top of **libdmotservices-c**.
-
-| Example | Description |
-|----------|--------------|
-| `ex_signals` | Generates mock sine-wave signal data. |
-| `ex_ui` | Minimal UI rendering test. |
-
-
-## Screenshots
-
-Screenshots.
-
-### equalizer
+## Screenshot
 
 ![Text-mode equalizer](../img/equalizer.png)
- 
 
+## Related
+
+- Back to [Linux build](../README.md)
+- Equalizer in action inside [WiFiEqu](../../../../wifiequ/linux/README.md)

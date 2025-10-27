@@ -13,3 +13,7 @@ python3 slideshow-server.py publicdomainpictures.net/
 
 ## Screenshot
 ![slideshow-server screenshot](slideshow-server.png)
+
+## Related
+
+- Back to [portfolio overview](../README.md)

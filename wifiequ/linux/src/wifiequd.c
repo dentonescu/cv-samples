@@ -1,4 +1,5 @@
 #include <signal.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -11,6 +12,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include "dmot/log.h"
+#include "dmot/string.h"
 #include "dmot/time.h"
 #include "dmot/ui.h"
 #include "wfq/wifiequ.h"
@@ -69,7 +71,7 @@ static void set_up_signal_source(void)
     if (s_config_ctx.opt.mock)
     {
         wfq_mock_signal_options o;
-        o.n_channels = WFQ_EQU_N_CHANNELS;
+        o.n_channels = s_config_ctx.n_chan_defined;
         o.refresh_wait_ms = WFQ_MOCK_SIGNAL_REFRESH_WAIT_MS;
         wfq_sine_wave_generator_init_with_options(&o);
         wfq_sine_wave_generator_start();
@@ -77,7 +79,13 @@ static void set_up_signal_source(void)
     }
     else
     {
-        // TODO: set up live source
+        if (s_config_ctx.opt.interface[0] == '\0')
+        {
+            DMOT_LOGE("Live mode requires a configured interface (interface=...)");
+            exit(EXIT_FAILURE);
+        }
+        wfq_wifi_signal_scanner_start(&s_config_ctx);
+        DMOT_LOGD("Started the wi-fi scanner: interface=%s", s_config_ctx.opt.interface);
     }
 }
 
@@ -90,7 +98,7 @@ static void tear_down_signal_source(void)
     }
     else
     {
-        // TODO: tear down live source
+        wfq_wifi_signal_scanner_stop();
     }
 }
 
@@ -109,12 +117,21 @@ static void publish_reading(void)
 
 static void load_config(void)
 {
-    if (!wfq_config_read(&s_config_ctx)) {
+    if (!wfq_config_read(&s_config_ctx))
+    {
         DMOT_LOGE("Failed to read the configuration file at: %s", WFQ_CONFIG_PATH);
         exit(EXIT_FAILURE);
     }
     DMOT_LOGD("Loaded the configuration.");
     g_reload = 0;
+}
+
+static void reload_signal_source(void)
+{
+    DMOT_LOGI("Reloading signal source...");
+    tear_down_signal_source();
+    load_config();
+    set_up_signal_source();
 }
 
 /*
@@ -123,28 +140,43 @@ static void load_config(void)
 
 void wfq_sample2json(wfq_sample *sample, char *buf, size_t buf_size)
 {
-    /*
-     * Example:
-     * {
-     *   "timestamp_ms": 1739978905123,
-     *   "channels_dbm": [-42.1, -36.5, -20.0, -12.3]
-     *   }
-     *
-     */
-    memset(buf, 0, buf_size);
-    strncat(buf, "{", buf_size - strlen(buf) - 1);
-    char tmp[64];
-    snprintf(tmp, sizeof tmp, "\"timestamp_ms\": %lld, ", sample->timestamp_ms);
-    strncat(buf, tmp, buf_size - strlen(buf) - 1);
-    strncat(buf, "\"channels_dbm\": [", buf_size - strlen(buf) - 1);
-    for (int i = 0; i < WFQ_EQU_N_CHANNELS; ++i)
+    if (!buf || buf_size == 0)
+        return;
+
+    buf[0] = '\0';
+    if (!sample)
+        return;
+
+    char *cursor = buf;
+    char *end = buf + buf_size;
+
+    if (!dmot_string_write_into(&cursor, end, "{\n"))
+        return;
+    if (!dmot_string_write_into(&cursor, end, "    \"timestamp_ms\": %lld,\n", sample->timestamp_ms))
+        return;
+    if (!dmot_string_write_into(&cursor, end, "    \"readings\": [\n"))
+        return;
+
+    bool first = true;
+    for (size_t i = 0; i < WFQ_EQU_MAX_READINGS; ++i)
     {
-        snprintf(tmp, sizeof tmp, "%.2f", sample->channels_dbm[i]);
-        strncat(buf, tmp, buf_size - strlen(buf) - 1);
-        if (i < WFQ_EQU_N_CHANNELS - 1)
-            strncat(buf, ", ", buf_size - strlen(buf) - 1);
+        const wfq_channel *channel = &sample->readings[i];
+        if (channel->chan_id <= 0)
+            continue;
+
+        if (!first && !dmot_string_write_into(&cursor, end, ",\n"))
+            return;
+
+        if (!dmot_string_write_into(&cursor, end,
+                                    "        {\"chan\": %d, \"dbm\": %.1f}",
+                                    channel->chan_id, channel->chan_dbm))
+            return;
+
+        first = false;
     }
-    strncat(buf, "]}", buf_size - strlen(buf) - 1);
+
+    if (!dmot_string_write_into(&cursor, end, "\n    ]\n}\n"))
+        return;
 }
 
 int main(void)
@@ -158,7 +190,10 @@ int main(void)
     while (g_running)
     {
         if (g_reload)
-            load_config();
+        {
+            reload_signal_source();
+            continue;
+        }
         publish_reading();
         dmot_time_sleep_ms(WFQ_REFRESH_WAIT_MS);
     }

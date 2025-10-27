@@ -10,6 +10,7 @@ extern "C"
 
 #define WFQ_CONFIG_MAX_CHAN 1024
 #define WFQ_CONFIG_PATH "/etc/wifiequd.conf"
+#define WFQ_PARAM_INTERFACE "interface"
 #define WFQ_PARAM_MOCK "mock"
 #define WFQ_PARAM_HTTP_PORT "http.port"
 

@@ -14,7 +14,7 @@ WiFiEqu demonstrates how system services on different operating systems can expo
 - [Linux daemon](linux/README.md) — daemon and CLI (C, Makefiles, systemd unit install).
 - [Windows service](windows/README.md) — Windows service (C#) (stub).
 - [Angular frontend](web-angular/README.md) — Angular client (stub).
-- [API specification](api/README.md) — API specifications and examples.
+- [API specification](api/README.md) — API schemas and examples.
 
 ## Architecture
 
@@ -47,8 +47,8 @@ WiFiEqu demonstrates how system services on different operating systems can expo
 - **Web client (Angular)**: browser visualization that consumes the JSON API.
 
 ## Status
-- Linux daemon and CLI scaffolding in place; Makefiles and versioning wired.
-- Web/Windows clients are stubs and will iterate as the API stabilises.
+- Linux daemon now publishes live readings and mock data, with Makefiles and systemd integration wired.
+- Web/Windows clients remain stubs and will evolve once the JSON contract stabilises.
 
 ## Build
 ```sh
@@ -83,6 +83,10 @@ Exact schemas will be documented in `/api/README.md` as the daemon stabilises.
 - [ ] Windows service prototype.
 - [ ] Angular visualization with channel overlays.
 - [ ] Packaging and minimal installer scripts.
+
+## Related
+- Back to [portfolio overview](../README.md)
+- Underlying equalizer lives in [libdmotservices](../libdmotservices/README.md)
 
 ## License
 See `/LICENSE` in the repository root.

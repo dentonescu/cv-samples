@@ -3,11 +3,6 @@
 **libdmotservices-c** provides portable C utilities designed to be simple, reusable, and illustrative.  
 It includes a logging subsystem, signal generation helpers, and a terminal equalizer demo.
 
-### Operating Systems
-
-- [Linux](linux/README.md): C library for Linux
-
-
 ### Project Summary
 This module demonstrates my ability to:
 - Build modular, dependency-light C libraries with a clear include/src/tests structure.
@@ -54,3 +49,8 @@ make example-demo   # runs example demos
 - The renderer only clears rows it actually printed, so it plays nicely alongside other console output.
 
 This component powers the live Wi-Fi equalizer in the companion WiFiEqu project.
+
+## Where next
+
+- [Linux build details](linux/README.md)
+- [Portfolio overview](../../README.md)
