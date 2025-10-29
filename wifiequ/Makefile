@@ -126,4 +126,8 @@ $(DOC_DIR_API):
 
 $(DOC_API_HTML): $(OPENAPI) | $(DOC_DIR_API)
 	@$(MILESTONE) "Generating the OpenAPI specification as HTML..."
+	@if ! npx --no-install @redocly/cli --version >/dev/null 2>&1; then \
+		echo "Installing @redocly/cli (dev dependency)..."; \
+		npm install --save-dev @redocly/cli >/dev/null; \
+	fi
 	@npx @redocly/cli build-docs "$<" --output "$@"

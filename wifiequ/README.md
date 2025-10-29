@@ -76,7 +76,7 @@ make example-demo           # runs the demos
 - `GET /api/v1/stats`
 - `GET /api/v1/channels/stream`
 
-The OpenAPI contract lives in [`api/openapi.yaml`](api/openapi.yaml), and running the top-level `make docs` target generates a pre-rendered copy at [`docs/api/index.html`](docs/api/index.html).
+The OpenAPI contract lives in [`api/openapi.yaml`](api/openapi.yaml). The HTML version at [`docs/api/index.html`](docs/api/index.html) is produced on demand via the root `make docs` target, which will fetch `@redocly/cli` if it is not already installed.
 
 ## Roadmap
 - [ ] Finalise JSON schema and add contract tests.

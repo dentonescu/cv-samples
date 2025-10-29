@@ -14,7 +14,6 @@ It pairs a scanning daemon (`wifiequd`) with ANSI-rendered visualisations powere
 sudo apt update
 sudo apt install -y build-essential libcmocka-dev \
      libmicrohttpd-dev libnl-3-dev libnl-genl-3-dev
-npm install --save-dev @redocly/cli
 ```
 
 ### Build
