@@ -2,7 +2,7 @@
 ## WiFiEqu/Makefile
 #################################################
 
-.PHONY: all angular clean install example-demo examples linux prebuild setup-user test tests windows
+.PHONY: all angular clean dist docs install example-demo examples linux prebuild setup-user test tests windows
 
 # build prerequisites
 VERSION := $(strip $(shell cat VERSION))
@@ -10,28 +10,38 @@ VERSION := $(strip $(shell cat VERSION))
 export VERSION
 
 # locations
-DIST := "dist"
-ROOT := $(strip $(shell pwd))
+ROOT            := $(CURDIR)
+DIST            := dist
+OPENAPI         := $(ROOT)/api/openapi.yaml
+
+# outputs
+DOC_DIR_API     := docs/api
+DOC_API_HTML    := $(DOC_DIR_API)/index.html
 
 # commands
 MILESTONE := echo === 
-GATHER := 	find "${ROOT}" -name "*.a" -type f -exec cp -v "{}" "${DIST}" \; ; \
-			find "${ROOT}" -name "build" -type d -exec cp -vR "{}/." "${DIST}" \; ; \
-			find "${ROOT}" -name "bin" -type d -exec cp -vR "{}/." "${DIST}" \;
 
 
 #####################################################################################
 ## Default build
 #####################################################################################
-all: prebuild version linux dist
+all: prebuild version linux dist docs
 
 dist:
 	@$(MILESTONE) "Populating the distribution directory..."
-	@mkdir -p "${DIST}"
-	@$(GATHER)
+	@mkdir -p "$(DIST)"
+	@find "$(ROOT)/linux" -name "*.a" -type f -exec cp -v "{}" "$(DIST)"/ \;
+	@for dir in "$(ROOT)/linux/bin" "$(ROOT)/linux/build"; do \
+		if [ -d "$$dir" ]; then \
+			cp -vR "$$dir"/. "$(DIST)"/; \
+		fi; \
+	done
+
+docs: $(DOC_API_HTML)
 
 prebuild:
 	@cat wifiequ.logo
+
 
 #####################################################################################
 ## Version management
@@ -81,7 +91,6 @@ angular:
 tests:
 	@$(MILESTONE) "Compiling all tests..."
 	@$(MAKE) -C linux tests
-	@$(GATHER)
 
 test: tests
 	@$(MILESTONE) "Executing all tests..."
@@ -94,7 +103,6 @@ test: tests
 examples:
 	@$(MILESTONE) "Compiling all examples..."
 	@$(MAKE) -C linux examples
-	@$(GATHER)
 
 example-demo: examples
 	@$(MILESTONE) "Executing all examples and demos..."
@@ -106,4 +114,16 @@ example-demo: examples
 clean:
 	@$(MILESTONE) "Removing previous builds..."
 	@$(MAKE) -C linux clean || true
-	@rm -Rf "${DIST}"
+	@rm -Rf "$(DIST)"
+	@rm -Rf "$(DOC_DIR_API)"
+
+#####################################################################################
+## documentation helpers
+#####################################################################################
+
+$(DOC_DIR_API):
+	@mkdir -p "$@"
+
+$(DOC_API_HTML): $(OPENAPI) | $(DOC_DIR_API)
+	@$(MILESTONE) "Generating the OpenAPI specification as HTML..."
+	@npx @redocly/cli build-docs "$<" --output "$@"

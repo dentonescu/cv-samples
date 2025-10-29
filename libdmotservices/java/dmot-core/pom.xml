@@ -15,7 +15,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
     <build>
-        <testSourceDirectory>${project.basedir}/src/test</testSourceDirectory>
+        <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
         <testResources>
             <testResource>
                 <directory>${project.basedir}/src/test/resources</directory>

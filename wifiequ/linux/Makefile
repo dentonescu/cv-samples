@@ -9,7 +9,7 @@
 ROOT 			:= $(strip $(shell pwd))
 LIB_DIR			:= ../../libdmotservices/c/linux
 ARCHIVE_DIR  	:= $(LIB_DIR)/lib
-ARCHIVE			:= $(ARCHIVE_DIR)/libdmotservices_c-0.2.9.a
+ARCHIVE			:= $(ARCHIVE_DIR)/libdmotservices_c-0.3.0.a
 CONFIG_DIR		:= $(ROOT)/etc
 CONFIG_FILE		:= wifiequd.conf
 CONFIG			:= $(CONFIG_DIR)/$(CONFIG_FILE)

@@ -71,11 +71,12 @@ make example-demo           # runs the demos
 
 > Notes: Linux build depends on the local `libdmotservices` C artifacts. See that project’s README for building the library first.
 
-## JSON API (early sketch)
+## JSON API
 - `GET /api/v1/channels`
 - `GET /api/v1/stats`
+- `GET /api/v1/channels/stream`
 
-Exact schemas will be documented in `/api/README.md` as the daemon stabilises.
+The OpenAPI contract lives in [`api/openapi.yaml`](api/openapi.yaml), and running the top-level `make docs` target generates a pre-rendered copy at [`docs/api/index.html`](docs/api/index.html).
 
 ## Roadmap
 - [ ] Finalise JSON schema and add contract tests.

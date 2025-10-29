@@ -63,12 +63,15 @@ dkms.conf
 **/dist
 **/log/
 **/logs/
+**/node_modules/
 **/*.a
 **/*.d
 **/*.o
 **/*.log
 **/*.secret
 **/access.token
+**/package.json
+**/package-lock.json
 **/Thumbs.db*
 build.bat
 build.cmd

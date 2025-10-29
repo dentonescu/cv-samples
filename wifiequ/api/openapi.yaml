@@ -1,0 +1,272 @@
+openapi: 3.0.3
+info:
+  title: WiFiEqu API
+  version: 1.0.0-draft
+  description: >
+    HTTP interface for the WiFiEqu daemon. Exposes the latest Wi-Fi channel
+    readings, daemon metadata, and a streaming feed suitable for real-time
+    visualisers. All requests must include a valid API key.
+  contact:
+    name: WiFiEqu Maintainers
+servers:
+  - url: http://localhost:{port}
+    description: Local daemon (default)
+    variables:
+      port:
+        default: "8080"
+tags:
+  - name: Channels
+    description: Current Wi-Fi channel readings.
+  - name: Diagnostics
+    description: Daemon metadata and status endpoints.
+paths:
+  /api/v1/channels:
+    get:
+      tags:
+        - Channels
+      summary: Retrieve the most recent Wi-Fi channel snapshot.
+      description: >
+        Returns the last `wfq_sample` recorded by the daemon, including the
+        capture timestamp and signal strength of each configured channel.
+      operationId: getLatestChannels
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: Latest sample available.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Sample"
+              examples:
+                mock:
+                  summary: Mock data response
+                  value:
+                    timestamp_ms: 1701451234567
+                    readings:
+                      - chan: 1
+                        dbm: -48.5
+                      - chan: 6
+                        dbm: -61.0
+                      - chan: 11
+                        dbm: -72.3
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  /api/v1/stats:
+    get:
+      tags:
+        - Diagnostics
+      summary: Retrieve daemon metadata and configuration stats.
+      description: >
+        Provides slow-changing metadata such as daemon mode, configured
+        interface, refresh cadence, and the channel bins defined via
+        `wifiequd.conf`.
+      operationId: getStats
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: Daemon metadata payload.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stats"
+              examples:
+                live:
+                  summary: Live scanner stats
+                  value:
+                    mode: live
+                    interface: wlan0
+                    refresh_ms: 500
+                    channels_defined: 3
+                    channel_bins:
+                      - chan: 36
+                        lower_freq_mhz: 5170
+                        mid_freq_mhz: 5180
+                        upper_freq_mhz: 5190
+                      - chan: 40
+                        lower_freq_mhz: 5190
+                        mid_freq_mhz: 5200
+                        upper_freq_mhz: 5210
+                      - chan: 44
+                        lower_freq_mhz: 5230
+                        mid_freq_mhz: 5240
+                        upper_freq_mhz: 5250
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  /api/v1/channels/stream:
+    get:
+      tags:
+        - Channels
+      summary: Stream Wi-Fi readings as Server-Sent Events.
+      description: >
+        Establishes a long-lived Server-Sent Events (SSE) connection that
+        flushes a JSON payload whenever a new `wfq_sample` is available.
+        Each event is emitted with the name `reading` and a `data:` line
+        containing the same structure as the `/channels` snapshot response.
+      operationId: streamChannelReadings
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: SSE stream of channel readings.
+          headers:
+            Content-Type:
+              schema:
+                type: string
+              description: Always `text/event-stream; charset=utf-8`.
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                description: >
+                  Stream containing `event: reading` lines followed by
+                  `data: { ... }` JSON payloads. Events are separated by a blank line.
+              examples:
+                sample:
+                  summary: SSE event stream
+                  value: |
+                    event: reading
+                    data: {"timestamp_ms":1701451234567,"readings":[{"chan":1,"dbm":-48.5}]}
+
+                    event: reading
+                    data: {"timestamp_ms":1701451235067,"readings":[{"chan":1,"dbm":-47.9}]}
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: >
+        Provide the API key configured in `wifiequd.conf`. Requests missing
+        the header or carrying an invalid key receive HTTP 401.
+  responses:
+    UnauthorizedError:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error: unauthorized
+            message: API key is missing or invalid.
+    ServerError:
+      description: Unexpected server failure.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error: server_error
+            message: An unexpected error occurred.
+  schemas:
+    Sample:
+      type: object
+      required:
+        - timestamp_ms
+        - readings
+      properties:
+        timestamp_ms:
+          type: integer
+          format: int64
+          description: Milliseconds since Unix epoch when the sample was captured.
+          minimum: 0
+        readings:
+          type: array
+          description: Signal strength for each configured channel.
+          minItems: 0
+          items:
+            $ref: "#/components/schemas/ChannelReading"
+    ChannelReading:
+      type: object
+      required:
+        - chan
+        - dbm
+      properties:
+        chan:
+          type: integer
+          minimum: 1
+          description: Wi-Fi channel identifier.
+        dbm:
+          type: number
+          format: double
+          description: Signal strength in dBm (negative values indicate weaker signals).
+    Stats:
+      type: object
+      required:
+        - mode
+        - refresh_ms
+        - channels_defined
+        - channel_bins
+      properties:
+        mode:
+          type: string
+          description: >
+            Source of readings. `mock` indicates the built-in waveform generator;
+            `live` indicates the nl80211-backed scanner.
+          enum:
+            - mock
+            - live
+        interface:
+          type: string
+          nullable: true
+          description: >
+            Wireless interface in use when `mode` is `live`. Null or empty when the daemon
+            runs in mock mode.
+        refresh_ms:
+          type: integer
+          minimum: 1
+          description: Nominal delay between successive scans (default 500 ms).
+        channels_defined:
+          type: integer
+          minimum: 0
+          description: Number of channel bins defined in `wifiequd.conf`.
+        channel_bins:
+          type: array
+          description: Configured channel frequency spans.
+          items:
+            $ref: "#/components/schemas/ChannelBin"
+    ChannelBin:
+      type: object
+      required:
+        - chan
+        - lower_freq_mhz
+        - mid_freq_mhz
+        - upper_freq_mhz
+      properties:
+        chan:
+          type: integer
+          minimum: 1
+          description: Wi-Fi channel identifier.
+        lower_freq_mhz:
+          type: number
+          format: double
+          description: Lower bound of the configured channel bin in MHz.
+        mid_freq_mhz:
+          type: number
+          format: double
+          description: Midpoint frequency in MHz.
+        upper_freq_mhz:
+          type: number
+          format: double
+          description: Upper bound of the configured channel bin in MHz.
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Machine-readable error key.
+        message:
+          type: string
+          description: Human-friendly message describing the error.
