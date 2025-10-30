@@ -48,6 +48,8 @@ Remove with `sudo make uninstall`.
 - **Scanner (`src/wlan/wlanscan.c`)** – drives `nl80211` via libnl, aggregates the strongest signal per configured channel bin, and exposes the results to the UI.
 - **Configuration (`src/config/config.c`)** – parses `etc/wifiequd.conf`, validates channel ranges, and maps frequencies to Wi-Fi channels.
 - **Equalizer UI (`examples/ex_wlanscan.c`)** – renders live channel strengths using the reusable terminal equalizer from libdmotservices.
+- **HTTP server (`src/wfqapi/http.c`)** – manages a monotonic ring buffer for streaming samples and wraps libmicrohttpd startup/shutdown (router currently returns `MHD_NO` until endpoints are wired).
+- **Unit tests (`tests/test_sample_stream.c`)** – exercise the sample-stream buffer with fast-producer/slow-consumer scenarios.
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for the data flow between these pieces.
 

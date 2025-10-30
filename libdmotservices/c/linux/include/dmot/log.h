@@ -17,31 +17,48 @@ extern "C"
         DMOT_LOG_DEBUG = 3
     } dmot_log_level;
 
-    // Compares the supplied file pointer with the internal file pointer.
-    // @param fp    File pointer.
-    // @return      True if both file pointers are the same.
+    /**
+     * @brief Checks whether logging currently targets a given file.
+     *
+     * @param[in] fp File pointer to compare with the active log stream.
+     * @retval true The supplied file matches the configured stream.
+     * @retval false The configured stream differs.
+     */
     bool dmot_log_cmp_fp(FILE *fp);
 
-    // Provides the name of the log level enum.
-    // @param level dmot_log_level. e.g. DMOT_LOG_ERROR, DMOT_LOG_WARN, DMOT_LOG_INFO, DMOT_LOG_DEBUG
-    // @return String representation of the level: ERROR, WARN, INFO, DEBUG
+    /**
+     * @brief Returns a human-readable name for a log level.
+     *
+     * @param[in] level Log level to translate.
+     * @return Constant string such as "ERROR", "WARN", "INFO", or "DEBUG".
+     */
     const char *dmot_log_level_name(dmot_log_level level);
 
-    // Points to the stream to which logging data is written.
-    // @param fp    File pointer.
+    /**
+     * @brief Sets the output stream used for log messages.
+     *
+     * @param[in] fp Destination file pointer (defaults to `stderr` when null).
+     */
     void dmot_log_set_file(FILE *fp);
 
-    // Sets the lowest log level to be displayed: DEBUG, INFO, WARN, ERROR.
-    // Messages with the given level and all those to the right of it will be displayed.
-    // @param lvl   dmot_log_level enum.
+    /**
+     * @brief Configures the minimum log level that will be emitted.
+     *
+     * Messages at @p lvl and more severe will be logged.
+     *
+     * @param[in] lvl Threshold level to enable.
+     */
     void dmot_log_set_level(dmot_log_level lvl);
 
-    // Logs a message using the specified log level: DEBUG, INFO, WARN, ERROR.
-    // Messages with the given level and all those to the right of it will be displayed.
-    // @param lvl   dmot_log_level enum.
-    // @param fmt   Format string.
-    // @param ...   Accompanying variables required by fmt.
-    // E.g. dmot_log(DMOT_LOG_ERROR, "Invalid text: %s", foo);
+    /**
+     * @brief Emits a formatted log message at the requested level.
+     *
+     * Messages below the configured threshold are ignored.
+     *
+     * @param[in] lvl Severity level of the message.
+     * @param[in] fmt `printf`-style format string.
+     * @param[in] ... Variadic arguments substituted into @p fmt.
+     */
     void dmot_log(dmot_log_level lvl, const char *fmt, ...);
 
 #define DMOT_LOGE(...) dmot_log(DMOT_LOG_ERROR, __VA_ARGS__)

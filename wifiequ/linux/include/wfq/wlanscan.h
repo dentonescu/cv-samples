@@ -28,46 +28,38 @@ extern "C"
 
     typedef struct
     {
-        double freq_mhz;
-        double strength_dbm;
+        double freq_mhz;      /**< Measured center frequency in MHz. */
+        double strength_dbm;  /**< Observed signal strength in dBm. */
     } wfq_signal;
 
-    // wfq_scan_context keeps track of wlanscan's state.
-    // @param sock                          libnl socket handle for Netlink traffic
-    // @param family_id                     resolved numeric ID for the nl80211 generic-netlink family
-    // @param ifindex                       numeric interface index returned by if_nametoindex
-    // @param results                       results array
-    // @param n_max_results                 maximum number of results possible
-    // @param n_count_results               number of results retrieved so far
-    // @param done                          set when the kernel reports the dump finished or aborted
-    // @param overflow                      set when the number of results exceeds the size of the results buffer
-    // @param error                         failure code in the event of an error
-    // @param msg                           message buffer
-    // @param msg_dealloc_required          tracks whether the message buffer needs to be freed
-    // @param current_scan_results          current scan results
-    // @param current_scan_results_index    marks the last result in the current scan results array
+    /**
+     * @brief Tracks state while performing a Netlink Wi-Fi scan.
+     */
     typedef struct
     {
-        struct nl_sock *sock;
-        int family_id;
-        int ifindex;
-        wfq_signal *results;
-        size_t n_max_results;
-        size_t n_count_results;
-        bool done;
-        bool overflow;
-        int error;
-        struct nl_msg *msg;
-        bool msg_dealloc_required;
-        wfq_signal current_scan_results[WFQ_WLAN_SCAN_MAX_RESULTS + 1];
-        size_t current_scan_results_index;
-        wfq_signal largest_scan_results[WFQ_WLAN_SCAN_MAX_RESULTS + 1];
-        size_t largest_scan_results_index;
+        struct nl_sock *sock;                                   /**< libnl socket used to talk to nl80211. */
+        int family_id;                                          /**< Numeric nl80211 family identifier. */
+        int ifindex;                                            /**< Interface index from `if_nametoindex`. */
+        wfq_signal *results;                                    /**< Caller-supplied results buffer. */
+        size_t n_max_results;                                   /**< Maximum number of results the buffer can hold. */
+        size_t n_count_results;                                 /**< Number of results written so far. */
+        bool done;                                              /**< Set when the kernel signals scan completion. */
+        bool overflow;                                          /**< Set if more results arrived than the buffer can store. */
+        int error;                                              /**< Netlink error code, if any. */
+        struct nl_msg *msg;                                     /**< Reusable message buffer. */
+        bool msg_dealloc_required;                              /**< Tracks whether `msg` must be freed by the caller. */
+        wfq_signal current_scan_results[WFQ_WLAN_SCAN_MAX_RESULTS + 1]; /**< Scan results from the most recent sweep. */
+        size_t current_scan_results_index;                      /**< Index of the last entry in `current_scan_results`. */
+        wfq_signal largest_scan_results[WFQ_WLAN_SCAN_MAX_RESULTS + 1]; /**< Strongest results observed in any sweep. */
+        size_t largest_scan_results_index;                      /**< Index of the last entry in `largest_scan_results`. */
     } wfq_scan_context;
 
-    // Scans a wireless interface and retrieves information about the detected signals.
-    // @param ifname                Interface name. e.g., wlan0
-    // @return                      Signal structure wfq_signal.
+    /**
+     * @brief Performs a Wi-Fi scan and retrieves detected signals.
+     *
+     * @param[in] ifname Network interface name (for example, "wlan0").
+     * @return Pointer to an array of scan results owned by the scan layer.
+     */
     wfq_signal *wfq_scan_wlan(const char *ifname);
 
 #ifdef __cplusplus

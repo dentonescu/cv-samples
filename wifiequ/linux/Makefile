@@ -26,7 +26,7 @@ TESTS_FAILED    := $(LOG_DIR)/tests.failed
 ## sources
 SRC				:= $(shell find src -type f -name '*.c')
 OBJ 			:= $(SRC:.c=.o)
-MAIN_OBJ		:= src/wifiequd.o
+MAIN_OBJ		:= src/wfq/wifiequd.o
 CORE_OBJ		:= $(filter-out $(MAIN_OBJ), $(OBJ))
 DEPS			:= $(OBJ:.o=.d)
 

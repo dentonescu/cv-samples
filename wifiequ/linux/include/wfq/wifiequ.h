@@ -15,40 +15,41 @@ extern "C"
 #define WFQ_REFRESH_WAIT_MS         500
 #define WFQ_WIDTH_INTERFACE         64
 
-    // wifiequd configuration settings.
-    // @param mock                      Mock mode on when true, live signal from Wi-Fi interface when false.
-    // @param interface                 Wireless network interface: e.g. wlan0
-    // @param port                      HTTP port to listen on.
+    /**
+     * @brief Configuration options for the WiFiEqu daemon.
+     */
     typedef struct
     {
-        bool mock;
-        char interface[WFQ_WIDTH_INTERFACE + 1];
-        int port;
+        bool mock;                                  /**< When true, operate in mock mode instead of live capture. */
+        char interface[WFQ_WIDTH_INTERFACE + 1];    /**< Wireless network interface name (for example, `wlan0`). */
+        int port;                                   /**< TCP port for the HTTP API. */
     } wfq_options;
 
-    // Wi-Fi channel representation.
-    // @param chan_id                   Wi-Fi channel ID. (e.g. 1)
-    // @param chan_label                Short label for this channel.
-    // @param chan_dbm                  Signal strength of this channel in dBm.
+    /**
+     * @brief Represents a single Wi-Fi channel reading.
+     */
     typedef struct
     {
-        int chan_id;
-        double chan_dbm;
+        int chan_id;        /**< Wi-Fi channel identifier (1-based). */
+        double chan_dbm;    /**< Signal strength for the channel in dBm. */
     } wfq_channel;
 
-    // Signal strength readings by Wi-Fi channel.
-    // @param timestamp_ms              Timestamp of the sample.
-    // @param channels                  Channels and their signal strengths.
+    /**
+     * @brief Collection of channel readings captured at a given timestamp.
+     */
     typedef struct
     {
-        long long timestamp_ms;
-        wfq_channel readings[WFQ_EQU_MAX_READINGS];
+        long long timestamp_ms;                         /**< Millisecond timestamp of the sample capture. */
+        wfq_channel readings[WFQ_EQU_MAX_READINGS];     /**< Per-channel readings gathered for the sample. */
     } wfq_sample;
 
-    // Converts a sample structure to a JSON string
-    // @param sample            Sample reading.
-    // @param buf               String buffer to store the JSON in.
-    // @param buf_size          Size of the JSON string buffer.
+    /**
+     * @brief Serializes a sample into JSON form.
+     *
+     * @param[in] sample Sample to encode.
+     * @param[out] buf Destination buffer for UTF-8 JSON output.
+     * @param[in] buf_size Capacity of @p buf in bytes.
+     */
     void wfq_sample2json(wfq_sample *sample, char *buf, size_t buf_size);
 
 #ifdef __cplusplus

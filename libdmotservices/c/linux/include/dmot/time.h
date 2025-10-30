@@ -10,12 +10,18 @@ extern "C"
 {
 #endif
 
-    // Sleeps for a given number of milliseconds.
-    // @param ms        Time in milliseconds. e.g. 500
+    /**
+     * @brief Sleeps the current thread for the requested number of milliseconds.
+     *
+     * @param[in] ms Duration in milliseconds.
+     */
     void dmot_time_sleep_ms(long ms);
 
-    // Returns the current timestamp in milliseconds.
-    // @return          Current timestamp in milliseconds.
+    /**
+     * @brief Returns the current wall-clock time in milliseconds.
+     *
+     * @return Milliseconds elapsed since the Unix epoch.
+     */
     uint64_t dmot_time_now_ms(void);
 
 #ifdef __cplusplus

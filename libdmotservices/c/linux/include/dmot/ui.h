@@ -18,153 +18,197 @@ extern "C"
 #define DMOT_UI_EQU_DEFAULT_N_CHAN 16
 #define DMOT_UI_EQU_MAX_CHAN 1024
 
-    // Represents a single channel of the equalizer
-    // @param id            Channel ID. E.g., 1
-    // @param ch_name       When set labels the channel with a short name intead of a number.
-    // @param value         Current signal strength on this channel (dBm).
-    // @param smoothed      Average of the past signal strengths with an incremental movement towards the current value.
+    /**
+     * @brief Holds runtime values for a single equalizer channel.
+     */
     struct dmot_ui_eq_channel
     {
-        int id;
-        char ch_name[DMOT_UI_EQU_CH_NAME_WIDTH + 1];
-        double value;
-        double smoothed;
+        int id;                                      /**< Channel identifier (1-based). */
+        char ch_name[DMOT_UI_EQU_CH_NAME_WIDTH + 1]; /**< Optional short label rendered instead of the id. */
+        double value;                                /**< Current signal strength in dBm. */
+        double smoothed;                             /**< Smoothed value incorporating prior readings. */
     };
 
-    // Represents the size of the console window.
-    // @params rows             height in rows
-    // @params cols             width in columns
+    /**
+     * @brief Console dimensions expressed as row/column counts.
+     */
     struct dmot_ui_screen_size
     {
-        int rows;
-        int cols;
+        int rows;  /**< Visible height of the console. */
+        int cols;  /**< Visible width of the console. */
     };
 
-    // Equalizer properties.
-    // @param channels_available        Number of channels available.
-    // @param col_width                 Number of columns to be used for rendering.
-    // @param channels                  Array of channels.
-    // @param forever_mode              If true, continuously redraws the equalizer until a stop signal is received. Otherwise, draws only once.
-    // @param permit_rendering          If true, allows the equalizer to be drawn. Otherwise, stops rendering of the equalizer.
-    // @param refresh_wait_ms           Delay between each redraw cycle.
-    // @param render_only_named_chans   Render only named channels.
-    // @param smoothing_constraint      Maximum single movement in dBm permitted for a channel. Prevents jerky equalizer movements.
+    /**
+     * @brief Configuration and state used while rendering the equalizer.
+     */
     struct dmot_ui_equ_properties
     {
-        size_t channels_available;
-        size_t col_width;
-        struct dmot_ui_eq_channel channels[DMOT_UI_EQU_MAX_CHAN + 1];
-        bool forever_mode;
-        bool permit_rendering;
-        long refresh_wait_ms;
-        bool render_only_named_chans;
-        double smoothing_constraint;
+        size_t channels_available;                           /**< Number of channels the UI should draw. */
+        size_t col_width;                                    /**< Width allocated per channel column. */
+        struct dmot_ui_eq_channel channels[DMOT_UI_EQU_MAX_CHAN + 1]; /**< Channel state storage. */
+        bool forever_mode;                                   /**< When true, keep redrawing until stopped. */
+        bool permit_rendering;                               /**< Toggle enabling/disabling redraws. */
+        long refresh_wait_ms;                                /**< Delay between refresh cycles. */
+        bool render_only_named_chans;                        /**< Hide channels without labels when true. */
+        double smoothing_constraint;                         /**< Max single-step change when smoothing values. */
     };
 
-    // Equalizer handle for creating and using an equalizer.
-    // @param id            Equalizer ID.
-    // @param forever_mode  Continuous rendering option.
-    // @param out           Output stream.
-    // @param refresh_ms    Wait period between redraws.
+    /**
+     * @brief Container for an equalizer instance tied to a specific output stream.
+     */
     typedef struct
     {
-        FILE *out;
-        struct dmot_ui_equ_properties equ_properties;
+        FILE *out;                                    /**< Destination stream for rendered output. */
+        struct dmot_ui_equ_properties equ_properties; /**< Equalizer state and configuration. */
     } dmot_ui_eq;
 
     /*
      * ANSI graphics functions
      */
 
-    // Clears the entire row in the console.
+    /**
+     * @brief Clears the current console row using ANSI escape sequences.
+     */
     void dmot_ui_ansi_clear_row();
 
-    // Provides the ANSI forgeground escape sequence for various terms.
-    // @param term      Term. E.g. black, blue, cyan, green, purple, red, reset, yellow, white.
-    // @return          ANSI code of the requested term. e.g. "\x1b[0m"
+    /**
+     * @brief Returns an ANSI foreground color escape sequence.
+     *
+     * @param[in] term Color name (`"red"`, `"green"`, `"reset"`, etc.).
+     * @return Escape sequence literal (for example, `"\x1b[0m"`).
+     */
     const char *dmot_ui_ansi_esc_seq_fg(const char *term);
 
-    // Moves the cursor up the specified number of rows.
-    // @param rows      Rows to move up.
+    /**
+     * @brief Moves the console cursor upward.
+     *
+     * @param[in] rows Number of rows to move up.
+     */
     void dmot_ui_ansi_move_cursor_up(int rows);
 
-    // Moves the cursor to the start of the row.
+    /**
+     * @brief Moves the cursor to the start of the current row.
+     */
     void dmot_ui_ansi_move_cursor_to_start_of_row();
 
-    // Determines the size of the console window and returns the number of rows and columns.
-    // @return          dmot_ui_screen_size struct containing the rows and columns.
+    /**
+     * @brief Returns the current console size in rows and columns.
+     *
+     * @return Detected console dimensions.
+     */
     struct dmot_ui_screen_size dmot_ui_get_console_size();
 
     /*
      * Multi-channel equalizer functions
      */
 
-    // Initializes the equalizer.
-    // param eq         Equalizer handle.
+    /**
+     * @brief Initializes an equalizer object with defaults.
+     *
+     * @param[in,out] eq Equalizer handle to initialize.
+     */
     void dmot_ui_equalizer_init(dmot_ui_eq *eq);
 
-    // Forbids the equalizer from being rendered.
-    // param eq         Equalizer handle.
+    /**
+     * @brief Prevents the equalizer from rendering future frames.
+     *
+     * @param[in,out] eq Equalizer handle.
+     */
     void dmot_ui_equalizer_forbid_rendering(dmot_ui_eq *eq);
 
-    // Hides or reveals channels without labels. By default, channels without labels are visible.
-    // @param eq        Equalizer handle.
-    // @param hide      If true, hides channels without labels. Otherwise, all channels will be rendered.
-    // @return          true if the value was set, false otherwise.
+    /**
+     * @brief Toggles visibility of channels that lack labels.
+     *
+     * @param[in,out] eq Equalizer handle.
+     * @param[in] hide Whether to hide unlabeled channels.
+     * @retval true Operation succeeded.
+     * @retval false Requested change was out of range.
+     */
     bool dmot_ui_equalizer_hide_chans_without_labels(dmot_ui_eq *eq, bool hide);
 
-    // Permits the equalizer to be rendered.
-    // param eq         Equalizer handle.
+    /**
+     * @brief Allows the equalizer to resume rendering frames.
+     *
+     * @param[in,out] eq Equalizer handle.
+     */
     void dmot_ui_equalizer_permit_rendering(dmot_ui_eq *eq);
 
-    // Renders a text mode equalizer using the raw inputs.
-    // @param eq        Equalizer handle.
+    /**
+     * @brief Renders a text-mode equalizer using raw channel values.
+     *
+     * @param[in] eq Equalizer handle.
+     */
     void dmot_ui_equalizer_render(dmot_ui_eq *eq);
 
-    // Renders a text mode equalizer using the smoothed inputs.
-    // @param eq        Equalizer handle.
+    /**
+     * @brief Renders a text-mode equalizer using smoothed channel values.
+     *
+     * @param[in] eq Equalizer handle.
+     */
     void dmot_ui_equalizer_render_smoothed(dmot_ui_eq *eq);
 
-    // Sets the input value of a particular channel.
-    // @param eq        Equalizer handle.
-    // @param channel   Channel id: 1-16.
-    // @param value     Input value in dBm.
-    // @return          true if the value was set, false otherwise.
+    /**
+     * @brief Updates the raw input value for a channel.
+     *
+     * @param[in,out] eq Equalizer handle.
+     * @param[in] channel Channel identifier (1-based).
+     * @param[in] value Signal strength in dBm.
+     * @retval true Update succeeded.
+     * @retval false Channel was out of range.
+     */
     bool dmot_ui_equalizer_set_channel_input_value(dmot_ui_eq *eq, size_t channel, double value);
 
-    // Sets a short name for a channel with a maximum length of DMOT_UI_EQU_CH_NAME_WIDTH
-    // @param eq        Equalizer handle.
-    // @param chan      Channel number. E.g. 1, 2, 3 ...
-    // @param name      Label for the channel.
-    // @return          true if the name was set, false otherwise.
+    /**
+     * @brief Assigns a human-readable label to a channel.
+     *
+     * @param[in,out] eq Equalizer handle.
+     * @param[in] chan Channel identifier (1-based).
+     * @param[in] name Null-terminated label to store.
+     * @retval true Label applied successfully.
+     * @retval false Channel was out of range.
+     */
     bool dmot_ui_equalizer_set_channel_name(dmot_ui_eq *eq, size_t chan, const char *name);
 
-    // Set the number of channels available.
-    // @param eq        Equalizer handle.
-    // @param n_chan    Number of channels available. E.g. 16
-    // @return          true if the value was set, false otherwise.
+    /**
+     * @brief Sets how many channels the equalizer should render.
+     *
+     * @param[in,out] eq Equalizer handle.
+     * @param[in] n_chan Number of channels to display.
+     * @retval true Update succeeded.
+     * @retval false Requested count exceeded the maximum.
+     */
     bool dmot_ui_equalizer_set_channels_available(dmot_ui_eq *eq, size_t n_chan);
 
-    // Sets how many columns wide the equalizer should be.
-    // @param eq        Equalizer handle.
-    // @param cols      Columns: e.g. 100
-    // @return          true if the value was set, false otherwise.
+    /**
+     * @brief Adjusts the equalizer width in console columns.
+     *
+     * @param[in,out] eq Equalizer handle.
+     * @param[in] cols Desired width in columns.
+     * @retval true Width updated successfully.
+     * @retval false Width was outside of the supported range.
+     */
     bool dmot_ui_equalizer_set_width(dmot_ui_eq *eq, int cols);
 
     /*
      * Output stream functions
      */
 
-    // Writes a pattern to the output stream n number of times.
-    // @param out       Output stream. e.g. stdout.
-    // @param p         Pattern to be repeated. eg. "foo"
-    // @param n         Number of repetitions.
+    /**
+     * @brief Writes a pattern to an output stream repeatedly.
+     *
+     * @param[in,out] out Destination stream (for example, `stdout`).
+     * @param[in] p Null-terminated pattern to write.
+     * @param[in] n Number of repetitions.
+     */
     void dmot_ui_ostream_repeat_pattern(FILE *out, const char *p, size_t n);
 
-    // Writes a pattern to the output stream n number of times. Prints a new line after.
-    // @param out       Outputstream. e.g. stdout.
-    // @param p         Pattern to be repeated. eg. "foo"
-    // @param n         Number of repetitions.
+    /**
+     * @brief Writes a repeated pattern followed by a newline.
+     *
+     * @param[in,out] out Destination stream.
+     * @param[in] p Null-terminated pattern to write.
+     * @param[in] n Number of repetitions.
+     */
     void dmot_ui_ostream_repeat_pattern_endl(FILE *out, const char *p, size_t n);
 
 #ifdef __cplusplus

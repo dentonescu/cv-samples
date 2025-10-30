@@ -6,17 +6,29 @@ extern "C"
 {
 #endif
 
-    // Writes a formatted into a string at the position indicated by cursor.
-    // @param cursor                Pointer to the a pointer marking the position to start overwriting
-    // @param end                   Marks the end of the string.
-    // @param fmt                   String to insert which may containing format specifiers.
-    // @param ...                   Variables which accompany the formatted string.
-    // @return                      Integer representing the characters written or unable to be written. Positive means success; negative, failure.
+    /**
+     * @brief Writes formatted text into a string buffer at the cursor location.
+     *
+     * Typical setup prior to calling this function:
+     * @code{.c}
+     * char *cursor = buf;
+     * char *end = buf + buf_size;
+     * @endcode
+     *
+     * @param[in,out] cursor Pointer to the buffer cursor; advanced as characters are emitted.
+     * @param[in] end Pointer one past the writable end of the buffer.
+     * @param[in] fmt printf-style format string.
+     * @param[in] ... Variadic arguments consumed by the format string.
+     * @return Number of characters appended on success; negative on failure.
+     */
     int dmot_string_write_into(char **cursor, char *end, const char *fmt, ...);
 
-    // Removes whitespace from both sides of a string.
-    // @param s         String to trim -- NOT a string literal but a writeable array.
-    // @return          Trimmed string.
+    /**
+     * @brief Trims leading and trailing whitespace from a mutable string.
+     *
+     * @param[in,out] s Writable string buffer to trim in place.
+     * @return Pointer to the trimmed portion of @p s.
+     */
     char *dmot_string_trim(char *s);
 
 #ifdef __cplusplus

@@ -14,45 +14,53 @@ extern "C"
 #define WFQ_PARAM_MOCK "mock"
 #define WFQ_PARAM_HTTP_PORT "http.port"
 
-    // Describes a channel bin.
-    // @param chan          Channel number.
-    // @param lower_freq    Lower frequency in MHz.
-    // @param mid_freq      Mid frequency in MHz.
-    // @param upper_freq    Upper frequency in MHz.
+    /**
+     * @brief Describes a Wi-Fi channel frequency bin.
+     */
     typedef struct
     {
-        int chan;
-        double lower_freq;
-        double mid_freq;
-        double upper_freq;
+        int chan;            /**< Channel number. */
+        double lower_freq;   /**< Lower bound of the channel center frequency in MHz. */
+        double mid_freq;     /**< Midpoint frequency in MHz. */
+        double upper_freq;   /**< Upper bound of the channel center frequency in MHz. */
     } wfq_config_channel_bin;
 
-    // Configuration context.
-    // @param opt                   WiFiEqu options.
-    // @param channel_bin           Channel bin describes a Wi-Fi channel. channel_bin[1] is Wi-Fi channel 1.
-    // @param n_chan_defined        Number of defined channels in the configuration.
-    // @param chan_list             Zero-indexed list of defined channels.
+    /**
+     * @brief Aggregates WiFiEqu configuration settings and channel metadata.
+     */
     typedef struct
     {
-        wfq_options opt;
-        wfq_config_channel_bin channel_bin[WFQ_CONFIG_MAX_CHAN + 1];
-        int n_chan_defined;
-        int chan_list[WFQ_CONFIG_MAX_CHAN + 1]; // zero-indexed
+        wfq_options opt;                                        /**< Global daemon options. */
+        wfq_config_channel_bin channel_bin[WFQ_CONFIG_MAX_CHAN + 1]; /**< Channel metadata indexed by channel number. */
+        int n_chan_defined;                                     /**< Count of configured channels. */
+        int chan_list[WFQ_CONFIG_MAX_CHAN + 1];                 /**< Zero-indexed list of defined channel numbers. */
     } wfq_config_context;
 
-    // Retrieves configuration options from the configuration file.
-    // @param ctx           wfq_config_context structure.
-    // @return              true if the configuration was successfully read, false otherwise.
+    /**
+     * @brief Loads WiFiEqu configuration from disk.
+     *
+     * @param[in,out] ctx Configuration context to populate.
+     * @retval true Configuration parsed successfully.
+     * @retval false Failed to read or parse the configuration file.
+     */
     bool wfq_config_read(wfq_config_context *ctx);
 
-    // Retrieves the position of the channel in the list of defined channels.
-    // @param ctx           wfq_config_context structure.
-    // @return              -1 if not found, otherwise position in the array of channels defined.
+    /**
+     * @brief Finds the index of a channel within the defined-channel list.
+     *
+     * @param[in] ctx Configuration context.
+     * @param[in] chan Channel number to look up.
+     * @return Zero-based index when present, otherwise -1.
+     */
     int wfq_config_find_index_among_channels_defined(wfq_config_context *ctx, int chan);
 
-    // Converts a frequency to a channel number.
-    // @param freq          Frequency (e.g. 2405)
-    // @return              Channel number based on the frequency (e.g. 2405). Zero if no channel found.
+    /**
+     * @brief Converts a frequency to the closest defined Wi-Fi channel.
+     *
+     * @param[in] ctx Configuration context.
+     * @param[in] freq Frequency in MHz.
+     * @return Channel number when a mapping exists; otherwise 0.
+     */
     int wfq_config_freq2chan(wfq_config_context *ctx, double freq);
 
 #ifdef __cplusplus

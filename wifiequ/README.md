@@ -47,13 +47,17 @@ WiFiEqu demonstrates how system services on different operating systems can expo
 - **Web client (Angular)**: browser visualization that consumes the JSON API.
 
 ## Status
-- Linux daemon now publishes live readings and mock data, with Makefiles and systemd integration wired.
+- Linux daemon now publishes live readings or mock data, with Makefiles, systemd integration, and a tested HTTP sample-stream buffer wired in.
+- HTTP router is still stubbed (returns `MHD_NO` for now); wiring the JSON endpoints is the next milestone in this series.
 - Web/Windows clients remain stubs and will evolve once the JSON contract stabilises.
 
 ## Build
 ```sh
 make clean all              # or simply: make
+make docs                   # regenerate API docs when needed
 ```
+
+> Note: Documentation is no longer generated as part of `make`/`make all`; run `make docs` explicitly whenever the HTML needs to be refreshed.
 
 ## Install (optional)
 ```sh
@@ -71,12 +75,16 @@ make example-demo           # runs the demos
 
 > Notes: Linux build depends on the local `libdmotservices` C artifacts. See that project’s README for building the library first.
 
+Ring-buffer behaviour for the streaming endpoint is covered by `linux/tests/test_sample_stream.c`, including fast-producer/slow-consumer edge cases.
+
 ## JSON API
 - `GET /api/v1/channels`
 - `GET /api/v1/stats`
 - `GET /api/v1/channels/stream`
 
 The OpenAPI contract lives in [`api/openapi.yaml`](api/openapi.yaml). The HTML version at [`docs/api/index.html`](docs/api/index.html) is produced on demand via the root `make docs` target, which will fetch `@redocly/cli` if it is not already installed.
+
+> API note: Although the ring buffer and tests are in place, the libmicrohttpd callback still returns `MHD_NO`, so the published endpoints are staged and currently return no data while the router is being integrated.
 
 ## Roadmap
 - [ ] Finalise JSON schema and add contract tests.

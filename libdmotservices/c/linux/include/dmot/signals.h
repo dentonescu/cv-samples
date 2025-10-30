@@ -6,22 +6,28 @@ extern "C"
 {
 #endif
 
-    // Generates a bounded sine wave. f = A * SINE(k * theta) + offset
-    //
-    // @param A       Amplitude.
-    // @param k       Cefficient.
-    // @param theta   Angle in radians.
-    // @param offset  Vertical offset.
-    //
-    // @return Computed sine value.
+    /**
+     * @brief Computes a bounded sine wave sample.
+     *
+     * Evaluates @f$ A \cdot \sin(k \cdot \theta) + \text{offset} @f$.
+     *
+     * @param[in] A Amplitude applied to the sine wave.
+     * @param[in] k Frequency coefficient.
+     * @param[in] theta Input angle in radians.
+     * @param[in] offset Vertical offset applied to the waveform.
+     * @return Evaluated sine value.
+     */
     double dmot_signal_sine_wave(double A, double k, double theta, double offset);
 
-    // Generates a sine wave in a valid dBm range (-100 to 0 dBm). f = SINE_dbm(k * theta)
-    //
-    // @param k         Coefficient.
-    // @param theta     Angle in radians.
-    //
-    // @return Computed sine value in dBm.
+    /**
+     * @brief Computes a sine wave constrained to the Wi-Fi dBm range.
+     *
+     * Evaluates @f$ \sin_{\text{dBm}}(k \cdot \theta) @f$ yielding values in [-100, 0] dBm.
+     *
+     * @param[in] k Frequency coefficient.
+     * @param[in] theta Input angle in radians.
+     * @return Sine value expressed in dBm.
+     */
     double dmot_signal_sine_wave_dbm(double k, double theta);
 
 #ifdef __cplusplus

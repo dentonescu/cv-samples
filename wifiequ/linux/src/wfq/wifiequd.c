@@ -19,6 +19,8 @@
 #include "wfq/config.h"
 #include "wfq/mocksignal.h"
 #include "wfq/wifisignal.h"
+#include "wfqapi/http.h"
+#include "wfqapi/json.h"
 
 /*
  * internals
@@ -109,10 +111,7 @@ static void publish_reading(void)
     wfq_sample sample = (s_config_ctx.opt.mock ? wfq_sine_wave_generator_read() : wfq_wifi_signal_read());
     wfq_sample2json(&sample, json, sizeof json);
     if (sample.timestamp_ms > prev_timestamp)
-    {
         DMOT_LOGD("%s", json);
-    }
-    // TODO: publish the reading to the HTTP stream
 }
 
 static void load_config(void)
@@ -138,55 +137,34 @@ static void reload_signal_source(void)
  * externals
  */
 
-void wfq_sample2json(wfq_sample *sample, char *buf, size_t buf_size)
-{
-    if (!buf || buf_size == 0)
-        return;
-
-    buf[0] = '\0';
-    if (!sample)
-        return;
-
-    char *cursor = buf;
-    char *end = buf + buf_size;
-
-    if (!dmot_string_write_into(&cursor, end, "{\n"))
-        return;
-    if (!dmot_string_write_into(&cursor, end, "    \"timestamp_ms\": %lld,\n", sample->timestamp_ms))
-        return;
-    if (!dmot_string_write_into(&cursor, end, "    \"readings\": [\n"))
-        return;
-
-    bool first = true;
-    for (size_t i = 0; i < WFQ_EQU_MAX_READINGS; ++i)
-    {
-        const wfq_channel *channel = &sample->readings[i];
-        if (channel->chan_id <= 0)
-            continue;
-
-        if (!first && !dmot_string_write_into(&cursor, end, ",\n"))
-            return;
-
-        if (!dmot_string_write_into(&cursor, end,
-                                    "        {\"chan\": %d, \"dbm\": %.1f}",
-                                    channel->chan_id, channel->chan_dbm))
-            return;
-
-        first = false;
-    }
-
-    if (!dmot_string_write_into(&cursor, end, "\n    ]\n}\n"))
-        return;
-}
-
 int main(void)
 {
+    int exit_status = EXIT_SUCCESS;
     dmot_log_set_level(DMOT_LOG_DEBUG);
     dmot_log_set_file(stdout);
     load_config();
     kernel_set_signal_handler();
     daemon_announce(stdout);
     set_up_signal_source();
+
+    unsigned short port = s_config_ctx.opt.port;
+    bool api_started = false;
+    wfqapi_http_server *srv = calloc(1, sizeof(*srv)); // otherwise stack overflow; carries an ~8MB ring buffer
+    if (!srv)
+    {
+        DMOT_LOGE("FAILED to allocate HTTP server state (out of memory).");
+        exit_status = EXIT_FAILURE;
+        goto cleanup;
+    }
+    api_started = wfqapi_http_server_start(srv, port);
+    if (!api_started)
+    {
+        DMOT_LOGE("FAILED to start the API server on HTTP port %u", port);
+        exit_status = EXIT_FAILURE;
+        goto cleanup;
+    }
+    DMOT_LOGD("API server listening on HTTP port %u.", port);
+
     while (g_running)
     {
         if (g_reload)
@@ -197,7 +175,18 @@ int main(void)
         publish_reading();
         dmot_time_sleep_ms(WFQ_REFRESH_WAIT_MS);
     }
+
+cleanup:
+    if (srv)
+    {
+        if (api_started)
+        {
+            wfqapi_http_server_stop(srv);
+            DMOT_LOGD("Stopped the API server on port %u.", port);
+        }
+        free(srv);
+    }
     tear_down_signal_source();
     DMOT_LOGD("Daemon stopped.");
-    return EXIT_SUCCESS;
+    return exit_status;
 }

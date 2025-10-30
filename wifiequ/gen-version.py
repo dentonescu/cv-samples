@@ -16,13 +16,22 @@ extern "C"
 {{
 #endif
 
-    // Retrieves the current version of wifique
-    // @return          Current version of wifique
+    /**
+     * @brief Retrieves the full semantic version string of WiFiEqu.
+     *
+     * @return Null-terminated version string.
+     */
     static inline const char *wfq_version_get_version(void)
     {{
         return WFQ_VERSION;
     }}
     
+    /**
+     * @brief Parses a single numeric component from the version string.
+     *
+     * @param[in] component_index Zero-based index of the component (`0` = major, `1` = minor, ...).
+     * @return Parsed component value, or `0` if the component is absent.
+     */
     static inline unsigned int wfq_version_get_version_component(unsigned int component_index)
     {{
         const char *cursor = wfq_version_get_version();
@@ -46,16 +55,31 @@ extern "C"
         return value;
     }}
 
+    /**
+     * @brief Returns the major component of the WiFiEqu version.
+     *
+     * @return Major version number.
+     */
     static inline unsigned int wfq_version_get_version_major(void)
     {{
         return wfq_version_get_version_component(0U);
     }}
 
+    /**
+     * @brief Returns the minor component of the WiFiEqu version.
+     *
+     * @return Minor version number.
+     */
     static inline unsigned int wfq_version_get_version_minor(void)
     {{
         return wfq_version_get_version_component(1U);
     }}
 
+    /**
+     * @brief Returns the patch component of the WiFiEqu version.
+     *
+     * @return Patch version number.
+     */
     static inline unsigned int wfq_version_get_version_patch(void)
     {{
         return wfq_version_get_version_component(2U);

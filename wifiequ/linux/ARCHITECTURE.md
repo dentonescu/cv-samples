@@ -10,10 +10,10 @@ nl80211 scan  -->  scanner (wlanscan.c)  -->  channel bins (config.c)
                      v                                      v
                 wfq_signal[]                        wfq_config_context
                      \                                      /
-                      \--> ui equalizer (libdmotservices) --
-                                   |
-                                   v
-                          terminal + JSON logging
+                     \--> ui equalizer (libdmotservices) --
+                                  |
+                                  v
+                         terminal + HTTP sample stream
 ```
 
 ## Key modules
@@ -24,7 +24,8 @@ nl80211 scan  -->  scanner (wlanscan.c)  -->  channel bins (config.c)
 | Configuration | `src/config/config.c` | Reads `etc/wifiequd.conf`, validates channel bins, and provides frequency-to-channel lookups. |
 | UI integration | `examples/ex_wlanscan.c` | Bridges scanner output into the `dmot_ui_equalizer` from [libdmotservices](../../libdmotservices/README.md), including label management per channel. |
 | Mock/live data | `src/mock/mocksignal.c`, `src/wlan/wifisignal.c` | Provide interchangeable data sources for demos and daemon mode. |
-| Daemon | `src/wifiequd.c` | Hosts the refresh loop, publishes JSON, and manages signal sources. |
+| HTTP façade | `src/wfqapi/http.c` | Owns the libmicrohttpd daemon, keeps a ring buffer of recent samples, and exposes monotonic read/write helpers. The router callback currently returns `MHD_NO` until endpoint wiring lands. |
+| Daemon | `src/wifiequd.c` | Hosts the refresh loop, publishes JSON, interacts with the HTTP façade, and manages signal sources. |
 
 ## Configuration flow
 
@@ -41,7 +42,8 @@ nl80211 scan  -->  scanner (wlanscan.c)  -->  channel bins (config.c)
 
 ## Extensibility ideas
 
-- Add HTTP streaming in `wifiequd` so the equalizer can power a web UI.
+- Finish wiring the libmicrohttpd router so `/api/v1/channels` and the streaming endpoint can serialise straight from the ring buffer (currently stubbed).
+- Expose the ring buffer over Server-Sent Events and add basic auth for remote viewers.
 - Persist configuration samples so scans can be replayed offline.
 
 ## Related

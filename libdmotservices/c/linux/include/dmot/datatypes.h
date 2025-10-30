@@ -19,9 +19,12 @@ extern "C"
 {
 #endif
 
-    // Converts a size_t type to an int.
-    // @param value         size_t value to be converted.
-    // @return              Corresponding int value if within range, INT_MAX otherwise.
+    /**
+     * @brief Safely narrows a `size_t` value to `int`.
+     *
+     * @param[in] value Value to convert.
+     * @return Converted value when representable; otherwise `INT_MAX`.
+     */
     int size_t_to_int(size_t value);
 
 #ifdef __cplusplus

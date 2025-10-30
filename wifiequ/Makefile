@@ -2,7 +2,7 @@
 ## WiFiEqu/Makefile
 #################################################
 
-.PHONY: all angular clean dist docs install example-demo examples linux prebuild setup-user test tests windows
+.PHONY: all angular clean dist docs docs-openapi install example-demo examples linux prebuild setup-user test tests windows
 
 # build prerequisites
 VERSION := $(strip $(shell cat VERSION))
@@ -19,29 +19,38 @@ DOC_DIR_API     := docs/api
 DOC_API_HTML    := $(DOC_DIR_API)/index.html
 
 # commands
-MILESTONE := echo === 
+MILESTONE 		:= echo === 
+GATHER_BINS		:= for dir in "$(ROOT)/linux/bin" "$(ROOT)/linux/build"; do \
+						if [ -d "$$dir" ]; then \
+							cp -vR "$$dir"/. "$(DIST)"/; \
+						fi; \
+					done
 
 
 #####################################################################################
 ## Default build
 #####################################################################################
-all: prebuild version linux dist docs
+all: prebuild version linux dist
 
 dist:
 	@$(MILESTONE) "Populating the distribution directory..."
 	@mkdir -p "$(DIST)"
 	@find "$(ROOT)/linux" -name "*.a" -type f -exec cp -v "{}" "$(DIST)"/ \;
-	@for dir in "$(ROOT)/linux/bin" "$(ROOT)/linux/build"; do \
-		if [ -d "$$dir" ]; then \
-			cp -vR "$$dir"/. "$(DIST)"/; \
-		fi; \
-	done
+	@$(GATHER_BINS)
 
-docs: $(DOC_API_HTML)
+docs: docs-openapi
+
+docs-openapi: $(DOC_DIR_API) $(OPENAPI)
+	@$(MILESTONE) "Generating the OpenAPI specification as HTML..."
+	@if ! npx --no-install @redocly/cli --version >/dev/null 2>&1; then \
+		echo "Installing @redocly/cli (dev dependency)..."; \
+		npm install --save-dev @redocly/cli >/dev/null; \
+	fi
+	@npx @redocly/cli build-docs "$(OPENAPI)" --output "$(DOC_API_HTML)"
 
 prebuild:
 	@cat wifiequ.logo
-
+	
 
 #####################################################################################
 ## Version management
@@ -91,6 +100,7 @@ angular:
 tests:
 	@$(MILESTONE) "Compiling all tests..."
 	@$(MAKE) -C linux tests
+	@$(GATHER_BINS)
 
 test: tests
 	@$(MILESTONE) "Executing all tests..."
@@ -103,6 +113,7 @@ test: tests
 examples:
 	@$(MILESTONE) "Compiling all examples..."
 	@$(MAKE) -C linux examples
+	@$(GATHER_BINS)
 
 example-demo: examples
 	@$(MILESTONE) "Executing all examples and demos..."
@@ -123,11 +134,3 @@ clean:
 
 $(DOC_DIR_API):
 	@mkdir -p "$@"
-
-$(DOC_API_HTML): $(OPENAPI) | $(DOC_DIR_API)
-	@$(MILESTONE) "Generating the OpenAPI specification as HTML..."
-	@if ! npx --no-install @redocly/cli --version >/dev/null 2>&1; then \
-		echo "Installing @redocly/cli (dev dependency)..."; \
-		npm install --save-dev @redocly/cli >/dev/null; \
-	fi
-	@npx @redocly/cli build-docs "$<" --output "$@"

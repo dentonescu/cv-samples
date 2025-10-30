@@ -12,28 +12,45 @@ extern "C"
 
     typedef struct
     {
-        int n_channels;
-        long refresh_wait_ms;
+        int n_channels;          /**< Number of channels to synthesize. */
+        long refresh_wait_ms;    /**< Delay between generated samples in milliseconds. */
     } wfq_mock_signal_options;
 
-    // A thread which generates fake input signals for the equalizer using sine waves.
+    /**
+     * @brief Thread entry point that generates mock equalizer signals.
+     *
+     * @param[in] arg Pointer to a `wfq_mock_signal_options` instance.
+     * @return Always `NULL`.
+     */
     void *wfq_task_sine_wave_generator(void *arg);
 
-    // Initializes the sine wave signal generator.
+    /**
+     * @brief Initializes the sine wave signal generator with defaults.
+     */
     void wfq_sine_wave_generator_init(void);
 
-    // Initializes the sine wave signal generator with user options.
-    // @param options           Preferences for the generator.
+    /**
+     * @brief Initializes the sine wave generator using caller-supplied options.
+     *
+     * @param[in] options Preferred generator settings.
+     */
     void wfq_sine_wave_generator_init_with_options(wfq_mock_signal_options *options);
 
-    // Reads the last sample produced by the sine wave signal generator.
-    // @return                  Last sample read.
+    /**
+     * @brief Returns the most recent mock sample produced by the generator.
+     *
+     * @return Latest sample value.
+     */
     wfq_sample wfq_sine_wave_generator_read(void);
 
-    // Starts the threaded sine wave signal generator.
+    /**
+     * @brief Starts the background thread that produces mock samples.
+     */
     void wfq_sine_wave_generator_start(void);
 
-    // Stops the threaded sine wave signal generator.
+    /**
+     * @brief Stops the background thread that produces mock samples.
+     */
     void wfq_sine_wave_generator_stop(void);
 
 #ifdef __cplusplus

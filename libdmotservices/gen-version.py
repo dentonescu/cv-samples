@@ -18,13 +18,22 @@ extern "C"
 {{
 #endif
 
-    // Retrieves the current version of libdmotservices
-    // @return          Current version of libdmotservices
+    /**
+     * @brief Retrieves the full semantic version string of libdmotservices.
+     *
+     * @return Null-terminated version string.
+     */
     static inline const char *dmot_version_get_version(void)
     {{
         return DMOT_VERSION;
     }}
     
+    /**
+     * @brief Parses an individual component from the version string.
+     *
+     * @param[in] component_index Zero-based component index.
+     * @return Parsed component value, or `0` if missing.
+     */
     static inline unsigned int dmot_version_get_version_component(unsigned int component_index)
     {{
         const char *cursor = dmot_version_get_version();
@@ -48,16 +57,31 @@ extern "C"
         return value;
     }}
 
+    /**
+     * @brief Returns the major component of the libdmotservices version.
+     *
+     * @return Major version number.
+     */
     static inline unsigned int dmot_version_get_version_major(void)
     {{
         return dmot_version_get_version_component(0U);
     }}
 
+    /**
+     * @brief Returns the minor component of the libdmotservices version.
+     *
+     * @return Minor version number.
+     */
     static inline unsigned int dmot_version_get_version_minor(void)
     {{
         return dmot_version_get_version_component(1U);
     }}
 
+    /**
+     * @brief Returns the patch component of the libdmotservices version.
+     *
+     * @return Patch version number.
+     */
     static inline unsigned int dmot_version_get_version_patch(void)
     {{
         return dmot_version_get_version_component(2U);
@@ -75,24 +99,47 @@ java_dir.mkdir(parents=True, exist_ok=True)
 (java_dir/"Versioning.java").write_text(f'''
 package dev.dmotservices.versioning;
 
+/**
+ * Provides access to the current libdmotservices version at runtime.
+ */
 public class Versioning {{
 
     private static final String VERSION = "{ver}";
     private static final String BASE_VERSION = VERSION.split("-", 2)[0];
     private static final String[] VERSION_PARTS = BASE_VERSION.split("\\\\.");
 
+    /**
+     * Returns the full semantic version string.
+     *
+     * @return The raw version string, including any pre-release suffix.
+     */
     public static String getVersion() {{
         return VERSION;
     }}
 
+    /**
+     * Returns the major component of the version.
+     *
+     * @return Major version number.
+     */
     public static int getMajor() {{
         return Integer.parseInt(VERSION_PARTS[0]);
     }}
 
+    /**
+     * Returns the minor component of the version.
+     *
+     * @return Minor version number, or {{@code 0}} when absent.
+     */
     public static int getMinor() {{
         return (VERSION_PARTS.length > 1) ? Integer.parseInt(VERSION_PARTS[1]) : 0;
     }}
 
+    /**
+     * Returns the patch component of the version.
+     *
+     * @return Patch version number, or {{@code 0}} when absent.
+     */
     public static int getPatch() {{
         return (VERSION_PARTS.length > 2) ? Integer.parseInt(VERSION_PARTS[2]) : 0;
     }}
