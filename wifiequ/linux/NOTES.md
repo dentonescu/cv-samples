@@ -60,6 +60,7 @@ sudo watch -n 1 "echo 'freq\tsignal' && iw dev wlan0 scan | awk '/freq:/{f=\$2}/
 - [GNU Libmicrohttpd](https://www.gnu.org/software/libmicrohttpd/)
 - [Linux Wireless documentation](https://wireless.docs.kernel.org/en/latest/en/developers/documentation/nl80211.html)
 - [Stackoverflow: How do the nl80211 library & cfg80211 work?](https://stackoverflow.com/questions/21456235/how-do-the-nl80211-library-cfg80211-work): Overview of the nl80211 library
+- [Wikipedia: Circular buffer](https://en.wikipedia.org/wiki/Circular_buffer): Ring buffer data structure.
 - [Wikipedia: List of WLAN channels](https://en.wikipedia.org/wiki/List_of_WLAN_channels): Channels and frequency ranges.
 - [Wikipedia: Netlink](https://en.wikipedia.org/wiki/Netlink): AF_NETLINK socket family for IPC between kernel and userspace processes.
 
