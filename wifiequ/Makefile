@@ -126,7 +126,6 @@ clean:
 	@$(MILESTONE) "Removing previous builds..."
 	@$(MAKE) -C linux clean || true
 	@rm -Rf "$(DIST)"
-	@rm -Rf "$(DOC_DIR_API)"
 
 #####################################################################################
 ## documentation helpers
