@@ -8,8 +8,11 @@ extern "C"
 {
 #endif
 
-#define WFQ_MOCK_SIGNAL_REFRESH_WAIT_MS 50
+#define WFQ_MOCK_SIGNAL_REFRESH_WAIT_MS 50 /**< Default delay between mock samples in milliseconds. */
 
+    /**
+     * @brief Configuration parameters for the mock signal generator.
+     */
     typedef struct
     {
         int n_channels;          /**< Number of channels to synthesize. */

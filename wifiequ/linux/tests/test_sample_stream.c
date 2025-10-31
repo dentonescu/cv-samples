@@ -27,7 +27,7 @@ typedef struct
     long long time_tracker;
     wfq_sample test_buf[WFQAPI_SAMPLE_STREAM_BUFFER_SIZE * 10];
     size_t test_buf_ctr;
-    wfqapi_http_server srv;
+    wfqapi_server srv;
 } test_context;
 
 static test_context ctx;

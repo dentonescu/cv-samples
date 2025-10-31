@@ -11,6 +11,7 @@ extern "C"
 #define WFQ_CONFIG_MAX_CHAN 1024
 #define WFQ_CONFIG_PATH "/etc/wifiequd.conf"
 #define WFQ_PARAM_INTERFACE "interface"
+#define WFQ_PARAM_LOG_JSON "log.daemon.json"
 #define WFQ_PARAM_MOCK "mock"
 #define WFQ_PARAM_HTTP_PORT "http.port"
 
@@ -19,10 +20,10 @@ extern "C"
      */
     typedef struct
     {
-        int chan;            /**< Channel number. */
-        double lower_freq;   /**< Lower bound of the channel center frequency in MHz. */
-        double mid_freq;     /**< Midpoint frequency in MHz. */
-        double upper_freq;   /**< Upper bound of the channel center frequency in MHz. */
+        int chan;          /**< Channel number. */
+        double lower_freq; /**< Lower bound of the channel center frequency in MHz. */
+        double mid_freq;   /**< Midpoint frequency in MHz. */
+        double upper_freq; /**< Upper bound of the channel center frequency in MHz. */
     } wfq_config_channel_bin;
 
     /**
@@ -30,10 +31,10 @@ extern "C"
      */
     typedef struct
     {
-        wfq_options opt;                                        /**< Global daemon options. */
+        wfq_options opt;                                             /**< Global daemon options. */
         wfq_config_channel_bin channel_bin[WFQ_CONFIG_MAX_CHAN + 1]; /**< Channel metadata indexed by channel number. */
-        int n_chan_defined;                                     /**< Count of configured channels. */
-        int chan_list[WFQ_CONFIG_MAX_CHAN + 1];                 /**< Zero-indexed list of defined channel numbers. */
+        int n_chan_defined;                                          /**< Count of configured channels. */
+        int chan_list[WFQ_CONFIG_MAX_CHAN + 1];                      /**< Zero-indexed list of defined channel numbers. */
     } wfq_config_context;
 
     /**
@@ -62,6 +63,22 @@ extern "C"
      * @return Channel number when a mapping exists; otherwise 0.
      */
     int wfq_config_freq2chan(wfq_config_context *ctx, double freq);
+
+    /**
+     * @brief Returns the configuration context cached by wfq_config_store_context().
+     *
+     * @return Pointer to the cached configuration, or `NULL` if none has been stored.
+     */
+    wfq_config_context *wfq_config_retrieve_context(void);
+
+    /**
+     * @brief Caches the supplied configuration context for later reuse.
+     *
+     * The pointer is stored verbatim; the caller retains ownership of the memory.
+     *
+     * @param[in] ctx Configuration context to expose globally.
+     */
+    void wfq_config_store_context(wfq_config_context *ctx);
 
 #ifdef __cplusplus
 }

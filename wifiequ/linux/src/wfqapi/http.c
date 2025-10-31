@@ -5,11 +5,14 @@
 #include "wfqapi/http.h"
 #include "wfqapi/router.h"
 
+#define ERR_EMPTY_SRV_CONTEXT "A non-empty server context must be provided."
+
 /*
  * internals
  */
 
-static const char *ERR_EMPTY_SRV_CONTEXT = "A non-empty server context must be provided.";
+static wfqapi_server *srv;
+static bool is_api_server_started = false;
 
 static enum MHD_Result cb_req(void *cls,
                               struct MHD_Connection *connection,
@@ -24,18 +27,66 @@ static enum MHD_Result cb_req(void *cls,
     (void)version;
 
     /*
-    // libmicrohttpd calls you twice for POST data; keep state via con_cls if needed.
-    // For simple GET endpoints, we can dispatch directly:
-    return api_router_dispatch(connection, method, url, upload_data, upload_data_size);
-    */
-    return MHD_NO; // to-do: remove this and call the router
+     * NOTE (libmicrohttpd call sequence):
+     *   1. *con_cls == NULL, *upload_data_size == 0 -> allocate per-request ctx, assign to *con_cls, return MHD_YES.
+     *   2. *upload_data_size > 0 -> streaming chunk; consume it, set *upload_data_size = 0, return (no response yet).
+     *   3. *upload_data_size == 0 -> upload complete; use the ctx to build/send the response.
+     * Applies to POST/PUT/PATCH uploads.
+     */
+
+    return wfqapi_router_dispatch(connection, method, url, upload_data, upload_data_size);
 }
 
 /*
  * externals
  */
 
-void wfqapi_sample_stream_init(wfqapi_http_server *srv)
+bool wfqapi_create_server_context(void)
+{
+    if (srv)
+    {
+        DMOT_LOGW("An attempt was made to create another server context when a handle already exists. Ignoring.");
+        return false;
+    }
+    else
+    {
+        srv = calloc(1, sizeof(*srv)); // otherwise stack overflow; carries an ~8MB ring buffer
+        if (!srv)
+        {
+            DMOT_LOGE("FAILED to allocate HTTP server state (out of memory).");
+            return false;
+        }
+    }
+    return true;
+}
+
+wfqapi_server *wfqapi_get_server_context(void)
+{
+    return srv;
+}
+
+bool wfqapi_destroy_server_context(void)
+{
+    if (srv)
+    {
+        if (is_api_server_started)
+        {
+            wfqapi_http_server_stop(srv);
+            DMOT_LOGD("Stopped the API server on port %u.", srv->port);
+        }
+        free(srv);
+        srv = NULL;
+        is_api_server_started = false;
+    }
+    else
+    {
+        DMOT_LOGW("An attempt was made to destroy a non-existent server handle. Ignoring.");
+        return false;
+    }
+    return true;
+}
+
+void wfqapi_sample_stream_init(wfqapi_server *srv)
 {
     if (!srv)
         return;
@@ -46,7 +97,7 @@ void wfqapi_sample_stream_init(wfqapi_http_server *srv)
     memset(srv->sample_stream_ring_buf, 0, sizeof(srv->sample_stream_ring_buf));
 }
 
-bool wfqapi_http_server_start(wfqapi_http_server *srv, unsigned short port)
+bool wfqapi_http_server_start(wfqapi_server *srv, unsigned short port)
 {
     if (!srv)
     {
@@ -66,10 +117,11 @@ bool wfqapi_http_server_start(wfqapi_http_server *srv, unsigned short port)
         &cb_req, NULL,
         MHD_OPTION_END);
 
-    return srv->daemon != NULL;
+    is_api_server_started = (srv->daemon != NULL);
+    return is_api_server_started;
 }
 
-void wfqapi_http_server_stop(wfqapi_http_server *srv)
+void wfqapi_http_server_stop(wfqapi_server *srv)
 {
     if (!srv)
     {
@@ -81,9 +133,10 @@ void wfqapi_http_server_stop(wfqapi_http_server *srv)
         MHD_stop_daemon(srv->daemon);
         srv->daemon = NULL;
     }
+    is_api_server_started = false;
 }
 
-wfq_sample wfqapi_next_sample_read(wfqapi_http_server *srv)
+wfq_sample wfqapi_next_sample_read(wfqapi_server *srv)
 {
     static wfq_sample sample_prev = {0};
     static wfq_sample sample_curr = {0};
@@ -101,7 +154,7 @@ wfq_sample wfqapi_next_sample_read(wfqapi_http_server *srv)
     return sample_curr;
 }
 
-bool wfqapi_next_sample_write(wfqapi_http_server *srv, wfq_sample *sample)
+bool wfqapi_next_sample_write(wfqapi_server *srv, wfq_sample *sample)
 {
     static wfq_sample sample_prev = {0};
     if (!srv)

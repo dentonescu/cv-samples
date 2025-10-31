@@ -2,11 +2,15 @@
 #define WFQAPI_JSON_H
 #include <microhttpd.h>
 #include <stdbool.h>
+#include "wfq/wifiequ.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
+
+/** Default buffer size for serialized JSON payloads. */
+#define DEFAULT_JSON_BUFFER_SIZE 8192
 
     /**
      * @brief Creates a JSON success response with status 200.
@@ -30,6 +34,15 @@ extern "C"
      * @return Allocated libmicrohttpd response object, or `NULL` on failure.
      */
     struct MHD_Response *wfqapi_json_response_error(int code, const char *message);
+
+    /**
+     * @brief Serializes a sample into JSON form.
+     *
+     * @param[in] sample Sample to encode.
+     * @param[out] buf Destination buffer for UTF-8 JSON output.
+     * @param[in] buf_size Capacity of @p buf in bytes.
+     */
+    void wfqapi_sample2json(wfq_sample *sample, char *buf, size_t buf_size);
 
 #ifdef __cplusplus
 }

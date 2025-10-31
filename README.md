@@ -14,7 +14,7 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 | **[libdmotservices](libdmotservices/README.md)** | Personal multi‑language utility library with unit tests and examples. | C, Java, Makefile, Unit Testing |
 | **[null-cipher](null-cipher/README.md)** | Single‑page visual demo of a simple cipher (encrypt/decrypt) in the browser. | JavaScript, HTML, CSS |
 | **[slideshow-server](slideshow-server/README.md)** | Tiny Python web server that generates responsive media slideshows. | Python, HTML, JS |
-| **[WiFiEqu](wifiequ/README.md)** (in progress) | Terminal Wi‑Fi channel “equalizer” visualizer with a C JSON daemon, Windows service, and Angular web UI. Linux daemon now streams real readings through a tested HTTP ring buffer; HTTP routing is stubbed while the API wiring lands. | C, ANSI/terminal, JSON APIs, C#, Angular |
+| **[WiFiEqu](wifiequ/README.md)** (in progress) | Terminal Wi‑Fi channel “equalizer” visualizer with a C JSON daemon, Windows service, and Angular web UI. Linux daemon now exposes `GET /api/v1/channels`, ships a configurable JSON logger, and streams live/mock readings through a tested HTTP ring buffer (more endpoints underway). | C, ANSI/terminal, JSON APIs, C#, Angular |
 | **[Terraglean](terraglean/README.md)** (planned) | Interactive map showing world data layers (time, weather, country stats). | Java, Spring Boot, Leaflet.js |
 
 ## How to use this repository

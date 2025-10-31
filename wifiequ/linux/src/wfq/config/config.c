@@ -3,10 +3,13 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include "wifiequd.h"
 #include "dmot/log.h"
 #include "dmot/string.h"
 #include "wfq/wifiequ.h"
 #include "wfq/config.h"
+
+static wfq_config_context *ctx_cached;
 
 /*
  * internals
@@ -17,6 +20,16 @@
 /*
  * externals
  */
+
+wfq_config_context *wfq_config_retrieve_context(void)
+{
+    return ctx_cached;
+}
+
+void wfq_config_store_context(wfq_config_context *ctx)
+{
+    ctx_cached = ctx;
+}
 
 bool wfq_config_read(wfq_config_context *ctx)
 {
@@ -31,8 +44,9 @@ bool wfq_config_read(wfq_config_context *ctx)
         return false;
 
     // defaults
-    ctx->opt.port = WFQ_PORT;
-    ctx->opt.mock = WFQ_MOCK_MODE;
+    ctx->opt.json_log = WFQ_DEFAULT_SETTING_JSON_LOG_MODE;
+    ctx->opt.port = WFQ_DEFAULT_SETTING_PORT;
+    ctx->opt.mock = WFQ_DEFAULT_SETTING_MOCK_MODE;
     ctx->opt.interface[0] = '\0';
 
     // initialize channel bins
@@ -95,6 +109,8 @@ bool wfq_config_read(wfq_config_context *ctx)
         }
         else if (strcmp(key, WFQ_PARAM_INTERFACE) == 0)
             snprintf(ctx->opt.interface, sizeof ctx->opt.interface, "%s", val);
+        else if (strcmp(key, WFQ_PARAM_LOG_JSON) == 0)
+            ctx->opt.json_log = atoi(val) != 0;
         else if (strcmp(key, WFQ_PARAM_MOCK) == 0)
             ctx->opt.mock = atoi(val) != 0;
         else if (strcmp(key, WFQ_PARAM_HTTP_PORT) == 0)

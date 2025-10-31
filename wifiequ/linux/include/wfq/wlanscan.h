@@ -9,23 +9,27 @@
 #include <netlink/genl/genl.h>
 #include <netlink/genl/ctrl.h>
 #include <netlink/socket.h>
+#include "wfq/wifiequ.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-#define WFQ_DEFAULT_WLAN_IFACE              "wlan0"
-#define WFQ_DEFAULT_WLAN_FAMILY             "nl80211"
-#define WFQ_WLAN_SCAN_MAX_RESULTS           256U
-#define WFQ_WLAN_SCAN_TIMEOUT_MS            30000
-#define WFQ_WLAN_SCAN_WAIT_MS               100
-#define WFQ_WLAN_SCAN_QUOTA_MIN             WFQ_EQU_N_CHANNELS
+#define WFQ_DEFAULT_WLAN_IFACE "wlan0"                         /**< Default wireless interface to scan. */
+#define WFQ_DEFAULT_WLAN_FAMILY "nl80211"                      /**< Netlink family used for scans. */
+#define WFQ_WLAN_SCAN_MAX_RESULTS 256U                         /**< Maximum signals retained per sweep. */
+#define WFQ_WLAN_SCAN_TIMEOUT_MS 30000                         /**< Overall timeout for a scan request (ms). */
+#define WFQ_WLAN_SCAN_WAIT_MS 100                              /**< Delay between poll attempts while scanning (ms). */
+#define WFQ_WLAN_SCAN_QUOTA_MIN WFQ_EQU_N_CHANNELS             /**< Minimum signals expected from a scan. */
 
 #ifndef NLE_FAIL
 #define NLE_FAIL NLE_FAILURE
 #endif
 
+    /**
+     * @brief Captures a single Wi-Fi signal observation.
+     */
     typedef struct
     {
         double freq_mhz;      /**< Measured center frequency in MHz. */
@@ -57,7 +61,7 @@ extern "C"
     /**
      * @brief Performs a Wi-Fi scan and retrieves detected signals.
      *
-     * @param[in] ifname Network interface name (for example, "wlan0").
+     * @param[in] ifname Network interface name (for example, `"wlan0"`).
      * @return Pointer to an array of scan results owned by the scan layer.
      */
     wfq_signal *wfq_scan_wlan(const char *ifname);

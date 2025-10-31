@@ -61,8 +61,9 @@ static void daemon_announce(FILE *out)
     dmot_ui_ostream_repeat_pattern_endl(out, "=", 80);
     fputs("wifiequd\n", out);
     dmot_ui_ostream_repeat_pattern_endl(out, "-", 80);
-    fprintf(out, "%-25s %s\n", WFQ_PARAM_MOCK, (s_config_ctx.opt.mock ? "true" : "false"));
     fprintf(out, "%-25s %d\n", WFQ_PARAM_HTTP_PORT, s_config_ctx.opt.port);
+    fprintf(out, "%-25s %s\n", WFQ_PARAM_LOG_JSON, (s_config_ctx.opt.json_log ? "true" : "false"));
+    fprintf(out, "%-25s %s\n", WFQ_PARAM_MOCK, (s_config_ctx.opt.mock ? "true" : "false"));
     dmot_ui_ostream_repeat_pattern_endl(out, "=", 80);
     fputs("\n", out);
 }
@@ -107,11 +108,22 @@ static void tear_down_signal_source(void)
 static void publish_reading(void)
 {
     static long long prev_timestamp = -1;
-    char json[8192];
+    char json[DEFAULT_JSON_BUFFER_SIZE];
     wfq_sample sample = (s_config_ctx.opt.mock ? wfq_sine_wave_generator_read() : wfq_wifi_signal_read());
-    wfq_sample2json(&sample, json, sizeof json);
+
+    if (sample.readings[0].chan_id <= 0)
+    {
+        DMOT_LOGD("Skipping publish: no channel readings available.");
+        return;
+    }
+
+    wfqapi_sample2json(&sample, json, sizeof json);
     if (sample.timestamp_ms > prev_timestamp)
-        DMOT_LOGD("%s", json);
+    {
+        wfqapi_server *srv = wfqapi_get_server_context();
+        wfqapi_next_sample_write(srv, &sample);
+        prev_timestamp = sample.timestamp_ms;
+    }
 }
 
 static void load_config(void)
@@ -122,6 +134,8 @@ static void load_config(void)
         exit(EXIT_FAILURE);
     }
     DMOT_LOGD("Loaded the configuration.");
+    wfq_config_store_context(&s_config_ctx);
+    DMOT_LOGD("Cached the configuration.");
     g_reload = 0;
 }
 
@@ -148,16 +162,13 @@ int main(void)
     set_up_signal_source();
 
     unsigned short port = s_config_ctx.opt.port;
-    bool api_started = false;
-    wfqapi_http_server *srv = calloc(1, sizeof(*srv)); // otherwise stack overflow; carries an ~8MB ring buffer
-    if (!srv)
+    if (!wfqapi_create_server_context())
     {
-        DMOT_LOGE("FAILED to allocate HTTP server state (out of memory).");
-        exit_status = EXIT_FAILURE;
+        DMOT_LOGE("Could not create the server context.");
         goto cleanup;
     }
-    api_started = wfqapi_http_server_start(srv, port);
-    if (!api_started)
+    wfqapi_server *srv = wfqapi_get_server_context();
+    if (!wfqapi_http_server_start(srv, port))
     {
         DMOT_LOGE("FAILED to start the API server on HTTP port %u", port);
         exit_status = EXIT_FAILURE;
@@ -177,15 +188,7 @@ int main(void)
     }
 
 cleanup:
-    if (srv)
-    {
-        if (api_started)
-        {
-            wfqapi_http_server_stop(srv);
-            DMOT_LOGD("Stopped the API server on port %u.", port);
-        }
-        free(srv);
-    }
+    wfqapi_destroy_server_context();
     tear_down_signal_source();
     DMOT_LOGD("Daemon stopped.");
     return exit_status;

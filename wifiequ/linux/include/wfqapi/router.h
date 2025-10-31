@@ -15,19 +15,19 @@ extern "C"
      * appropriate endpoint implementation. Unsupported combinations result in
      * an HTTP error response.
      *
-     * @param[in] conn  libmicrohttpd connection context for the active request.
+     * @param[in] conn libmicrohttpd connection context for the active request.
      * @param[in] method HTTP verb (for example, `"GET"` or `"POST"`).
      * @param[in] url Requested path beginning with `/api/...`.
-     * @param[in] upload_data Pointer to request body data (if any).
-     * @param[in,out] upload_data_size Size of @p upload_data; libmicrohttpd may adjust this.
+     * @param[in] upload_data Pointer to request body data; may be `NULL` for GET.
+     * @param[in,out] upload_data_size Size of @p upload_data; set to `0` once consumed.
      * @retval MHD_YES The request was handled and a response queued.
      * @retval MHD_NO  The router could not handle the request.
      */
-    int api_router_dispatch(struct MHD_Connection *conn,
-                            const char *method,
-                            const char *url,
-                            const char *upload_data,
-                            size_t *upload_data_size);
+    int wfqapi_router_dispatch(struct MHD_Connection *conn,
+                               const char *method,
+                               const char *url,
+                               const char *upload_data,
+                               size_t *upload_data_size);
 
 #ifdef __cplusplus
 }

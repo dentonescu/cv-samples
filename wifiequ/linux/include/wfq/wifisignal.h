@@ -2,13 +2,14 @@
 #define WFQ_WIFI_SIGNAL_H
 
 #include "wfq/wifiequ.h"
+#include "wfq/config.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-#define WFQ_LIVE_SIGNAL_REFRESH_WAIT_MS 1000
+#define WFQ_LIVE_SIGNAL_REFRESH_WAIT_MS 1000 /**< Default polling cadence for the live signal scanner (ms). */
 
     /**
      * @brief Retrieves the most recent sample obtained from the live data source.

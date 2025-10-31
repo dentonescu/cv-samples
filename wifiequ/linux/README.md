@@ -30,6 +30,14 @@ make example-demo   # launches the highlight demos
 
 Artifacts land in `bin/`, logs in `logs/`.
 
+### Try the HTTP endpoint
+```bash
+./bin/wifiequd &
+curl -s http://localhost:8080/api/v1/channels | jq
+```
+
+Set `log.daemon.json=1` in `etc/wifiequd.conf` to mirror each payload in the daemon log.
+
 ## Optional systemd install
 
 The helper target installs a service unit and ensures the `wifiequ` user/group exist:
@@ -44,11 +52,11 @@ Remove with `sudo make uninstall`.
 
 ## Core components
 
-- **Daemon (`src/wifiequd.c`)** – gathers Wi-Fi samples, publishes JSON, and optionally serves HTTP via libmicrohttpd.
+- **Daemon (`src/wifiequd.c`)** – gathers Wi-Fi samples, publishes JSON, and optionally serves HTTP via libmicrohttpd (mock/live sources).
 - **Scanner (`src/wlan/wlanscan.c`)** – drives `nl80211` via libnl, aggregates the strongest signal per configured channel bin, and exposes the results to the UI.
 - **Configuration (`src/config/config.c`)** – parses `etc/wifiequd.conf`, validates channel ranges, and maps frequencies to Wi-Fi channels.
 - **Equalizer UI (`examples/ex_wlanscan.c`)** – renders live channel strengths using the reusable terminal equalizer from libdmotservices.
-- **HTTP server (`src/wfqapi/http.c`)** – manages a monotonic ring buffer for streaming samples and wraps libmicrohttpd startup/shutdown (router currently returns `MHD_NO` until endpoints are wired).
+- **HTTP server (`src/wfqapi/http.c`)** – manages a monotonic ring buffer for streaming samples and wraps libmicrohttpd startup/shutdown; currently powers `GET /api/v1/channels`.
 - **Unit tests (`tests/test_sample_stream.c`)** – exercise the sample-stream buffer with fast-producer/slow-consumer scenarios.
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for the data flow between these pieces.

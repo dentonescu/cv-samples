@@ -11,8 +11,9 @@ extern "C"
     /**
      * @brief Handles `GET /api/v1/channels` requests.
      *
-     * Generates a JSON payload containing the most recent per-channel aggregates
-     * and queues it on the provided libmicrohttpd connection.
+     * Serializes the latest sample published to the HTTP streaming buffer and
+     * queues it as a JSON payload. When daemon JSON logging is enabled the body
+     * is logged prior to transmission.
      *
      * @param[in] conn libmicrohttpd connection context for the active request.
      * @retval MHD_YES Response successfully queued.

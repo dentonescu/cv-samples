@@ -47,9 +47,9 @@ WiFiEqu demonstrates how system services on different operating systems can expo
 - **Web client (Angular)**: browser visualization that consumes the JSON API.
 
 ## Status
-- Linux daemon now publishes live readings or mock data, with Makefiles, systemd integration, and a tested HTTP sample-stream buffer wired in.
-- HTTP router is still stubbed (returns `MHD_NO` for now); wiring the JSON endpoints is the next milestone in this series.
-- Web/Windows clients remain stubs and will evolve once the JSON contract stabilises.
+- Linux daemon publishes live or mock readings, exposes `GET /api/v1/channels`, and lets operators toggle JSON logging in `wifiequd.conf`.
+- HTTP router currently implements the channels snapshot route; `/stats` and the streaming feed remain on the roadmap.
+- Web/Windows clients remain stubs and will evolve once the expanded JSON contract is ready.
 
 ## Build
 ```sh
@@ -78,19 +78,18 @@ make example-demo           # runs the demos
 Ring-buffer behaviour for the streaming endpoint is covered by `linux/tests/test_sample_stream.c`, including fast-producer/slow-consumer edge cases.
 
 ## JSON API
-- `GET /api/v1/channels`
-- `GET /api/v1/stats`
-- `GET /api/v1/channels/stream`
+- ✅ `GET /api/v1/channels` — returns the latest buffered sample.
+- ⏳ `GET /api/v1/stats` — planned daemon metadata payload.
+- ⏳ `GET /api/v1/channels/stream` — planned Server-Sent Events feed.
 
-The OpenAPI contract lives in [`api/openapi.yaml`](api/openapi.yaml). The HTML version at [`docs/api/index.html`](docs/api/index.html) is produced on demand via the root `make docs` target, which will fetch `@redocly/cli` if it is not already installed.
-
-> API note: Although the ring buffer and tests are in place, the libmicrohttpd callback still returns `MHD_NO`, so the published endpoints are staged and currently return no data while the router is being integrated.
+The OpenAPI contract lives in [`api/openapi.yaml`](api/openapi.yaml). The HTML version at [`docs/api/index.html`](docs/api/index.html) is produced on demand via the root `make docs` target, which will fetch `@redocly/cli` if it is not already installed. Implemented vs. planned routes are flagged in the spec.
 
 ## Roadmap
 - [ ] Finalise JSON schema and add contract tests.
 - [ ] Server-Sent Events (SSE) for live streaming updates.
 - [ ] Windows service prototype.
 - [ ] Angular visualization with channel overlays.
+- [ ] Enforce API-key authentication on HTTP endpoints.
 - [ ] Packaging and minimal installer scripts.
 
 ## Related

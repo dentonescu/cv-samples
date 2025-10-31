@@ -5,7 +5,7 @@ info:
   description: >
     HTTP interface for the WiFiEqu daemon. Exposes the latest Wi-Fi channel
     readings, daemon metadata, and a streaming feed suitable for real-time
-    visualisers. All requests must include a valid API key.
+    visualisers. Authentication is planned but not yet enforced.
   contact:
     name: WiFiEqu Maintainers
 servers:
@@ -22,6 +22,7 @@ tags:
 paths:
   /api/v1/channels:
     get:
+      x-status: implemented
       tags:
         - Channels
       summary: Retrieve the most recent Wi-Fi channel snapshot.
@@ -29,8 +30,6 @@ paths:
         Returns the last `wfq_sample` recorded by the daemon, including the
         capture timestamp and signal strength of each configured channel.
       operationId: getLatestChannels
-      security:
-        - ApiKeyAuth: []
       responses:
         "200":
           description: Latest sample available.
@@ -56,6 +55,7 @@ paths:
           $ref: "#/components/responses/ServerError"
   /api/v1/stats:
     get:
+      x-status: planned
       tags:
         - Diagnostics
       summary: Retrieve daemon metadata and configuration stats.
@@ -64,8 +64,6 @@ paths:
         interface, refresh cadence, and the channel bins defined via
         `wifiequd.conf`.
       operationId: getStats
-      security:
-        - ApiKeyAuth: []
       responses:
         "200":
           description: Daemon metadata payload.
@@ -100,6 +98,7 @@ paths:
           $ref: "#/components/responses/ServerError"
   /api/v1/channels/stream:
     get:
+      x-status: planned
       tags:
         - Channels
       summary: Stream Wi-Fi readings as Server-Sent Events.
@@ -109,8 +108,6 @@ paths:
         Each event is emitted with the name `reading` and a `data:` line
         containing the same structure as the `/channels` snapshot response.
       operationId: streamChannelReadings
-      security:
-        - ApiKeyAuth: []
       responses:
         "200":
           description: SSE stream of channel readings.
@@ -146,11 +143,11 @@ components:
       in: header
       name: X-API-Key
       description: >
-        Provide the API key configured in `wifiequd.conf`. Requests missing
-        the header or carrying an invalid key receive HTTP 401.
+        Planned header-based authentication. The current daemon ignores this header;
+        future revisions will validate it against `wifiequd.conf`.
   responses:
     UnauthorizedError:
-      description: Missing or invalid API key.
+      description: Missing or invalid credentials (reserved for future use).
       content:
         application/json:
           schema:
