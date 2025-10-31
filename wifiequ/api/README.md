@@ -3,8 +3,9 @@
 Authoritative contract for the daemon’s HTTP surface.
 
 ## Specification
-- Source: [`openapi.yaml`](openapi.yaml)
-- Pre-rendered docs: [`../docs/api/index.html`](../docs/api/index.html) (regenerate by running the root `make docs` target, which auto-installs `@redocly/cli` when needed; this no longer runs as part of `make all`)
+- Source (GitHub): [`openapi.yaml`](openapi.yaml)
+- Pre-rendered docs (local): [`../docs/api/index.html`](../docs/api/index.html) – regenerate by running the root `make docs` target (auto-installs `@redocly/cli` when needed; no longer part of `make all`)
+- Live preview: [cv-samples.vercel.app/wifiequ/docs/api](https://cv-samples.vercel.app/wifiequ/docs/api)
 
 ## Endpoints
 - ✅ `GET /api/v1/channels` → most recent channel aggregates (implemented)

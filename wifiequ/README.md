@@ -82,7 +82,7 @@ Ring-buffer behaviour for the streaming endpoint is covered by `linux/tests/test
 - ⏳ `GET /api/v1/stats` — planned daemon metadata payload.
 - ⏳ `GET /api/v1/channels/stream` — planned Server-Sent Events feed.
 
-The OpenAPI contract lives in [`api/openapi.yaml`](api/openapi.yaml). The HTML version at [`docs/api/index.html`](docs/api/index.html) is produced on demand via the root `make docs` target, which will fetch `@redocly/cli` if it is not already installed. Implemented vs. planned routes are flagged in the spec.
+The OpenAPI contract lives in [`api/openapi.yaml`](api/openapi.yaml). The HTML version at [`docs/api/index.html`](docs/api/index.html) is produced on demand via the root `make docs` target, which will fetch `@redocly/cli` if it is not already installed. Prefer the hosted preview at [cv-samples.vercel.app/wifiequ/docs/api](https://cv-samples.vercel.app/wifiequ/docs/api) for a live rendering (implemented vs. planned routes are flagged in the spec).
 
 ## Roadmap
 - [ ] Finalise JSON schema and add contract tests.
