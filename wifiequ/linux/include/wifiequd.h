@@ -3,6 +3,10 @@
 #include <stdbool.h>
 #include "wfq/wifiequ.h"
 
+/** @file wifiequd.h
+ *  @brief Public defaults exposed by the WiFiEqu daemon binary.
+ */
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -14,6 +18,8 @@ extern "C"
 #define WFQ_DEFAULT_SETTING_MOCK_MODE false
 /** Default HTTP port used by the daemon. */
 #define WFQ_DEFAULT_SETTING_PORT 8080
+/** Default delay between equalizer refreshes (ms). */
+#define WFQ_DEFAULT_SETTING_REFRESH_WAIT_MS 500
 
     // no declarations yet
 

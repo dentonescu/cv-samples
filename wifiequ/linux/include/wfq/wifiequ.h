@@ -2,6 +2,10 @@
 #define WFQ_WIFIEQU_H
 #include <stdbool.h>
 
+/** @file wfq/wifiequ.h
+ *  @brief Core data structures shared across the WiFiEqu daemon and API.
+ */
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -11,8 +15,6 @@ extern "C"
 #define WFQ_EQU_N_CHANNELS 13
 /** Maximum number of channel readings sampled per snapshot. */
 #define WFQ_EQU_MAX_READINGS 8192
-/** Default delay between equalizer refreshes (ms). */
-#define WFQ_REFRESH_WAIT_MS 500
 /** Maximum length of an interface name (characters). */
 #define WFQ_WIDTH_INTERFACE 64
 
@@ -21,10 +23,11 @@ extern "C"
      */
     typedef struct
     {
-        bool json_log;                          /**< Emit JSON payloads to the daemon log when enabled. */
-        bool mock;                               /**< When true, operate in mock mode instead of live capture. */
         char interface[WFQ_WIDTH_INTERFACE + 1]; /**< Wireless network interface name (for example, `wlan0`). */
-        int port;                                /**< TCP port for the HTTP API. */
+        bool json_log;                          /**< Emit JSON payloads to the daemon log when enabled. */
+        bool mock;                              /**< When true, operate in mock mode instead of live capture. */
+        int port;                               /**< TCP port for the HTTP API. */
+        unsigned long refresh_ms;               /**< Target delay between published samples in milliseconds. */
     } wfq_options;
 
     /**

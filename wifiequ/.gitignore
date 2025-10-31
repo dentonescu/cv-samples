@@ -60,9 +60,18 @@ dkms.conf
 **/.idea
 **/.sync*
 **/bin
+!/linux/bin/
+linux/bin/*
+!linux/bin/README.md
 **/dist
+!/dist/
+dist/*
+!dist/README.md
 **/log/
 **/logs/
+!/linux/logs/
+linux/logs/*
+!linux/logs/README.md
 **/node_modules/
 **/*.a
 **/*.d
@@ -77,4 +86,3 @@ build.bat
 build.cmd
 build.ps1
 build.sh
-

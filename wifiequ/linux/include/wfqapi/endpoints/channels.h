@@ -3,6 +3,10 @@
 #include <stdbool.h>
 #include <microhttpd.h>
 
+/** @file wfqapi/endpoints/channels.h
+ *  @brief REST endpoint for retrieving the latest Wi-Fi channel readings.
+ */
+
 #ifdef __cplusplus
 extern "C"
 {

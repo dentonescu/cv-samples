@@ -3,6 +3,10 @@
 
 #include "wfq/wifiequ.h"
 
+/** @file wfq/mocksignal.h
+ *  @brief Mock signal generator used when WiFiEqu runs without live hardware.
+ */
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -15,8 +19,8 @@ extern "C"
      */
     typedef struct
     {
-        int n_channels;          /**< Number of channels to synthesize. */
-        long refresh_wait_ms;    /**< Delay between generated samples in milliseconds. */
+        int n_channels;        /**< Number of channels to synthesize. */
+        long refresh_wait_ms;  /**< Delay between generated samples in milliseconds. */
     } wfq_mock_signal_options;
 
     /**

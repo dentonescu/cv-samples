@@ -11,6 +11,10 @@
 #include <netlink/socket.h>
 #include "wfq/wifiequ.h"
 
+/** @file wfq/wlanscan.h
+ *  @brief Netlink-based Wi-Fi scanning utilities for WiFiEqu.
+ */
+
 #ifdef __cplusplus
 extern "C"
 {

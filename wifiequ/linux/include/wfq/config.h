@@ -3,17 +3,29 @@
 
 #include "wfq/wifiequ.h"
 
+/** @file wfq/config.h
+ *  @brief Configuration context and helpers for WiFiEqu.
+ */
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
+/** Maximum channel identifier supported by the configuration parser. */
 #define WFQ_CONFIG_MAX_CHAN 1024
+/** Absolute path to the daemon configuration file. */
 #define WFQ_CONFIG_PATH "/etc/wifiequd.conf"
+/** Configuration key controlling the capture interface. */
 #define WFQ_PARAM_INTERFACE "interface"
+/** Configuration key toggling JSON logging. */
 #define WFQ_PARAM_LOG_JSON "log.daemon.json"
+/** Configuration key enabling mock-signal mode. */
 #define WFQ_PARAM_MOCK "mock"
+/** Configuration key selecting the HTTP port. */
 #define WFQ_PARAM_HTTP_PORT "http.port"
+/** Configuration key specifying the refresh cadence in milliseconds. */
+#define WFQ_PARAM_REFRESH_MILLIS "refresh.millis"
 
     /**
      * @brief Describes a Wi-Fi channel frequency bin.

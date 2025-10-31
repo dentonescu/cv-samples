@@ -11,6 +11,12 @@ cdir.mkdir(parents=True, exist_ok=True)
 #define WFQ_VERSION_H
 #define WFQ_VERSION "{ver}"
 
+#include <string.h>
+
+/** @file wfq/version.h
+ *  @brief Version metadata helpers for WiFiEqu.
+ */
+
 #ifdef __cplusplus
 extern "C"
 {{

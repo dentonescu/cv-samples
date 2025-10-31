@@ -3,6 +3,12 @@
 #define WFQ_VERSION_H
 #define WFQ_VERSION "0.2.9"
 
+#include <string.h>
+
+/** @file wfq/version.h
+ *  @brief Version metadata helpers for WiFiEqu.
+ */
+
 #ifdef __cplusplus
 extern "C"
 {

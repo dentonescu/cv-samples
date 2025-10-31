@@ -3,6 +3,13 @@
 #include <microhttpd.h>
 #include <stdbool.h>
 
+/** @file wfqapi/router.h
+ *  @brief Request router for the WiFiEqu HTTP API.
+ *
+ *  Declares the dispatcher responsible for mapping libmicrohttpd requests to
+ *  endpoint implementations exposed under the `/api/v1` namespace.
+ */
+
 #ifdef __cplusplus
 extern "C"
 {

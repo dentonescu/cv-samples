@@ -165,8 +165,8 @@ bool wfqapi_next_sample_write(wfqapi_server *srv, wfq_sample *sample)
     sample_prev = srv->sample_stream_ring_buf[srv->sample_cursor_write_prev];
     if (sample->timestamp_ms < sample_prev.timestamp_ms)
     {
-        DMOT_LOGE("The supplied sample having timestamp %u ms will not be streamed as it is older than the previous sample with timestamp %u ms",
-                  sample->timestamp_ms, sample_prev.timestamp_ms);
+        DMOT_LOGE("The supplied sample having timestamp %lld ms will not be streamed as it is older than the previous sample with timestamp %lld ms",
+                  (long long)sample->timestamp_ms, (long long)sample_prev.timestamp_ms);
         return false;
     }
     srv->sample_stream_ring_buf[srv->sample_cursor_write] = *sample; // write

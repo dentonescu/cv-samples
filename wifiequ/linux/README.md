@@ -34,9 +34,11 @@ Artifacts land in `bin/`, logs in `logs/`.
 ```bash
 ./bin/wifiequd &
 curl -s http://localhost:8080/api/v1/channels | jq
+curl -s http://localhost:8080/api/v1/stats | jq
 ```
 
 Set `log.daemon.json=1` in `etc/wifiequd.conf` to mirror each payload in the daemon log.
+Adjust `refresh.millis` to slow down or speed up the sampler; both mock and live sources honour the value (numbers <1 fall back to the default 500 ms, practical range in the hundreds).
 
 ## Optional systemd install
 
@@ -56,7 +58,7 @@ Remove with `sudo make uninstall`.
 - **Scanner (`src/wlan/wlanscan.c`)** – drives `nl80211` via libnl, aggregates the strongest signal per configured channel bin, and exposes the results to the UI.
 - **Configuration (`src/config/config.c`)** – parses `etc/wifiequd.conf`, validates channel ranges, and maps frequencies to Wi-Fi channels.
 - **Equalizer UI (`examples/ex_wlanscan.c`)** – renders live channel strengths using the reusable terminal equalizer from libdmotservices.
-- **HTTP server (`src/wfqapi/http.c`)** – manages a monotonic ring buffer for streaming samples and wraps libmicrohttpd startup/shutdown; currently powers `GET /api/v1/channels`.
+- **HTTP server (`src/wfqapi/http.c`)** – manages a monotonic ring buffer for streaming samples, wraps libmicrohttpd startup/shutdown, and backs `GET /api/v1/channels` plus `GET /api/v1/stats`.
 - **Unit tests (`tests/test_sample_stream.c`)** – exercise the sample-stream buffer with fast-producer/slow-consumer scenarios.
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for the data flow between these pieces.
@@ -76,4 +78,5 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for the data flow between these pieces.
 - [Architecture overview](ARCHITECTURE.md)
 - [Examples](examples/README.md)
 - [Developer notes](NOTES.md)
+- [API docs](../docs/README.md)
 - Back to [WiFiEqu overview](../README.md)

@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <math.h>
+#include <limits.h>
 #include <microhttpd.h>
 #include <pthread.h>
 #include <stdatomic.h>
@@ -16,6 +17,7 @@
 #include "dmot/time.h"
 #include "dmot/ui.h"
 #include "wfq/wifiequ.h"
+#include "wifiequd.h"
 #include "wfq/config.h"
 #include "wfq/mocksignal.h"
 #include "wfq/wifisignal.h"
@@ -29,6 +31,15 @@
 static volatile sig_atomic_t g_running = 1;
 static volatile sig_atomic_t g_reload = 0;
 static wfq_config_context s_config_ctx;
+
+static long clamp_refresh_wait(unsigned long configured, long fallback)
+{
+    if (configured == 0UL)
+        return fallback;
+    if (configured > (unsigned long)LONG_MAX)
+        return LONG_MAX;
+    return (long)configured;
+}
 
 static void on_signal(int sig)
 {
@@ -64,6 +75,7 @@ static void daemon_announce(FILE *out)
     fprintf(out, "%-25s %d\n", WFQ_PARAM_HTTP_PORT, s_config_ctx.opt.port);
     fprintf(out, "%-25s %s\n", WFQ_PARAM_LOG_JSON, (s_config_ctx.opt.json_log ? "true" : "false"));
     fprintf(out, "%-25s %s\n", WFQ_PARAM_MOCK, (s_config_ctx.opt.mock ? "true" : "false"));
+    fprintf(out, "%-25s %lu\n", WFQ_PARAM_REFRESH_MILLIS, s_config_ctx.opt.refresh_ms);
     dmot_ui_ostream_repeat_pattern_endl(out, "=", 80);
     fputs("\n", out);
 }
@@ -73,9 +85,11 @@ static void set_up_signal_source(void)
     DMOT_LOGD("Setting up the signal source...");
     if (s_config_ctx.opt.mock)
     {
-        wfq_mock_signal_options o;
+        wfq_mock_signal_options o = {0};
         o.n_channels = s_config_ctx.n_chan_defined;
-        o.refresh_wait_ms = WFQ_MOCK_SIGNAL_REFRESH_WAIT_MS;
+        o.refresh_wait_ms = clamp_refresh_wait(s_config_ctx.opt.refresh_ms, WFQ_DEFAULT_SETTING_REFRESH_WAIT_MS);
+        if (o.refresh_wait_ms <= 0)
+            o.refresh_wait_ms = WFQ_MOCK_SIGNAL_REFRESH_WAIT_MS;
         wfq_sine_wave_generator_init_with_options(&o);
         wfq_sine_wave_generator_start();
         DMOT_LOGD("Started the (mock) sine wave signal generator.");
@@ -184,7 +198,7 @@ int main(void)
             continue;
         }
         publish_reading();
-        dmot_time_sleep_ms(WFQ_REFRESH_WAIT_MS);
+        dmot_time_sleep_ms(s_config_ctx.opt.refresh_ms);
     }
 
 cleanup:

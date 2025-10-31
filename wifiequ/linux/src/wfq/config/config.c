@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <errno.h>
 #include "wifiequd.h"
 #include "dmot/log.h"
 #include "dmot/string.h"
@@ -44,10 +45,11 @@ bool wfq_config_read(wfq_config_context *ctx)
         return false;
 
     // defaults
-    ctx->opt.json_log = WFQ_DEFAULT_SETTING_JSON_LOG_MODE;
-    ctx->opt.port = WFQ_DEFAULT_SETTING_PORT;
-    ctx->opt.mock = WFQ_DEFAULT_SETTING_MOCK_MODE;
     ctx->opt.interface[0] = '\0';
+    ctx->opt.json_log = WFQ_DEFAULT_SETTING_JSON_LOG_MODE;
+    ctx->opt.mock = WFQ_DEFAULT_SETTING_MOCK_MODE;
+    ctx->opt.port = WFQ_DEFAULT_SETTING_PORT;
+    ctx->opt.refresh_ms = WFQ_DEFAULT_SETTING_REFRESH_WAIT_MS;
 
     // initialize channel bins
     ctx->n_chan_defined = 0;
@@ -107,14 +109,35 @@ bool wfq_config_read(wfq_config_context *ctx)
                 }
             }
         }
-        else if (strcmp(key, WFQ_PARAM_INTERFACE) == 0)
+        else if (0 == strcmp(key, WFQ_PARAM_INTERFACE))
             snprintf(ctx->opt.interface, sizeof ctx->opt.interface, "%s", val);
-        else if (strcmp(key, WFQ_PARAM_LOG_JSON) == 0)
+        else if (0 == strcmp(key, WFQ_PARAM_LOG_JSON))
             ctx->opt.json_log = atoi(val) != 0;
-        else if (strcmp(key, WFQ_PARAM_MOCK) == 0)
+        else if (0 == strcmp(key, WFQ_PARAM_MOCK))
             ctx->opt.mock = atoi(val) != 0;
-        else if (strcmp(key, WFQ_PARAM_HTTP_PORT) == 0)
+        else if (0 == strcmp(key, WFQ_PARAM_HTTP_PORT))
             ctx->opt.port = atoi(val);
+        else if (0 == strcmp(key, WFQ_PARAM_REFRESH_MILLIS))
+        {
+            char *endptr = NULL;
+            errno = 0;
+            unsigned long parsed = strtoul(val, &endptr, 10);
+            if (errno != 0 || endptr == val || *endptr != '\0')
+            {
+                DMOT_LOGW("Ignoring %s=%s: not a valid integer value.", WFQ_PARAM_REFRESH_MILLIS, val);
+                continue;
+            }
+            if (parsed == 0UL)
+            {
+                DMOT_LOGW("%s must be >= 1. Using default %lu ms.", WFQ_PARAM_REFRESH_MILLIS,
+                          (unsigned long)WFQ_DEFAULT_SETTING_REFRESH_WAIT_MS);
+                ctx->opt.refresh_ms = WFQ_DEFAULT_SETTING_REFRESH_WAIT_MS;
+            }
+            else
+            {
+                ctx->opt.refresh_ms = parsed;
+            }
+        }
     }
     fclose(f);
     return true;

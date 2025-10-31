@@ -4,6 +4,10 @@
 #include <stdbool.h>
 #include "wfq/wifiequ.h"
 
+/** @file wfqapi/http.h
+ *  @brief HTTP server helpers and ring-buffer utilities for WiFiEqu.
+ */
+
 /** Number of samples retained in the streaming ring buffer. */
 #define WFQAPI_SAMPLE_STREAM_BUFFER_SIZE 64
 

@@ -4,6 +4,10 @@
 #include "wfq/wifiequ.h"
 #include "wfq/config.h"
 
+/** @file wfq/wifisignal.h
+ *  @brief Live Wi-Fi signal acquisition interface.
+ */
+
 #ifdef __cplusplus
 extern "C"
 {

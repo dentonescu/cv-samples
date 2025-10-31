@@ -2,7 +2,12 @@
 #define WFQAPI_JSON_H
 #include <microhttpd.h>
 #include <stdbool.h>
+#include "wfq/config.h"
 #include "wfq/wifiequ.h"
+
+/** @file wfqapi/json.h
+ *  @brief JSON serialization helpers shared by the WiFiEqu API endpoints.
+ */
 
 #ifdef __cplusplus
 extern "C"
@@ -43,6 +48,15 @@ extern "C"
      * @param[in] buf_size Capacity of @p buf in bytes.
      */
     void wfqapi_sample2json(wfq_sample *sample, char *buf, size_t buf_size);
+
+    /**
+     * @brief Serializes the cached configuration into a pretty-printed JSON payload.
+     *
+     * @param[in] ctx Configuration context to encode.
+     * @param[out] buf Destination buffer for UTF-8 JSON output.
+     * @param[in] buf_size Capacity of @p buf in bytes.
+     */
+    void wfqapi_config2json(wfq_config_context *ctx, char *buf, size_t buf_size);
 
 #ifdef __cplusplus
 }

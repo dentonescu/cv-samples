@@ -4,13 +4,20 @@
 #include "dmot/log.h"
 #include "wfqapi/router.h"
 #include "wfqapi/endpoints/channels.h"
+#include "wfqapi/endpoints/stats.h"
 #include "wfqapi/json.h"
 
-// endpoints
+// API base path
 #define API_BASE "/api/v1"
 #define API_PATH(path) API_BASE path
-#define ENDPOINT_CHANNELS "/channels"
-#define ENDPOINT_CHANNELS_FULL API_PATH(ENDPOINT_CHANNELS)
+
+// API operations
+#define OP_CHANNELS "/channels"
+#define OP_STATS "/stats"
+
+// API endpoints
+#define ENDPOINT_CHANNELS API_PATH(OP_CHANNELS)
+#define ENDPOINT_STATS API_PATH(OP_STATS)
 
 // HTTP response messages
 #define MSG_NOT_FOUND "Not found"
@@ -43,8 +50,10 @@ int wfqapi_router_dispatch(struct MHD_Connection *conn,
 
     if (0 == strcmp(method, MHD_HTTP_METHOD_GET))
     {
-        if (0 == strcmp(url, ENDPOINT_CHANNELS_FULL))
+        if (0 == strcmp(url, ENDPOINT_CHANNELS))
             return wfqapi_handle_get_channels(conn);
+        else if (0 == strcmp(url, ENDPOINT_STATS))
+            return wfqapi_handle_get_stats(conn);
         return reply(conn, MHD_HTTP_NOT_FOUND, MSG_NOT_FOUND);
     }
     return reply(conn, MHD_HTTP_METHOD_NOT_ALLOWED, MSG_METHOD_NOT_ALLOWED);

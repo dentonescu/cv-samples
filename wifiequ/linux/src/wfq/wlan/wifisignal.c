@@ -4,6 +4,7 @@
 #include <string.h>
 #include <math.h>
 #include <pthread.h>
+#include <limits.h>
 #include <time.h>
 #include "dmot/log.h"
 #include "dmot/math.h"
@@ -80,6 +81,20 @@ wfq_sample wfq_wifi_signal_read(void)
 
 void wfq_wifi_signal_scanner_start(wfq_config_context *ctx)
 {
+    if (!ctx)
+    {
+        DMOT_LOGE("wfq_wifi_signal_scanner_start: Empty configuration context supplied.");
+        return;
+    }
+    unsigned long configured_refresh = ctx->opt.refresh_ms;
+    if (configured_refresh == 0UL)
+        configured_refresh = WFQ_LIVE_SIGNAL_REFRESH_WAIT_MS;
+    if (configured_refresh > (unsigned long)LONG_MAX)
+        configured_refresh = (unsigned long)LONG_MAX;
+    refresh_wait_ms = (long)configured_refresh;
+    if (refresh_wait_ms <= 0)
+        refresh_wait_ms = WFQ_LIVE_SIGNAL_REFRESH_WAIT_MS;
+
     if (!g_running)
     {
         g_running = true;

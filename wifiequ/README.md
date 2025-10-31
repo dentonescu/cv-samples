@@ -47,8 +47,8 @@ WiFiEqu demonstrates how system services on different operating systems can expo
 - **Web client (Angular)**: browser visualization that consumes the JSON API.
 
 ## Status
-- Linux daemon publishes live or mock readings, exposes `GET /api/v1/channels`, and lets operators toggle JSON logging in `wifiequd.conf`.
-- HTTP router currently implements the channels snapshot route; `/stats` and the streaming feed remain on the roadmap.
+- Linux daemon publishes live or mock readings, honours `refresh.millis` from `wifiequd.conf`, and offers both channel snapshots and metadata via HTTP.
+- HTTP router serves `GET /api/v1/channels` and `GET /api/v1/stats`; the Server-Sent Events stream remains on the roadmap.
 - Web/Windows clients remain stubs and will evolve once the expanded JSON contract is ready.
 
 ## Build
@@ -79,10 +79,10 @@ Ring-buffer behaviour for the streaming endpoint is covered by `linux/tests/test
 
 ## JSON API
 - ✅ `GET /api/v1/channels` — returns the latest buffered sample.
-- ⏳ `GET /api/v1/stats` — planned daemon metadata payload.
+- ✅ `GET /api/v1/stats` — exposes mode, interface (when live), refresh cadence, and configured channel bins.
 - ⏳ `GET /api/v1/channels/stream` — planned Server-Sent Events feed.
 
-The OpenAPI contract lives in [`api/openapi.yaml`](api/openapi.yaml). The HTML version at [`docs/api/index.html`](docs/api/index.html) is produced on demand via the root `make docs` target, which will fetch `@redocly/cli` if it is not already installed. Prefer the hosted preview at [cv-samples.vercel.app/wifiequ/docs/api](https://cv-samples.vercel.app/wifiequ/docs/api) for a live rendering (implemented vs. planned routes are flagged in the spec).
+The OpenAPI contract lives in [`api/openapi.yaml`](api/openapi.yaml). The HTML version at [`docs/api/index.html`](docs/api/index.html) is produced on demand via the root `make docs` target, which will fetch `@redocly/cli` if it is not already installed. Prefer the hosted preview at [cv-samples.vercel.app/wifiequ/docs/api](https://cv-samples.vercel.app/wifiequ/docs/api) for a live rendering (implemented vs. planned routes are flagged in the spec). See also the short guide in [`docs/README.md`](docs/README.md).
 
 ## Roadmap
 - [ ] Finalise JSON schema and add contract tests.
@@ -95,6 +95,7 @@ The OpenAPI contract lives in [`api/openapi.yaml`](api/openapi.yaml). The HTML v
 ## Related
 - Back to [portfolio overview](../README.md)
 - Underlying equalizer lives in [libdmotservices](../libdmotservices/README.md)
+- Prebuilt binaries live in [`dist/`](dist/README.md)
 
 ## License
 See `/LICENSE` in the repository root.
