@@ -19,7 +19,8 @@ ensure_dependencies() {
         libcmocka-dev \
         libmicrohttpd-dev \
         libnl-3-dev \
-        libnl-genl-3-dev
+        libnl-genl-3-dev \
+    	openjdk-17-jdk
 }
 
 if [ -z "$1" ]; then
@@ -76,6 +77,14 @@ if [ -n "$iface" ]; then
 else
     echo "No interface specified."
 fi
+
+JAVA_HOME=${JAVA_HOME:-/usr/lib/jvm/java-17-openjdk-amd64}
+if [ -d "$JAVA_HOME" ]; then
+    export JAVA_HOME
+else
+    echo "Warning: JAVA_HOME ($JAVA_HOME) not found; skipping export." >&2
+fi
+echo "JAVA_HOME=$JAVA_HOME"
 
 [ ! "$install_deps" -eq 1 ] || ensure_dependencies
 [ ! "$build" -eq 1 ] || make clean all docs

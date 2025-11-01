@@ -67,7 +67,7 @@ TEST_BINS := $(TEST_SRCS:.c=)
 $(TEST_BINS): %: %.c lib
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ $< $(LIB) $(LDLIBS)
 	@chmod +x "$@";
-	@[ ! "$@" ] || mv -v "$@" "$(BIN_DIR)";
+	@[ ! "$@" ] || mv -vf "$@" "$(BIN_DIR)";
 
 tests: $(TEST_BINS)
 
@@ -80,7 +80,7 @@ test: tests
 		echo "$(ANSI_RESET)$(ANSI_RED)ERROR: At least one unit test failed.$(ANSI_RESET)"; \
 		exit 1; \
 	fi
-	@find -name "*.log" -not -path "**/logs/*" -exec mv -v "{}" "$(LOG_DIR)" \;;
+	@find -name "*.log" -not -path "**/logs/*" -exec mv -vf "{}" "$(LOG_DIR)" \;;
 
 
 #####################################################################################
@@ -93,7 +93,7 @@ $(EX_BINS): %: %.c lib
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ $< $(LIB) $(LDLIBS)
 	@if [ -f "$@" ]; then \
 		chmod +x "$@"; \
-		mv -v "$@" "$(BIN_DIR)"; \
+		mv -vf "$@" "$(BIN_DIR)"; \
 	fi
 
 examples: $(EX_BINS)
@@ -102,7 +102,7 @@ examples: $(EX_BINS)
 example-demo: examples
 	@set -e; \
 	find "$(BIN_DIR)" -name "ex_*" -exec sh -c 'chmod +x "$$1" && "$$1"' _ {} \;;
-	@find -name "*.log" -not -path "**/logs/*" -exec mv -v "{}" "$(LOG_DIR)" \;
+	@find -name "*.log" -not -path "**/logs/*" -exec mv -vf "{}" "$(LOG_DIR)" \;
 
 #####################################################################################
 ## Housekeeping
