@@ -5,15 +5,31 @@
 WiFiEqu is built as a small pipeline that turns raw wireless scans into console-friendly visuals and JSON output.
 
 ```
-nl80211 scan  -->  scanner (wlanscan.c)  -->  channel bins (config.c)
-                     |                                      |
-                     v                                      v
-                wfq_signal[]                        wfq_config_context
-                     \                                      /
-                     \--> ui equalizer (libdmotservices) --
-                                  |
-                                  v
-                         terminal + HTTP sample stream
+          nl80211 scan (live) / mock generator
+                          |
+                          v
+                +---------------------+
+                | scanner (wlanscan.c)| --> wfq_signal[]
+                +---------------------+
+                          |
+                          v
+             +-----------------------------+
+             | config (config.c)           | --> wfq_config_context
+             +-----------------------------+
+                    /                \
+                   /                  \
+                  v                    v
+        +----------------+      +---------------------+
+        | daemon         |      | ex_wlanscan example |
+        | (wifiequd.c)   |      | (libdmotservices UI)|
+        +----------------+      +---------------------+
+                  |                         |
+          +-----------------+               |
+          | HTTP façade     |               |
+          | (wfqapi/http.c) |               |
+          +--------+--------+               |
+                   |                        |
+       REST endpoints + SSE stream      Terminal equalizer
 ```
 
 ## Key modules
@@ -35,10 +51,10 @@ nl80211 scan  -->  scanner (wlanscan.c)  -->  channel bins (config.c)
 
 ## Rendering pipeline
 
-- `wfq_scan_wlan` produces an array of `(freq, dBm)` samples.
+- `wfq_scan_wlan` produces an array of `(freq, dBm)` samples consumed by both the daemon and the CLI example.
 - Each sample is mapped to a configured channel using `wfq_config_freq2chan`.
-- `dmot_ui_equalizer_set_channel_input_value` clamps the input to a safe dBm range and smooths the display to avoid jumpy bars.
-- `dmot_ui_equalizer_hide_chans_without_labels` keeps the display dense by skipping unused bins, and the renderer only clears the rows it printed to preserve the rest of the terminal.
+- `dmot_ui_equalizer_set_channel_input_value` (used by `ex_wlanscan`) clamps the input to a safe dBm range and smooths the display to avoid jumpy bars.
+- `dmot_ui_equalizer_hide_chans_without_labels` keeps the CLI display dense by skipping unused bins, and the renderer only clears the rows it printed to preserve the rest of the terminal.
 
 ## Extensibility ideas
 

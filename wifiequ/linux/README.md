@@ -52,8 +52,6 @@ sudo make install          # install binaries, config, and systemd unit
 sudo systemctl enable --now wifiequd
 ```
 
-Remove with `sudo make uninstall`.
-
 ## Core components
 
 - **Daemon (`src/wifiequd.c`)** – gathers Wi-Fi samples, publishes JSON, and optionally serves HTTP via libmicrohttpd (mock/live sources).
