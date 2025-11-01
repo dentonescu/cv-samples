@@ -5,10 +5,8 @@
 #include "wfq/config.h"
 #include "wfq/mocksignal.h"
 #include "wfq/wifiequ.h"
+#include "wfqapi/http.h"
 #include "wfqapi/json.h"
-
-#define CONTENT_TYPE_JSON "application/json; charset=utf-8"
-#define HEADER_CONTENT_TYPE "Content-Type"
 
 /*
  * internals
@@ -24,7 +22,7 @@ struct MHD_Response *wfqapi_json_response_ok(const char *json)
 {
     struct MHD_Response *resp = MHD_create_response_from_buffer(
         strlen(json), (void *)json, MHD_RESPMEM_MUST_COPY);
-    MHD_add_response_header(resp, HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON);
+    MHD_add_response_header(resp, WFQAPI_HDR_CONTENT_TYPE, WFQAPI_CT_JSON);
     return resp;
 }
 
@@ -38,7 +36,7 @@ struct MHD_Response *wfqapi_json_response_error(int code, const char *message)
         n = 0;
     struct MHD_Response *resp = MHD_create_response_from_buffer(
         (size_t)n, (void *)buf, MHD_RESPMEM_MUST_COPY);
-    MHD_add_response_header(resp, HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON);
+    MHD_add_response_header(resp, WFQAPI_HDR_CONTENT_TYPE, WFQAPI_CT_JSON);
     return resp;
 }
 

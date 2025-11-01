@@ -24,7 +24,7 @@ nl80211 scan  -->  scanner (wlanscan.c)  -->  channel bins (config.c)
 | Configuration | `src/config/config.c` | Reads `etc/wifiequd.conf`, validates channel bins, and provides frequency-to-channel lookups. |
 | UI integration | `examples/ex_wlanscan.c` | Bridges scanner output into the `dmot_ui_equalizer` from [libdmotservices](../../libdmotservices/README.md), including label management per channel. |
 | Mock/live data | `src/mock/mocksignal.c`, `src/wlan/wifisignal.c` | Provide interchangeable data sources for demos and daemon mode. |
-| HTTP façade | `src/wfqapi/http.c` | Owns the libmicrohttpd daemon, keeps a ring buffer of recent samples, and exposes monotonic read/write helpers that back `GET /api/v1/channels` and `GET /api/v1/stats`. |
+| HTTP façade | `src/wfqapi/http.c` | Owns the libmicrohttpd daemon, keeps a ring buffer of recent samples, and exposes monotonic read/write helpers that back `GET /api/v1/channels`, `GET /api/v1/stats`, and the SSE stream. |
 | Daemon | `src/wifiequd.c` | Hosts the refresh loop, publishes JSON, interacts with the HTTP façade, manages signal sources, and honours `log.daemon.json`. |
 
 ## Configuration flow
@@ -42,8 +42,8 @@ nl80211 scan  -->  scanner (wlanscan.c)  -->  channel bins (config.c)
 
 ## Extensibility ideas
 
-- Expose the ring buffer over Server-Sent Events and add basic auth for remote viewers.
-- Enforce API-key validation in the HTTP façade once configuration wiring is ready.
+- Expand the SSE channel with richer event types (e.g., configuration diffs or scanner health).
+- Add structured metrics endpoints (Prometheus-style) for daemon health.
 - Persist configuration samples so scans can be replayed offline.
 
 ## Related

@@ -9,15 +9,15 @@ Authoritative contract for the daemon’s HTTP surface.
 
 ## Endpoints
 - ✅ `GET /api/v1/channels` → most recent channel aggregates (implemented)
-- ✅ `GET /api/v1/stats` → daemon metadata and config summary (implemented)
-- ⏳ `GET /api/v1/channels/stream` → Server-Sent Events feed of channel readings (planned)
+- ✅ `GET /api/v1/stats` → daemon metadata and config summary (requires `X-API-Key`)
+- ✅ `GET /api/v1/channels/stream` → Server-Sent Events feed of channel readings (implemented)
 
 Contract changes should update both the YAML and the generated HTML so clients and ops have a consistent view.
 
 ## Status
-- `GET /api/v1/channels` and `GET /api/v1/stats` are live in the Linux daemon; both honour `log.daemon.json` for optional JSON logging.
-- SSE remains staged in the contract; handlers will land once the streaming transport is ready.
-- Header-based API keys are documented but not yet enforced, so clients can call endpoints without credentials until that future milestone lands.
+- `GET /api/v1/channels`, `GET /api/v1/stats`, and the SSE stream are live in the Linux daemon; all honour `log.daemon.json` for optional JSON logging.
+- `/api/v1/stats` now enforces an API key through the `X-API-Key` header (`access.token.stats` in `wifiequd.conf`).
+- `/api/v1/channels` and the SSE stream remain open for public access.
 - Schema linting and contract tests remain on the roadmap.
 
 ## Related
@@ -34,13 +34,30 @@ JSON output:
 
 ![JSON output from /api/v1/channels](img/endpoint_get_channels.png)
 
+### GET /api/v1/channels/stream
+
+Stream output:
+
+![Stream output from /api/v1/channels/stream](img/endpoint_get_channels_stream.png)
+
+Daemon log (hardware mode):
+
+![Daemon log (hardware mode) for /api/v1/channels/stream](img/endpoint_get_channels_stream--daemon_log.png)
+
+
 ## GET /api/v1/stats
 
-JSON output:
+JSON output (unauthorized access, empty API key):
 
-![JSON output from /api/v1/stats](img/endpoint_get_stats.png)
+![JSON output from /api/v1/stats](img/endpoint_get_stats_unauthorized_1.png)
 
-## Journal
+JSON output (unauthorized access, incorrect API key):
+
+![JSON output from /api/v1/stats](img/endpoint_get_stats_unauthorized_2.png)
+
+JSON output (authorized access):
+
+![JSON output from /api/v1/stats](img/endpoint_get_stats_authorized.png)
 
 Daemon log (hardware mode):
 

@@ -10,6 +10,27 @@
 
 /** Number of samples retained in the streaming ring buffer. */
 #define WFQAPI_SAMPLE_STREAM_BUFFER_SIZE 64
+#define WFQAPI_PREFFERED_CHUNK_SIZE 1024
+
+// content types
+#define WFQAPI_CT_EVENTSTREAM "text/event-stream; charset=utf-8"
+#define WFQAPI_CT_JSON "application/json; charset=utf-8"
+
+// header fields
+#define WFQAPI_HDR_API_KEY "X-API-Key"
+#define WFQAPI_HDR_CONTENT_TYPE "Content-Type"
+#define WFQAPI_HDR_CACHE_CTRL "Cache-Control"
+#define WFQAPI_HDR_CONN "Connection"
+#define WFQAPI_HDR_CORS "Access-Control-Allow-Origin"
+
+// header values
+#define WFQAPI_HDR_VAL_CORS "*"
+#define WFQAPI_HDR_VAL_NOCACHE "no-cache"
+#define WFQAPI_HDR_VAL_KEEPALIVE "keep-alive"
+
+// messages
+#define WFQAPI_MSG_NOT_FOUND "Not found"
+#define WFQAPI_MSG_METHOD_NOT_ALLOWED "Method not allowed"
 
 #ifdef __cplusplus
 extern "C"

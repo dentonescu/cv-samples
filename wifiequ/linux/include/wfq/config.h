@@ -16,6 +16,9 @@ extern "C"
 #define WFQ_CONFIG_MAX_CHAN 1024
 /** Absolute path to the daemon configuration file. */
 #define WFQ_CONFIG_PATH "/etc/wifiequd.conf"
+
+// parameters
+#define WFQ_PARAM_ACCESS_TOKEN_STATS "access.token.stats"
 /** Configuration key controlling the capture interface. */
 #define WFQ_PARAM_INTERFACE "interface"
 /** Configuration key toggling JSON logging. */

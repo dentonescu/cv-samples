@@ -84,6 +84,7 @@ deploy:
 	@$(MILESTONE) "Deploying wifiequd..."
 	@cp -v $(SERVICE) /etc/systemd/system/$(SERVICE_FILE)
 	@cp -v $(CONFIG) /etc/$(CONFIG_FILE)
+	@token="$$(openssl rand -hex 32)" && sed -i "s|@@ACCESS_TOKEN_STATS@@|$$token|" /etc/$(CONFIG_FILE)
 	@cp -v $(BIN_DIR)/$(BIN) /usr/local/bin/$(BIN)
 	@chmod +x /usr/local/bin/$(BIN)
 

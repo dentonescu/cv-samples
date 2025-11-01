@@ -11,6 +11,7 @@ extern "C"
 {
 #endif
 
+#define WFQ_WIDTH_ACCESS_TOKEN_STATS 128
 /** Default number of Wi-Fi channels tracked by the equalizer. */
 #define WFQ_EQU_N_CHANNELS 13
 /** Maximum number of channel readings sampled per snapshot. */
@@ -23,6 +24,7 @@ extern "C"
      */
     typedef struct
     {
+        char access_token_stats[WFQ_WIDTH_ACCESS_TOKEN_STATS + 1];
         char interface[WFQ_WIDTH_INTERFACE + 1]; /**< Wireless network interface name (for example, `wlan0`). */
         bool json_log;                          /**< Emit JSON payloads to the daemon log when enabled. */
         bool mock;                              /**< When true, operate in mock mode instead of live capture. */

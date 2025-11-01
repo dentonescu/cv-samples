@@ -5,7 +5,8 @@ info:
   description: >
     HTTP interface for the WiFiEqu daemon. Exposes the latest Wi-Fi channel
     readings, daemon metadata, and a streaming feed suitable for real-time
-    visualisers. Authentication is planned but not yet enforced.
+    visualisers. `/api/v1/stats` now requires the `X-API-Key` header; other
+    endpoints remain publicly accessible.
   contact:
     name: WiFiEqu Maintainers
 servers:
@@ -49,13 +50,11 @@ paths:
                         dbm: -61.0
                       - chan: 11
                         dbm: -72.3
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
   /api/v1/stats:
     get:
-      x-status: planned
+      x-status: implemented
       tags:
         - Diagnostics
       summary: Retrieve daemon metadata and configuration stats.
@@ -64,6 +63,8 @@ paths:
         interface, refresh cadence, and the channel bins defined via
         `wifiequd.conf`.
       operationId: getStats
+      security:
+        - ApiKeyAuth: []
       responses:
         "200":
           description: Daemon metadata payload.
@@ -98,15 +99,19 @@ paths:
           $ref: "#/components/responses/ServerError"
   /api/v1/channels/stream:
     get:
-      x-status: planned
+      x-status: implemented
       tags:
         - Channels
       summary: Stream Wi-Fi readings as Server-Sent Events.
       description: >
         Establishes a long-lived Server-Sent Events (SSE) connection that
         flushes a JSON payload whenever a new `wfq_sample` is available.
-        Each event is emitted with the name `reading` and a `data:` line
-        containing the same structure as the `/channels` snapshot response.
+        Each event is emitted with the name `reading`, includes an `id`
+        equal to the sample timestamp (allowing resume via the
+        `Last-Event-ID` header), and provides a `data:` line containing the
+        same structure as the `/channels` snapshot response. When no new
+        samples are ready the server sends comment heartbeats such as
+        `: ping at 1701451235000` to keep the connection alive.
       operationId: streamChannelReadings
       responses:
         "200":
@@ -128,12 +133,14 @@ paths:
                   summary: SSE event stream
                   value: |
                     event: reading
+                    id: 1701451234567
                     data: {"timestamp_ms":1701451234567,"readings":[{"chan":1,"dbm":-48.5}]}
 
+                    : ping at 1701451235000
+
                     event: reading
+                    id: 1701451235067
                     data: {"timestamp_ms":1701451235067,"readings":[{"chan":1,"dbm":-47.9}]}
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/ServerError"
 components:
@@ -143,11 +150,11 @@ components:
       in: header
       name: X-API-Key
       description: >
-        Planned header-based authentication. The current daemon ignores this header;
-        future revisions will validate it against `wifiequd.conf`.
+        Shared-secret header required for `GET /api/v1/stats`. The token is
+        provisioned via `access.token.stats` in `wifiequd.conf`.
   responses:
     UnauthorizedError:
-      description: Missing or invalid credentials (reserved for future use).
+      description: Missing or invalid credentials for protected endpoints.
       content:
         application/json:
           schema:

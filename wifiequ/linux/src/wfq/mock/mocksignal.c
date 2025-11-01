@@ -40,7 +40,7 @@ void *wfq_task_sine_wave_generator(void *arg)
         }
         tmp.timestamp_ms = dmot_time_now_ms();
         pthread_mutex_lock(&sample_mx);
-        sample = tmp; // avoid data race while writing
+        sample = tmp; // write while holding sample_mx to avoid data races
         pthread_mutex_unlock(&sample_mx);
         dmot_time_sleep_ms(refresh_wait_ms);
     }
@@ -86,7 +86,7 @@ wfq_sample wfq_sine_wave_generator_read(void)
 {
     wfq_sample out;
     pthread_mutex_lock(&sample_mx);
-    out = sample; // avoid data race while reading
+    out = sample; // read while holding sample_mx to avoid data races
     pthread_mutex_unlock(&sample_mx);
     return out;
 }

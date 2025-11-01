@@ -258,7 +258,7 @@ wfq_signal *wfq_scan_wlan(const char *ifname)
         return ctx.current_scan_results;
     }
 
-    // allocate and initalize a nl_sock struct
+    // allocate and initialize an nl_sock struct
     ctx.sock = nl_socket_alloc();
     if (!ctx.sock)
     {

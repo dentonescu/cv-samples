@@ -45,6 +45,7 @@ bool wfq_config_read(wfq_config_context *ctx)
         return false;
 
     // defaults
+    ctx->opt.access_token_stats[0] = '\0';
     ctx->opt.interface[0] = '\0';
     ctx->opt.json_log = WFQ_DEFAULT_SETTING_JSON_LOG_MODE;
     ctx->opt.mock = WFQ_DEFAULT_SETTING_MOCK_MODE;
@@ -109,6 +110,8 @@ bool wfq_config_read(wfq_config_context *ctx)
                 }
             }
         }
+        else if (0 == strcmp(key, WFQ_PARAM_ACCESS_TOKEN_STATS))
+            snprintf(ctx->opt.access_token_stats, sizeof ctx->opt.access_token_stats, "%s", val);
         else if (0 == strcmp(key, WFQ_PARAM_INTERFACE))
             snprintf(ctx->opt.interface, sizeof ctx->opt.interface, "%s", val);
         else if (0 == strcmp(key, WFQ_PARAM_LOG_JSON))

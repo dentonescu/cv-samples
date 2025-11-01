@@ -47,8 +47,8 @@ WiFiEqu demonstrates how system services on different operating systems can expo
 - **Web client (Angular)**: browser visualization that consumes the JSON API.
 
 ## Status
-- Linux daemon publishes live or mock readings, honours `refresh.millis` from `wifiequd.conf`, and offers both channel snapshots and metadata via HTTP.
-- HTTP router serves `GET /api/v1/channels` and `GET /api/v1/stats`; the Server-Sent Events stream remains on the roadmap.
+- Linux daemon publishes live or mock readings, honours `refresh.millis` from `wifiequd.conf`, and offers snapshot, metadata, and streaming endpoints via HTTP.
+- HTTP router serves `GET /api/v1/channels`, `GET /api/v1/stats` (guarded by an API key), and the Server-Sent Events stream for live updates.
 - Web/Windows clients remain stubs and will evolve once the expanded JSON contract is ready.
 
 ## Build
@@ -61,8 +61,8 @@ make docs                   # regenerate API docs when needed
 
 ## Install (optional)
 ```sh
-sudo setup-user             # create 'wifiequ' user and 'wifieq' group
-sudo make install           # creates user and group and installs systemd unit and binary
+sudo make setup-user        # create the 'wifiequ' system user and group
+sudo make install           # installs config, unit file, and binary
 ```
 
 ## Test & Demos
@@ -79,17 +79,16 @@ Ring-buffer behaviour for the streaming endpoint is covered by `linux/tests/test
 
 ## JSON API
 - ✅ `GET /api/v1/channels` — returns the latest buffered sample.
-- ✅ `GET /api/v1/stats` — exposes mode, interface (when live), refresh cadence, and configured channel bins.
-- ⏳ `GET /api/v1/channels/stream` — planned Server-Sent Events feed.
+- ✅ `GET /api/v1/stats` — exposes mode, interface (when live), refresh cadence, and configured channel bins (requires `X-API-Key`).
+- ✅ `GET /api/v1/channels/stream` — Server-Sent Events feed for live updates.
 
 The OpenAPI contract lives in [`api/openapi.yaml`](api/openapi.yaml). The HTML version at [`docs/api/index.html`](docs/api/index.html) is produced on demand via the root `make docs` target, which will fetch `@redocly/cli` if it is not already installed. Prefer the hosted preview at [cv-samples.vercel.app/wifiequ/docs/api](https://cv-samples.vercel.app/wifiequ/docs/api) for a live rendering (implemented vs. planned routes are flagged in the spec). See also the short guide in [`docs/README.md`](docs/README.md).
 
 ## Roadmap
 - [ ] Finalise JSON schema and add contract tests.
-- [ ] Server-Sent Events (SSE) for live streaming updates.
+- [ ] Harden contract tests for the OpenAPI schema.
 - [ ] Windows service prototype.
 - [ ] Angular visualization with channel overlays.
-- [ ] Enforce API-key authentication on HTTP endpoints.
 - [ ] Packaging and minimal installer scripts.
 
 ## Related

@@ -34,7 +34,9 @@ Artifacts land in `bin/`, logs in `logs/`.
 ```bash
 ./bin/wifiequd &
 curl -s http://localhost:8080/api/v1/channels | jq
-curl -s http://localhost:8080/api/v1/stats | jq
+curl -s -H "X-API-Key: $(grep access.token.stats /etc/wifiequd.conf | cut -d= -f2)" \
+    http://localhost:8080/api/v1/stats | jq
+curl -s http://localhost:8080/api/v1/channels/stream
 ```
 
 Set `log.daemon.json=1` in `etc/wifiequd.conf` to mirror each payload in the daemon log.
@@ -45,7 +47,7 @@ Adjust `refresh.millis` to slow down or speed up the sampler; both mock and live
 The helper target installs a service unit and ensures the `wifiequ` user/group exist:
 
 ```bash
-sudo ./setup-user          # create service account
+sudo make setup-user       # create service account
 sudo make install          # install binaries, config, and systemd unit
 sudo systemctl enable --now wifiequd
 ```
