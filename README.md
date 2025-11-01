@@ -4,6 +4,9 @@ A compact portfolio of small, self‑contained code projects that complement my 
 
 > Live previews and links: [**cv‑samples.vercel.app**](https://cv-samples.vercel.app)
 
+[![cv-samples CI](https://github.com/dentonescu/cv-samples/actions/workflows/cv-samples-ci.yml/badge.svg?branch=main)](...)
+![License](https://img.shields.io/github/license/dentonescu/cv-samples)
+
 ## About me
 I’m a software engineer who enjoys building neat, well‑scoped utilities and visual demos across languages (C, Java, Python, TypeScript/JavaScript, and Angular). I care about readable code, reproducible builds, and pragmatic architecture.
 
