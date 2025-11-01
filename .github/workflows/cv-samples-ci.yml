@@ -1,0 +1,29 @@
+name: cv-samples CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: ./dev.sh --install-deps
+
+      - name: Build all projects
+        run: ./dev.sh --build
+
+      - name: Run unit tests
+        run: ./dev.sh --run-tests
+
+      - name: Install deployable projects
+        run: sudo ./dev.sh --install-prj
+      
+      - name: Run examples as superuser
+        run: sudo ./dev.sh --run-examples
