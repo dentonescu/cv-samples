@@ -82,7 +82,7 @@
         <dependency>
             <groupId>dev.dmotservices</groupId>
             <artifactId>libdmotservices-core</artifactId>
-            <version>1.0.0</version>
+            <version>${revision}</version>
         </dependency>
     </dependencies>
 </project>
