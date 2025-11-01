@@ -1,0 +1,90 @@
+###############################################################################
+# .gitattributes
+#
+# Purpose:
+#   Keep line endings, diffs, and merges consistent across platforms.
+#   This repo is developed primarily on Linux (VS Code) but also built
+#   and tested on Windows (VM).  Without this file, Git might convert
+#   line endings inconsistently (LF vs CRLF) or attempt to diff binaries.
+#
+# Summary of rules:
+#   - Normalize all text files to LF in the repository.
+#   - Let Git check them out with the native EOL for each OS if needed.
+#   - Mark common binaries as binary (no diffs / merges).
+#   - Provide diff drivers for common languages.
+#   - Exclude meta-files when exporting archives.
+#
+# Reference:
+#   https://git-scm.com/docs/gitattributes
+###############################################################################
+
+# ======================================================
+# Line endings
+# ======================================================
+
+* text=auto eol=lf
+
+*.bat  text eol=crlf
+*.ps1  text eol=crlf
+*.sh   text eol=lf
+*.bash text eol=lf
+
+# Common source types
+*.c      text eol=lf
+*.h      text eol=lf
+*.cpp    text eol=lf
+*.hpp    text eol=lf
+*.cs     text eol=lf
+*.py     text eol=lf
+*.java   text eol=lf
+*.json   text eol=lf
+*.yaml   text eol=lf
+*.yml    text eol=lf
+*.html   text eol=lf
+*.css    text eol=lf
+*.js     text eol=lf
+*.ts     text eol=lf
+*.tsx    text eol=lf
+*.md     text eol=lf
+*.xml    text eol=lf
+*.txt    text eol=lf
+*.ini    text eol=lf
+*.conf   text eol=lf
+*.cmake  text eol=lf
+
+# ======================================================
+# Binary files — no diff or merge
+# ======================================================
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.7z binary
+*.tar binary
+*.gz binary
+*.xz binary
+*.exe binary
+*.dll binary
+*.pdb binary
+*.so binary
+*.a binary
+*.o binary
+
+# ======================================================
+# Diff / merge hints
+# ======================================================
+*.cs diff=csharp
+*.c diff=cpp
+*.h diff=cpp
+*.cpp diff=cpp
+*.hpp diff=cpp
+*.py diff=python
+
+# ======================================================
+# Archive exports
+# ======================================================
+.gitignore     export-ignore
+.gitattributes export-ignore

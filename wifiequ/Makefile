@@ -67,7 +67,7 @@ version:
 
 install:
 	@$(MILESTONE) "Deploying the applications..."
-	# TO-DO: This target would have to do different things depending on which OS called it.
+	@$(MAKE) -C linux install
 
 
 #####################################################################################

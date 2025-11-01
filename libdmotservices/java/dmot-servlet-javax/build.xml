@@ -19,7 +19,7 @@
         <echo message="libdmotservices.version: ${libdmotservices.version}"/>
         <echo message="mvn: ${mvn}"/>
         <echo message="project.java.home: ${project.java.home}"/>
-        <exec executable="${mvn}">
+        <exec executable="${mvn}" failonerror="true">
             <env key="JAVA_HOME" value="${project.java.home}"/>
             <arg value="clean"/>
             <arg value="install"/>
@@ -48,19 +48,21 @@
      <echo message="libdmotservices.version: ${libdmotservices.version}"/>
         <echo message="mvn: ${mvn}"/>
         <echo message="project.java.home: ${project.java.home}"/>
-        <exec executable="${mvn}">
+        <exec executable="${mvn}" failonerror="true">
             <env key="JAVA_HOME" value="${project.java.home}"/>
             <arg value="test-compile"/>
             <arg value="-Dmaven.main.skip=true"/>
+            <arg value="-Drevision=${libdmotservices.version}"/>
         </exec>
     </target>
     <target name="test" description="run the unit tests">
      <echo message="libdmotservices.version: ${libdmotservices.version}"/>
         <echo message="mvn: ${mvn}"/>
         <echo message="project.java.home: ${project.java.home}"/>
-        <exec executable="${mvn}">
+        <exec executable="${mvn}" failonerror="true">
             <env key="JAVA_HOME" value="${project.java.home}"/>
             <arg value="surefire:test"/>
+            <arg value="-Drevision=${libdmotservices.version}"/>
             <arg value="-Duser.dir=${basedir}/src/test/java"/>
         </exec>
     </target>

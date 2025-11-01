@@ -48,7 +48,7 @@ docs:
 #####################################################################################
 install:
 	@$(MILESTONE) "Installing deployable projects..."
-	@$(MAKE) -C wifiequ/linux install
+	@$(MAKE) -C wifiequ install
 
 #####################################################################################
 ## Unit tests
