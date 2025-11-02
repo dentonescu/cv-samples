@@ -50,6 +50,7 @@ WiFiEqu demonstrates how system services on different operating systems can expo
 - Linux daemon publishes live or mock readings, honours `refresh.millis` from `wifiequd.conf`, and offers snapshot, metadata, and streaming endpoints via HTTP.
 - HTTP router serves `GET /api/v1/channels`, `GET /api/v1/stats` (guarded by an API key), and the Server-Sent Events stream for live updates.
 - Web/Windows clients remain stubs and will evolve once the expanded JSON contract is ready.
+- Windows parity, shared .NET DTOs, and richer Docker orchestration are queued up next; these items are outlined below so the core daemon work can guide upcoming branches.
 
 ## Build
 ```sh
@@ -117,11 +118,13 @@ Ring-buffer behaviour for the streaming endpoint is covered by `linux/tests/test
 The OpenAPI contract lives in [`api/openapi.yaml`](api/openapi.yaml). The HTML version at [`docs/api/index.html`](docs/api/index.html) is produced on demand via the root `make docs` target, which will fetch `@redocly/cli` if it is not already installed. Prefer the hosted preview at [cv-samples.vercel.app/wifiequ/docs/api](https://cv-samples.vercel.app/wifiequ/docs/api) for a live rendering (implemented vs. planned routes are flagged in the spec). See also the short guide in [`docs/README.md`](docs/README.md).
 
 ## Roadmap
-- [ ] Finalise JSON schema and add contract tests.
-- [ ] Harden contract tests for the OpenAPI schema.
-- [ ] Windows service prototype.
-- [ ] Angular visualization with channel overlays.
-- [ ] Packaging and minimal installer scripts.
+- [ ] Lock down the JSON schema and add contract tests (Linux + Windows).
+- [ ] Ship the first Windows worker: Minimal API, SSE endpoints, API-key auth, xUnit coverage.
+- [ ] Extract the shared `Dmot.Lib` C# package for DTOs, logging, and config.
+- [ ] Extend Docker Compose stack with the Angular UI, gallery landing page, and container health checks/metrics.
+- [ ] Harden OpenAPI docs and CI build job to emit Linux/Windows artifacts.
+- [ ] Enhance Angular visualization with channel overlays and live stream handling.
+- [ ] Polish packaging/installer scripts once multi-platform parity is in place.
 
 ## Related
 - Back to [portfolio overview](../README.md)
