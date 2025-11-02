@@ -76,6 +76,37 @@ make example-demo           # runs the demos
 > Notes: Linux build depends on the local `libdmotservices` C artifacts. See that project’s README for building the library first.
 > The `ex_wlanscan` demo expects a live wireless interface (defaults to `wlan0`). In CI and other headless environments the workflow exports `WFQ_MOCK=1`, so the binary exits early with a friendly message instead of attempting a hardware scan.
 
+## Docker & Compose
+
+Launch the mock-mode daemon in a container (build context is the repository root):
+
+```sh
+docker build -t wifiequ -f wifiequ/Dockerfile .
+docker run --rm -p 8080:8080 wifiequ
+```
+
+Override configuration tokens or toggle live mode via environment variables:
+
+```sh
+docker run --rm -p 8080:8080 \
+    -e WFQ_MOCK=0 \
+    -e WFQ_IFACE=wlp2s0 \
+    -e WFQ_ACCESS_TOKEN=customtoken123 \
+    wifiequ
+```
+
+The image generates a stats token automatically when `WFQ_ACCESS_TOKEN` is omitted and logs the value at startup.
+
+When building the container the Dockerfile compiles only the Linux C library (`make -C libdmotservices/c/linux ...`) before building WiFiEqu, avoiding the optional Java tooling from the host toolchain.
+
+Run WiFiEqu alongside `slideshow-server` via Docker Compose:
+
+```sh
+docker compose up --build wifiequ
+```
+
+The service binds to `http://localhost:8082` on the host. Compose makes it easy to start/stop just this service (`docker compose stop wifiequ`) or watch the logs (`docker compose logs -f wifiequ`). See the shared [Docker stack notes](../docker/README.md) for more examples and the Docker snap setup.
+
 Ring-buffer behaviour for the streaming endpoint is covered by `linux/tests/test_sample_stream.c`, including fast-producer/slow-consumer edge cases.
 
 ## JSON API

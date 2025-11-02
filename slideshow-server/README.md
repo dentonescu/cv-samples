@@ -38,6 +38,29 @@ Videos are streamed through `ffmpeg`. Ensure it is installed when serving format
 
 Run `make dist` before packaging or publishing artifacts. The root `Makefile` gathers the resulting tarball automatically.
 
+## Docker & Compose
+
+Build and run the containerised version (ffmpeg + bundled sample media) directly from the project root:
+
+```bash
+docker build -t slideshow-server -f slideshow-server/Dockerfile .
+docker run --rm -p 8081:8080 slideshow-server
+```
+
+Mount your own library instead of the bundled photos:
+
+```bash
+docker run --rm -p 8081:8080 -v "$PWD/my-media:/media:ro" slideshow-server /media
+```
+
+Or let Docker Compose handle everything (image build + ports + sample media volume):
+
+```bash
+docker compose up --build slideshow-server
+```
+
+This stack exposes the slideshow on `http://localhost:8081`. Use `docker compose logs -f slideshow-server` to tail output and `docker compose stop slideshow-server` (or `docker compose down`) when you’re finished. More compose tips live in the top-level [Docker stack notes](../docker/README.md).
+
 ## Project layout
 
 - [`slideshow_server/`](slideshow_server/README.md) — reusable package powering the CLI and tests.

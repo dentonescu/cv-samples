@@ -23,6 +23,7 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 ## Tooling & automation
 - `dev.sh` in the repository root orchestrates dependency setup, builds, tests, installs, and demo runs from a single entrypoint. It now recognises mock vs. hardware example runs, optional interface overrides, and selective subcommands so you can rehearse exactly what the CI job performs. See the usage recipes below for common scenarios.
 - `.github/workflows/cv-samples-ci.yml` mirrors the `dev.sh` flow on GitHub Actions: dependencies → build → tests → example runs. The pipeline ensures every project stays buildable on a clean Ubuntu runner (the Wi-Fi scan demo skips gracefully when no wireless interface is available).
+- `docker-compose.yml` spins up containerised demos (`slideshow-server` on host port `8081`, `wifiequ` on host port `8082`) using the project-specific Dockerfiles. Great for a one-command tour: `docker compose up --build`. See [Docker stack notes](docker/README.md) for the full command list, group permissions, and snap service tips.
 - `.gitattributes` files have been introduced across the projects to normalise line endings and enforce consistent attributes, making diffs reliable across platforms.
 
 ### `dev.sh` quick recipes
@@ -58,6 +59,7 @@ Skips demos requiring live hardware by setting mock mode. Handy for CI or headle
 
 ## How to use this repository
 - Every project folder has its own `README.md` with quick build or run instructions.
+- Prefer the Docker Compose workflow when you want to try the demos without installing runtimes directly. Install Docker (snap instructions included in [docker/README.md](docker/README.md)), run `docker compose up --build`, then visit `http://localhost:8081` (slideshow) and `http://localhost:8082` (WiFiEqu API). Use `docker compose down` when you're done.
 - Prefer `./dev.sh --install-deps --install-prj --build --run-tests --run-examples` for the full local check, or run the corresponding CI workflow manually from the Actions tab if you want to watch the hosted logs.
 - Code is intentionally small and instructional—suited for reading and discussion.
 - Nothing here is used in production customer systems.
