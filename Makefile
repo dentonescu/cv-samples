@@ -14,7 +14,8 @@ ROOT := $(strip $(shell pwd))
 MILESTONE := echo === 
 GATHER := 	find "${ROOT}" -name "*.a" -not -path "*/node_modules*" -type f -exec cp -v "{}" "${DIST}" \; ; \
 			find "${ROOT}" -name "build" -not -path "*/node_modules*" -type d -exec cp -vR "{}/." "${DIST}" \; ; \
-			find "${ROOT}" -name "bin" -not -path "*/node_modules*" -type d -exec cp -vR "{}/." "${DIST}" \;
+			find "${ROOT}" -name "bin" -not -path "*/node_modules*" -type d -exec cp -vR "{}/." "${DIST}" \; ; \
+			find "${ROOT}" -name "*.tar.gz" -not -path "*/node_modules*" -type f -exec cp -v "{}" "${DIST}" \;
 
 .PHONY: all build-all clean docs example-demo examples install test tests
 
@@ -25,6 +26,7 @@ all: prebuild build-all dist
 
 build-all:
 	@$(MILESTONE) "Building all projects with build files..."
+	@$(MAKE) -C slideshow-server dist
 	@$(MAKE) -C libdmotservices clean all
 	@$(MAKE) -C wifiequ clean all
 
@@ -61,6 +63,7 @@ tests:
 
 test: tests
 	@$(MILESTONE) "Executing all tests..."
+	@$(MAKE) -C slideshow-server test
 	@$(MAKE) -C libdmotservices test
 	@$(MAKE) -C wifiequ test
 
@@ -85,6 +88,7 @@ example-demo: examples
 #####################################################################################
 clean:
 	@$(MILESTONE) "Removing previous builds..."
+	@$(MAKE) -C slideshow-server clean || true
 	@$(MAKE) -C libdmotservices clean || true
 	@$(MAKE) -C wifiequ clean || true
 	@rm -Rf "${DIST}"

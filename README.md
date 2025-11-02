@@ -4,7 +4,7 @@ A compact portfolio of small, self‑contained code projects that complement my 
 
 > Live previews and links: [**cv‑samples.vercel.app**](https://cv-samples.vercel.app)
 
-[![cv-samples CI](https://github.com/dentonescu/cv-samples/actions/workflows/cv-samples-ci.yml/badge.svg?branch=main)](.)
+[![cv-samples CI](https://github.com/dentonescu/cv-samples/actions/workflows/cv-samples-ci.yml/badge.svg?branch=main)](/actions)
 ![License](https://img.shields.io/github/license/dentonescu/cv-samples)
 
 ## About me
