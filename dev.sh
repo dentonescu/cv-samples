@@ -20,7 +20,8 @@ ensure_dependencies() {
         libmicrohttpd-dev \
         libnl-3-dev \
         libnl-genl-3-dev \
-    	openjdk-17-jdk
+    	openjdk-17-jdk \
+    	python3-pytest
 }
 
 if [ -z "$1" ]; then
