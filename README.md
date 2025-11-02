@@ -21,9 +21,40 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 | **[Terraglean](terraglean/README.md)** (planned) | Interactive map showing world data layers (time, weather, country stats). | Java, Spring Boot, Leaflet.js |
 
 ## Tooling & automation
-- `dev.sh` in the repository root orchestrates dependency setup, builds, tests, and demo runs from a single entrypoint. It is the quickest way for a reviewer to get everything compiling and deployed locally (`./dev.sh --install-deps --install-prj --build --run-tests --run-examples` mirrors the CI run). Pass `--iface <name>` if your Wi-Fi device is not `wlan0` (e.g. `--iface wlp2s0`), and run the examples with `sudo` when the wireless scan demo needs hardware access.
+- `dev.sh` in the repository root orchestrates dependency setup, builds, tests, installs, and demo runs from a single entrypoint. It now recognises mock vs. hardware example runs, optional interface overrides, and selective subcommands so you can rehearse exactly what the CI job performs. See the usage recipes below for common scenarios.
 - `.github/workflows/cv-samples-ci.yml` mirrors the `dev.sh` flow on GitHub Actions: dependencies → build → tests → example runs. The pipeline ensures every project stays buildable on a clean Ubuntu runner (the Wi-Fi scan demo skips gracefully when no wireless interface is available).
 - `.gitattributes` files have been introduced across the projects to normalise line endings and enforce consistent attributes, making diffs reliable across platforms.
+
+### `dev.sh` quick recipes
+```bash
+sudo ./dev.sh --install-prj
+```
+Installs `/etc/wifiequd.conf`, generates an API key, stages the systemd unit, and copies binaries into `/usr/local/bin`. Run whenever you want the WiFiEqu daemon and demos on the host system.
+
+```bash
+sudo ./dev.sh --run-examples
+```
+Rebuilds and launches the demos in live hardware mode (defaults to `wlan0`; pair with `--iface <name>` to override).
+
+```bash
+./dev.sh --run-tests
+```
+Compiles and executes the unit-test suites without touching system directories.
+
+```bash
+sudo ./dev.sh --install-deps --install-prj --build --run-tests --run-examples
+```
+“Full treatment” run that matches the CI workflow: apt dependencies, rebuild, install, unit tests, and demos.
+
+```bash
+sudo ./dev.sh --iface wlp2s0 --install-deps --install-prj --build --run-tests --run-examples
+```
+Same as above but pinned to a specific wireless interface.
+
+```bash
+./dev.sh --mock --run-examples
+```
+Skips demos requiring live hardware by setting mock mode. Handy for CI or headless hosts where no Wi-Fi device is exposed.
 
 ## How to use this repository
 - Every project folder has its own `README.md` with quick build or run instructions.

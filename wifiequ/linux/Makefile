@@ -133,7 +133,10 @@ examples: $(EX_BINS)
 ## demonstrates the examples
 example-demo: examples
 	@set -e; \
-	find "$(BIN_DIR)" -name "ex_*" -exec sh -c 'chmod +x "$$1" && "$$1"' _ {} \;;
+	for bin in $$(find "$(BIN_DIR)" -maxdepth 1 -type f -name 'ex_*' -print); do \
+		chmod +x "$$bin"; \
+		"$$bin"; \
+	done
 	@find -name "*.log" -not -path "**/logs/*" -exec mv -vf "{}" "$(LOG_DIR)" \;
 
 

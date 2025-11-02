@@ -25,5 +25,18 @@ jobs:
       - name: Install deployable projects
         run: sudo ./dev.sh --install-prj
       
-      - name: Run examples as superuser
-        run: sudo ./dev.sh --run-examples
+      - name: Run examples in mock mode (no hardware examples)
+        run: ./dev.sh --mock --run-examples
+
+      - name: List dist (debug)
+        run: ls -laR dist || true
+      
+      - name: Upload artifacts from dist
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cv-samples-dist-${{ github.sha }}
+          path: |
+            dist/**
+          if-no-files-found: warn
+          retention-days: 90

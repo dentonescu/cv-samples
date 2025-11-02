@@ -30,6 +30,8 @@ make example-demo   # launches the highlight demos
 
 Artifacts land in `bin/`, logs in `logs/`.
 
+Set `WFQ_MOCK=1` before `make example-demo` (or pass `--mock` to `dev.sh`) when running on hosts without wireless hardware; the demos will acknowledge mock mode and skip live scans.
+
 ### Try the HTTP endpoint
 ```bash
 ./bin/wifiequd &

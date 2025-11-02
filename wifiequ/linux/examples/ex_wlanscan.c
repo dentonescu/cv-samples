@@ -6,13 +6,17 @@
 #include "dmot/log.h"
 #include "dmot/time.h"
 #include "dmot/ui.h"
+#include "wifiequd.h"
 #include "wfq/wifiequ.h"
 #include "wfq/config.h"
 #include "wfq/wlanscan.h"
 
 /*
- * declarations
+ * internals
  */
+
+static bool is_mock_mode(void);
+static char *get_wlan_interface(void);
 static void display_signal_table(char *iface);
 static void display_equalizer(char *iface);
 static void *task_scan_and_render_wifi_signals(void *arg);
@@ -26,6 +30,29 @@ static const int default_cycles = 30;
 static const long default_sleep_ms = 1000;
 static dmot_ui_eq eq;
 static dmot_log_level log_level = DMOT_LOG_DEBUG;
+
+static bool is_mock_mode(void)
+{
+    char *mock = getenv(WFQ_ENV_MOCK);
+    if (!mock)
+        return false; // mock env variable not set, so hardware mode
+    if (strlen(mock) == 0)
+        return false; // blank variable, so hardware mode
+    int mock_i = atoi(mock);
+    return (mock_i > 0); // positive value means mock mode
+}
+
+static char *get_wlan_interface(void)
+{
+    char *iface = getenv(WFQ_ENV_IFACE);
+    if (!iface || strlen(iface) == 0)
+    {
+        iface = WFQ_DEFAULT_WLAN_IFACE;
+        DMOT_LOGW("%s not set. Using the default interface.",
+                  WFQ_ENV_IFACE);
+    }
+    return iface;
+}
 
 static void *task_scan_and_render_wifi_signals(void *arg)
 {
@@ -55,7 +82,7 @@ static void display_signal_table(char *iface)
     wfq_signal *signals = wfq_scan_wlan(iface);
     if (!signals || signals[0].freq_mhz <= 0)
     {
-        puts("FAILED to retrieve signal information.");
+        DMOT_LOGE("FAILED to retrieve signal information from %s.", iface);
         exit(EXIT_FAILURE);
     }
     puts("");
@@ -99,12 +126,14 @@ static void display_equalizer(char *iface)
 int main(void)
 {
     puts("[ ex_wlanscan ]");
-    char *iface = getenv("WFQ_IFACE");
-    if (!iface)
+    if (is_mock_mode())
     {
-        iface = WFQ_DEFAULT_WLAN_IFACE;
-        puts("WFQ_IFACE not set. Using the default interface.");
+        puts("Mock mode. Skipping execution.");
+        DMOT_LOGI("%s is set and so hardware usage is disallowed. Exiting gracefuly.",
+                  WFQ_ENV_MOCK);
+        exit(EXIT_SUCCESS);
     }
+    char *iface = get_wlan_interface();
     printf("Interface: %s\n", iface);
     dmot_log_set_file(stdout);
     dmot_log_set_level(log_level);

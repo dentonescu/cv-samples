@@ -7,6 +7,9 @@
  *  @brief Public defaults exposed by the WiFiEqu daemon binary.
  */
 
+#define WFQ_ENV_IFACE "WFQ_IFACE"
+#define WFQ_ENV_MOCK "WFQ_MOCK"
+
 #ifdef __cplusplus
 extern "C"
 {
