@@ -22,6 +22,7 @@ This project demonstrates my ability to:
 - Full test coverage with CMocka (C) and JUnit (Java).
 - Minimal dependencies and clear build instructions.
 - API-first mindset: code is structured for reusability and clarity.
+- Automated via Ant+Maven with fail-fast targets; GitHub Actions (`../.github/workflows/cv-samples-ci.yml`) exercises both languages with the same revision metadata that `dev.sh` passes locally.
 - Featured sample: an ANSI equalizer capable of labelled channels, also used in my WiFiEqu Linux monitor project.
 
 ## Build Overview

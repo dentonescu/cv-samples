@@ -74,6 +74,7 @@ make example-demo           # runs the demos
 ```
 
 > Notes: Linux build depends on the local `libdmotservices` C artifacts. See that project’s README for building the library first.
+> The `ex_wlanscan` demo expects a live wireless interface (defaults to `wlan0`). In CI and other headless environments it falls back to the mock data path so the workflow completes without hardware access.
 
 Ring-buffer behaviour for the streaming endpoint is covered by `linux/tests/test_sample_stream.c`, including fast-producer/slow-consumer edge cases.
 
