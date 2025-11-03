@@ -30,4 +30,5 @@ Keeping TLS certificates fresh across hobby projects is still a manual, spreadsh
 - Define the minimal RBAC/auth approach for an admin-only deployment (session cookie vs. token).
 
 ## Related
+- Developer notes: [NOTES.md](NOTES.md)
 - Back to [portfolio overview](../README.md)
