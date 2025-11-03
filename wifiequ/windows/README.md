@@ -22,3 +22,4 @@ JSON API compatibility and network access patterns will follow the Linux impleme
 - [Linux daemon](../linux/README.md)
 - [API notes](../api/README.md)
 - Back to [WiFiEqu overview](../README.md)
+- Developer notes: [NOTES.md](NOTES.md)

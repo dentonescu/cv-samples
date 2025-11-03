@@ -54,5 +54,9 @@ Active work-in-progress. APIs may evolve as other portfolio samples (like [WiFiE
 
 ![Build screenshot](libdmotservices.png)
 
+## Related
+- Developer notes: [NOTES.md](NOTES.md)
+- Back to [portfolio overview](../README.md)
+
 ---
 **License:** [MIT](LICENSE)

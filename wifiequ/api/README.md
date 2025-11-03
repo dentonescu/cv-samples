@@ -23,6 +23,7 @@ Contract changes should update both the YAML and the generated HTML so clients a
 ## Related
 - Back to [WiFiEqu overview](../README.md)
 - Implementation details live in the [Linux daemon docs](../linux/README.md)
+- Developer notes: [NOTES.md](NOTES.md)
 
 ## Screenshots
 

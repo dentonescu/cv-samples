@@ -36,5 +36,6 @@ Small, reusable Java utilities I’ve built and refined over time. The repositor
 
 ## Related
 
+- Developer notes: [NOTES.md](NOTES.md)
 - Explore [dmot-core](dmot-core/README.md) and [dmot-servlet-javax](dmot-servlet-javax/README.md)
 - Back to [libdmotservices overview](../README.md)

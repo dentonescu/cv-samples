@@ -24,6 +24,7 @@ usage() {
         print_usage_block "--run-examples" "Run available demo programs."
         echo
         echo "Git operations:"
+        print_usage_block "--git-log" "Show git log for each sub-project."
         print_usage_block "--git-status" "Show short git status for each sub-project."
         print_usage_block "--git-push" "Push committed changes for each sub-project."
         echo
@@ -46,6 +47,15 @@ ensure_dependencies() {
         libnl-genl-3-dev \
         openjdk-17-jdk \
         python3-pytest
+}
+
+git_log() {
+    for prj in "${SUB_PROJECTS[@]}"; do
+        echo "== ${prj#./}"
+        pushd "$prj" >/dev/null
+        git log
+        popd >/dev/null
+    done
 }
 
 git_status() {
@@ -75,6 +85,7 @@ mock=0
 install_deps=0
 install_prj=0
 build=0
+do_git_log=0
 do_git_status=0
 do_git_push=0
 run_examples=0
@@ -110,6 +121,9 @@ while [ $# -gt 0 ]; do
         --run-examples)
             run_examples=1
             ;;
+        --git-log)
+            do_git_log=1
+            ;;
         --git-status)
             do_git_status=1
             ;;
@@ -142,6 +156,7 @@ fi
 echo "JAVA_HOME=$JAVA_HOME"
 
 ## git operations
+[ ! "$do_git_log" -eq 1 ] || git_log
 [ ! "$do_git_status" -eq 1 ] || git_status
 [ ! "$do_git_push" -eq 1 ] || git_push
 

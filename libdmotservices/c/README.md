@@ -52,5 +52,6 @@ This component powers the live Wi-Fi equalizer in the companion WiFiEqu project.
 
 ## Where next
 
+- [Developer notes](NOTES.md)
 - [Linux build details](linux/README.md)
 - [Portfolio overview](../../README.md)

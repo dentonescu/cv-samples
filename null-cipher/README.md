@@ -9,4 +9,5 @@ Single-page app that encrypts and decrypts text using a variant of the null (con
 
 ## Related
 
+- Developer notes: [NOTES.md](NOTES.md)
 - Back to [portfolio overview](../README.md)

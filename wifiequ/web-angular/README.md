@@ -9,3 +9,4 @@ Angular client that visualises channel data from the WiFiEqu JSON API.
 ## Related
 - Back to [WiFiEqu overview](../README.md)
 - API notes: [wifiequ/api](../api/README.md)
+- Developer notes: [NOTES.md](NOTES.md)

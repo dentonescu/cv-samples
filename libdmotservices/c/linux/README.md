@@ -45,5 +45,6 @@ make example-demo   # runs example demos
 
 ## Related
 
+- Developer notes: [NOTES.md](NOTES.md)
 - Back to [libdmotservices (C)](../README.md)
 - See how the equalizer is used in [WiFiEqu](../../../wifiequ/README.md)

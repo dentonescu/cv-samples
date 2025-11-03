@@ -128,6 +128,7 @@ The OpenAPI contract lives in [`api/openapi.yaml`](api/openapi.yaml). The HTML v
 
 ## Related
 - Back to [portfolio overview](../README.md)
+- Developer notes: [NOTES.md](NOTES.md)
 - Underlying equalizer lives in [libdmotservices](../libdmotservices/README.md)
 
 ## License

@@ -31,5 +31,6 @@ _Maven_
 
 ## Related
 
+- Developer notes: [NOTES.md](NOTES.md)
 - Back to [libdmotservices (Java)](../README.md)
 - Modern utilities live in [dmot-core](../dmot-core/README.md)

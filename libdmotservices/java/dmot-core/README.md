@@ -35,5 +35,6 @@ _Maven_
 
 ## Related
 
+- Developer notes: [NOTES.md](NOTES.md)
 - Back to [libdmotservices (Java)](../README.md)
 - Legacy servlet helpers live in [dmot-servlet-javax](../dmot-servlet-javax/README.md)

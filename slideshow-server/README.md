@@ -96,4 +96,5 @@ Browser:
 
 ## Related
 
+- Developer notes: [NOTES.md](NOTES.md)
 - Back to [portfolio overview](../README.md)

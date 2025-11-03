@@ -21,4 +21,5 @@ Showcase Java service that will expose a small REST API for analysing locations 
 - Outline Dockerfile and Compose wiring to share infrastructure with the existing portfolio.
 
 ## Related
+- Developer notes: [NOTES.md](NOTES.md)
 - Back to [portfolio overview](../README.md)
