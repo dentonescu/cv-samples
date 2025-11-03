@@ -41,32 +41,55 @@ document.addEventListener('DOMContentLoaded', () => {
     	cipherKeyBox.value = '';
     	outputBox.value = '';
 	}
-	
+
+	function getCipherKey() {
+    	const cipherkey = cipherKeyBox.value.trim();
+    	if (cipherkey.length === 0) {
+        	window.alert('Please enter a cipher key (digits only) before continuing.');
+        	return null;
+    	}
+    	if (!/^\d+$/.test(cipherkey)) {
+        	window.alert('Cipher key must contain digits only.');
+        	return null;
+    	}
+    	return cipherkey;
+	}
+
+	function getCipherDigit(cipherkey, index) {
+    	return parseInt(cipherkey.charAt(index % cipherkey.length), 10);
+	}
+
 	function decrypt() {
-    	let ciphertext = inputBox.value.toUpperCase().replace(/\s+/g, '');
-    	let cipherkey = cipherKeyBox.value;
+    	const cipherkey = getCipherKey();
+    	if (!cipherkey) {
+        	return;
+    	}
+    	const ciphertext = inputBox.value.toUpperCase().replace(/\s+/g, '');
     	let result = '';
     	let j = 0;
     	for (let i = 0; i < ciphertext.length; ++i) {
-        	if (i != 0) {
-            	let digit = parseInt(cipherkey.charAt(j), 10);
+        	if (i !== 0) {
+            	const digit = getCipherDigit(cipherkey, j);
             	i += digit;
             	++j;
         	}
         	result += ciphertext.charAt(i);
     	}
-	
+
     	outputBox.value = result;
 	}
-	
+
 	function encrypt() {
-    	let plaintext = inputBox.value.toUpperCase().replace(/[^A-Z]+/g, '');
-    	let cipherkey = cipherKeyBox.value;
+    	const cipherkey = getCipherKey();
+    	if (!cipherkey) {
+        	return;
+    	}
+    	const plaintext = inputBox.value.toUpperCase().replace(/[^A-Z]+/g, '');
     	let result = '';
     	let j = 0;
     	for (let i = 0; i < plaintext.length; ++i) {
-        	if (i != 0) {
-            	let digit = parseInt(cipherkey.charAt(j), 10);
+        	if (i !== 0) {
+            	const digit = getCipherDigit(cipherkey, j);
             	result += padding(digit);
             	++j;
         	}

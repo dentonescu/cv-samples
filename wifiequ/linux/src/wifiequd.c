@@ -122,7 +122,6 @@ static void tear_down_signal_source(void)
 static void publish_reading(void)
 {
     static long long prev_timestamp = -1;
-    char json[DEFAULT_JSON_BUFFER_SIZE];
     wfq_sample sample = (s_config_ctx.opt.mock ? wfq_sine_wave_generator_read() : wfq_wifi_signal_read());
 
     if (sample.readings[0].chan_id <= 0)
@@ -131,7 +130,6 @@ static void publish_reading(void)
         return;
     }
 
-    wfqapi_sample2json(&sample, json, sizeof json);
     if (sample.timestamp_ms > prev_timestamp)
     {
         wfqapi_server *srv = wfqapi_get_server_context();

@@ -45,7 +45,7 @@ build/
 **/bin/
 **/log/
 **/logs/
-**/node_modules#/
+**/node_modules/
 **/.sync*
 **/*.a
 **/*.d

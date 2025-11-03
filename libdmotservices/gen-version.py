@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import pathlib, sys
-root = pathlib.Path(__file__).resolve().cwd()
+root = pathlib.Path(__file__).resolve().parent
 ver = (root/"VERSION").read_text().strip()
 
 # C header
