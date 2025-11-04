@@ -19,7 +19,7 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 | **[slideshow-server](https://github.com/dentonescu/cv-samples/tree/main/slideshow-server)** | Tiny Python web server that generates responsive media slideshows. | Python, HTML, JS |
 | **[WiFiEqu](https://github.com/dentonescu/cv-samples/tree/main/wifiequ)** (in progress) | Terminal Wi‑Fi channel “equalizer” visualizer with a C JSON daemon, Windows service, and Angular web UI. The Linux daemon streams live/mock readings over SSE, honours configurable refresh cadences, and secures `/api/v1/stats` with an API key. | C, ANSI/terminal, JSON APIs, C#, Angular |
 | **[Terraglean](https://github.com/dentonescu/cv-samples/tree/main/terraglean)** (planned) | Interactive map showing world data layers (time, weather, country stats). | Java, Spring Boot, Leaflet.js |
-| **[pkixwebadm](https://github.com/dentonescu/cv-samples/tree/main/pkixwebadm)** (early planning) | Certificate inventory web app concept that will pair FastAPI with SQLite storage and calendar reminders for expiring certs. | Python, FastAPI, SQLite, Docker |
+| **[pkixwebadm](https://github.com/dentonescu/cv-samples/tree/main/pkixwebadm)** (HTTP foundation in progress) | Certificate inventory web app pairing FastAPI with SQLite; configuration and scaffold are in place while the app factory and landing page are being implemented. | Python, FastAPI, SQLite, Docker |
 
 ## Tooling & automation
 - `dev.sh` in the repository root orchestrates dependency setup, builds, tests, installs, and demo runs from a single entrypoint. It now recognises mock vs. hardware example runs, optional interface overrides, and selective subcommands so you can rehearse exactly what the CI job performs. See the usage recipes below for common scenarios.
@@ -74,7 +74,7 @@ All content is provided under the license in `/LICENSE`. You’re free to read a
 Check back regularly — new samples will be added and existing ones improved as the gallery evolves.
 
 ## Upcoming work
-- **pkixwebadm**: design a FastAPI + SQLite workflow for ingesting certificate files, persisting chain metadata, and serving calendar-friendly expiry views. Containerisation and periodic refresh jobs will follow once the core ingestion flow lands.
+- **pkixwebadm**: finish the HTTP app foundation slice—add the FastAPI app factory, bootstrap the landing page, then expand into Jinja templating before circling back to ingestion workflows and container packaging.
 - **WiFiEqu**: prototype the Windows worker that mirrors the Linux API, factor shared DTO/config plumbing into a reusable C# library, and round out the Docker Compose story with health checks and metrics before pursuing CI/CD builds.
 - **Terraglean**: spike a Spring Boot REST service backed by lightweight JDBC persistence, then layer unit/integration coverage and Gradle build tooling ahead of a possible React/Angular dashboard.
 - **Portfolio glue**: continue aligning DevOps expectations—multi-language builds, container images, and cross-project Compose entries—so each sample can graduate from `_private_staging` once the future work above solidifies.
