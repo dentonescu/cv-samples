@@ -2,6 +2,32 @@
 
 Developer notes for the C library shared across demos and WiFiEqu. Keep these aligned with the platform-specific builds (see `linux/NOTES.md` for host-specific details).
 
+## Current File Layout
+```
+c/
+├─ README.md                     # C track overview
+├─ NOTES.md                      # Developer roadmap (this file)
+├─ Makefile                      # Root C build orchestrator
+├─ .gitignore
+├─ .vscode/
+│  ├─ c_cpp_properties.json
+│  └─ settings.json
+└─ linux/                        # Linux implementation target
+   ├─ README.md / NOTES.md
+   ├─ Makefile
+   ├─ include/dmot/*.h           # Public headers
+   ├─ src/                       # Library source modules
+   │  ├─ datatypes/datatypes.c
+   │  ├─ math/{math.c, signals.c}
+   │  ├─ string/{string.c, stringx.d}
+   │  ├─ time/{time.c, timex.d}
+   │  └─ util/log.c
+   ├─ tests/                     # CMocka suites
+   ├─ examples/                  # Example programs (ex_signals.c, …)
+   ├─ img/equalizer.png
+   └─ libdmotservices-c-linux.png
+```
+
 ## Implementation Plan
 1. **Core library polish**  
    - Maintain clean separation between `include/` and `src/`; avoid leaking internal headers.  

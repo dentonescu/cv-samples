@@ -2,6 +2,36 @@
 
 Developer notes for the Linux-focused build of `libdmotservices-c`. These highlight platform specifics that differ from the generic C module.
 
+## Current File Layout
+```
+linux/
+├─ README.md                     # Platform-specific build guidance
+├─ NOTES.md                      # Developer roadmap (this file)
+├─ Makefile
+├─ include/dmot/*.h              # Installed header set
+├─ src/
+│  ├─ datatypes/datatypes.c
+│  ├─ math/{math.c, mathx.d, signals.c}
+│  ├─ string/{string.c, stringx.d}
+│  ├─ time/{time.c, timex.d}
+│  └─ util/log.c
+├─ tests/
+│  ├─ test_log.c
+│  ├─ test_math.c
+│  ├─ test_signals.c
+│  ├─ test_string.c
+│  └─ test_version.c
+├─ examples/
+│  ├─ README.md
+│  ├─ ex_signals.c
+│  ├─ ex_time.c
+│  └─ ex_ui.c
+├─ img/equalizer.png
+├─ libdmotservices-c-linux.png
+├─ logs/                         # Sample output (gitignored contents)
+└─ bin/ / lib/ / tests/ artifacts (generated at build time)
+```
+
 ## Implementation Plan
 1. **Build system polish**  
    - Keep the platform `Makefile` thin: delegate most compilation flags to the parent `c/` folder to minimise duplication.  

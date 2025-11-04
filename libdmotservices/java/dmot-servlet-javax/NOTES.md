@@ -2,6 +2,17 @@
 
 Developer notes for `libdmotservices-servlet-javax`. This module keeps legacy servlet helpers available while the ecosystem moves toward Jakarta APIs.
 
+## Current File Layout
+```
+dmot-servlet-javax/
+├─ README.md                     # Module overview and migration notes
+├─ NOTES.md                      # Developer roadmap (this file)
+├─ build.xml                     # Ant wrapper for Maven goals
+├─ src/
+│  ├─ main/java/dev/dmotservices/servlet/**  # Filters, listeners, helpers
+│  └─ test/java/dev/dmotservices/servlet/**  # JUnit tests
+```
+
 ## Implementation Plan
 1. **API shape**  
    - Keep helpers compatible with Servlet 3.1 (`javax.servlet.*`). Avoid accidental use of Jakarta namespaces.  

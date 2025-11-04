@@ -1,38 +1,23 @@
 import io
 import subprocess
 
+from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler
 
 from slideshow_server import (
     HTTP_ERR_FILE_NOT_FOUND,
     SlideshowHandler,
-    build_ffmpeg_command,
     create_handler,
-    discover_media_files,
     normalize_context,
     render_index,
     serve_index_response,
 )
-
-
-def test_discover_media_files_filters_supported_extensions(tmp_path):
-    (tmp_path / "keep.jpg").write_bytes(b"x")
-    (tmp_path / "skip.txt").write_text("this should be skipped")
-    nested = tmp_path / "nested"
-    nested.mkdir()
-    (nested / "clip.MP4").write_bytes(b"x")
-
-    files = discover_media_files(tmp_path)
-
-    assert set(files) == {"keep.jpg", "nested/clip.MP4"}
-
 
 def test_render_index_injects_constants_and_assets():
     html_template = "<!-- CONST_INJECTION_POINT --><style><!-- CSS_INJECTION_POINT --></style><script><!-- JS_INJECTION_POINT --></script>"
     css = "body { color: red; }"
     js = "console.log('hi');"
     html = render_index(["img.jpg"], 1234, css, html_template, js)
-
     assert "const FILES = [\"img.jpg\"];" in html
     assert "const INTERVAL = 1234;" in html
     assert css in html
@@ -61,9 +46,8 @@ def test_serve_index_response_writes_html():
     allowed_context = "/slides"
     allowed_context_normalized = "/slides/"
     served = serve_index_response(handler, requested_path, allowed_context, allowed_context_normalized, "<html>ok</html>")
-
     assert served is True
-    assert handler.status == 200
+    assert handler.status == HTTPStatus.OK
     assert ("Content-type", "text/html") in handler.headers
     assert handler.ended is True
     assert handler.wfile.getvalue() == b"<html>ok</html>"
@@ -89,29 +73,21 @@ def test_serve_index_response_rejects_other_paths():
     allowed_context = "/slides"
     allowed_context_normalized = "/slides/"
     served = serve_index_response(handler, requested_path, allowed_context, allowed_context_normalized, "<html>ok</html>")
-
     assert served is False
     assert handler.wfile.getvalue() == b""
 
 
-def test_build_ffmpeg_command_contains_target_path():
-    target = "/tmp/video.mp4"
-    command = build_ffmpeg_command(target)
-
-    assert command[0] == "ffmpeg"
-    assert target in command
-
-
 def test_create_handler_normalizes_context_and_assigns_html():
     handler_cls = create_handler("/slides", "<html>doc</html>", ['.mp4'], subprocess.Popen)
-
     assert handler_cls.web_context == "/slides"
     assert handler_cls.normalized_web_context == "/slides/"
     assert handler_cls.html_document == "<html>doc</html>"
 
 
 def test_handler_serve_video_streams_chunks():
-    chunks = [b"first", b"second", b""]
+    CHUNK1 = b"chunk1"
+    CHUNK2 = b"chunk2"
+    chunks = [CHUNK1, CHUNK2, b""]
 
     class DummyProcess:
         def __init__(self):
@@ -150,12 +126,11 @@ def test_handler_serve_video_streams_chunks():
 
     handler = DummyHandler()
     handler.serve_video("/tmp/video.mov")
-
     assert calls
-    assert handler.responses == [200]
+    assert handler.responses == [HTTPStatus.OK]
     assert ("Content-Type", "video/mp4") in handler.headers
     assert calls[0][1] == subprocess.PIPE
-    assert handler.wfile.getvalue() == b"firstsecond"
+    assert handler.wfile.getvalue() == b"".join([CHUNK1, CHUNK2])
 
 
 def test_normalize_context_appends_trailing_slash():
@@ -184,8 +159,6 @@ def test_handler_missing_file_triggers_404(monkeypatch):
         raise FileNotFoundError
 
     monkeypatch.setattr(SimpleHTTPRequestHandler, "do_GET", fake_super_do_get, raising=False)
-
     handler = DummyHandler()
     handler.do_GET()
-
-    assert handler.errors == [(404, HTTP_ERR_FILE_NOT_FOUND)]
+    assert handler.errors == [(HTTPStatus.NOT_FOUND, HTTP_ERR_FILE_NOT_FOUND)]

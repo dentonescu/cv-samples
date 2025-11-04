@@ -2,6 +2,22 @@
 
 Developer notes for `libdmotservices-core`. This module is the general-purpose Java utility set shared across portfolio projects.
 
+## Current File Layout
+```
+dmot-core/
+├─ README.md                     # Module overview and usage
+├─ NOTES.md                      # Developer roadmap (this file)
+├─ build.xml                     # Ant wrapper for Maven goals
+├─ pom.xml                       # Maven module descriptor
+├─ dep/jars/json-20231013.jar    # Third-party dependency checked in
+├─ src/
+│  ├─ main/java/dev/dmotservices/api/**     # HTTP/client abstractions
+│  ├─ main/java/dev/dmotservices/beans/**   # Sample DTOs
+│  ├─ main/java/dev/dmotservices/util/**    # Utility helpers
+│  └─ test/java/dev/dmotservices/**         # JUnit test suites
+└─ .idea/ (workspace metadata, gitignored in final tree)
+```
+
 ## Implementation Plan
 1. **Library scope**  
    - Keep the API tight: utilities for I/O, regex, URIs, collections, and time. Resist adding heavy frameworks.  

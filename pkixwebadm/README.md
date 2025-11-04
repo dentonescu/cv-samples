@@ -7,6 +7,11 @@ Small self-contained certificate inventory web app that will track X.509 expirat
 - Target stack: FastAPI + SQLAlchemy on SQLite for a portable data store, with Bootstrap-backed templates for the first UI.
 - Docker image layout, background schedulers, and notification channels are being designed alongside the initial backlog.
 
+## Getting started (developer preview)
+- Dependencies are tracked in `pyproject.toml`; install them into your virtual environment with `python -m pip install -e .` from this directory.
+- Copy `.env.example` to `.env` and tailor the values (host/port, database URL, secrets). The application will load these through the forthcoming settings module.
+- Until the FastAPI app factory lands, the CLI stub is the primary entry point; expect `serve` and related commands to arrive during the “HTTP app foundation” milestone.
+
 ## Why build it
 Keeping TLS certificates fresh across hobby projects is still a manual, spreadsheet-driven process. pkixwebadm will ingest PEM/DER files or reach out to endpoints via `openssl s_client`, capture the full chain, and surface the data in a concise dashboard with calendar exports and reminder hooks.
 
@@ -30,5 +35,7 @@ Keeping TLS certificates fresh across hobby projects is still a manual, spreadsh
 - Define the minimal RBAC/auth approach for an admin-only deployment (session cookie vs. token).
 
 ## Related
+- Package layout: [pkixwebadm/README.md](pkixwebadm/README.md)
+- Test suite guide: [tests/README.md](tests/README.md)
 - Developer notes: [NOTES.md](NOTES.md)
 - Back to [portfolio overview](../README.md)

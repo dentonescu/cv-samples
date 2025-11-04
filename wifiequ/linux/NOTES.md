@@ -2,6 +2,45 @@
 
 Developer notes for the Linux reference implementation (`wifiequd` + CLI demos). Use this file to track the feature roadmap, runtime considerations, and wireless tooling cheatsheets gathered while building the daemon.
 
+## Current File Layout
+```
+linux/
+├─ README.md                     # Build/run instructions for Linux daemon
+├─ NOTES.md                      # Developer roadmap and references
+├─ ARCHITECTURE.md               # Detailed component diagram
+├─ Makefile                      # gcc build + install targets
+├─ etc/
+│  ├─ wifiequd.conf              # Sample configuration
+│  └─ systemd/
+│     └─ system/wifiequd.service # Service unit template
+├─ include/
+│  ├─ wifiequd.h                 # Daemon public header
+│  ├─ wfq/*.h                    # Signal processing headers
+│  └─ wfqapi/**/*.h              # HTTP endpoint interfaces
+├─ src/
+│  ├─ README.md
+│  ├─ wifiequd.c                 # Daemon entry point
+│  ├─ wfq/
+│  │  ├─ config/config.c         # Configuration loader
+│  │  └─ wlan/{wifisignal.c, wlanscan.c}
+│  └─ wfqapi/
+│     ├─ http.c / json.c / router.c
+│     └─ endpoints/{channels.c, channels_stream.c, stats.c}
+├─ tests/
+│  ├─ README.md
+│  ├─ test_sample_stream.c
+│  └─ test_version.c
+├─ examples/
+│  ├─ README.md
+│  └─ ex_wlanscan.c              # CLI equalizer demo
+├─ img/
+│  ├─ README.md
+│  ├─ wfq-bss-01.png
+│  ├─ wfq-daemon-readings--live.png
+│  └─ wfq-freq-signal-*.png
+└─ logs/                         # Sample daemon logs (gitignored content)
+```
+
 ## Implementation Plan
 1. **Scanner reliability**  
    - Finalise retry/backoff strategies in `src/wlan/wlanscan.c` for busy/locked interfaces.  

@@ -2,6 +2,55 @@
 
 Developer notes for **libdmotservices** — the umbrella project that houses the reusable C and Java utilities backing several samples (WiFiEqu, CLI demos, servlet helpers).
 
+## Current File Layout
+```
+libdmotservices/
+├─ README.md                     # Project overview and integration notes
+├─ NOTES.md                      # Cross-language developer log
+├─ VERSION                       # Library release tag
+├─ Makefile                      # Orchestrates C and Java builds/tests
+├─ gen-version.py                # Shared VERSION bumping helper
+├─ .gitattributes / .gitignore
+├─ dist/                         # Published artifacts (static libs, jars, demos)
+├─ c/
+│  ├─ README.md / NOTES.md
+│  ├─ Makefile
+│  ├─ .vscode/
+│  └─ linux/
+│     ├─ README.md / NOTES.md
+│     ├─ Makefile
+│     ├─ include/dmot/*.h        # Public headers (math, string, time, ...)
+│     ├─ src/
+│     │  ├─ datatypes/datatypes.c
+│     │  ├─ math/{math.c, signals.c, mathx.d}
+│     │  ├─ string/{string.c, stringx.d}
+│     │  ├─ time/{time.c, timex.d}
+│     │  └─ util/log.c
+│     ├─ tests/                  # CMocka suites (test_math.c, ...)
+│     ├─ examples/               # Sample programs (ex_signals.c, ...)
+│     └─ img/equalizer.png
+├─ java/
+│  ├─ README.md / NOTES.md
+│  ├─ build.xml / build.sh / build.cmd
+│  ├─ log4j2.xml
+│  ├─ mock/                      # Test doubles
+│  ├─ dmot-core/
+│  │  ├─ README.md / NOTES.md
+│  │  ├─ build.xml / pom.xml
+│  │  ├─ dep/jars/json-20231013.jar
+│  │  └─ src/
+│  │     ├─ main/java/dev/dmotservices/**  # Core API & utilities
+│  │     └─ test/java/dev/dmotservices/**  # JUnit tests
+│  └─ dmot-servlet-javax/
+│     ├─ README.md / NOTES.md
+│     ├─ build.xml
+│     └─ src/
+│        ├─ main/java/dev/dmotservices/servlet/**  # Servlet adapters
+│        └─ test/java/dev/dmotservices/servlet/**  # Tests
+├─ libdmotservices.logo
+└─ libdmotservices.png
+```
+
 ## Project Snapshot
 - Shared assets: top-level `Makefile` syncs version numbers from `VERSION`, kicks off language-specific builds, runs tests, and copies artifacts into `dist/`.  
 - Cross-project usage: the equalizer renderer feeds WiFiEqu demos; Java utilities support planned Spring/Terraglean services.  

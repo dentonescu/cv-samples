@@ -2,6 +2,17 @@
 
 Developer notes for the Null Cipher single-page app. Captures the roadmap, crypto references, and UI considerations used while iterating on the demo.
 
+## Current File Layout
+```
+null-cipher/
+├─ README.md                     # Project overview and usage notes
+├─ NOTES.md                      # Developer plan and history
+├─ index.html                    # Single-page UI shell
+├─ null-cipher.js                # Cipher logic + DOM interactions
+├─ null-cipher.png               # Branding/Screenshot asset
+└─ .gitattributes
+```
+
 ## Implementation Plan
 1. **Core mechanics**  
    - Keep the cipher implementation (`null-cipher.js`) readable and well-commented; document how keyword removal and padding work.  

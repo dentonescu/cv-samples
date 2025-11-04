@@ -2,6 +2,13 @@
 
 Developer notes for the Windows service (`WiFiEquD`). These outline how the service should converge with the Linux daemon while respecting Windows-specific constraints.
 
+## Current File Layout
+```
+windows/
+├─ README.md                     # Windows service concept and goals
+├─ NOTES.md                      # Developer roadmap (this file)
+```
+
 ## Implementation Plan
 1. **Service scaffold**  
    - Create a Windows Service project (C#/.NET 8) with a hosted worker that boots via `HostApplicationBuilder`.  

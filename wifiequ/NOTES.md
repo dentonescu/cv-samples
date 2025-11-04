@@ -2,6 +2,63 @@
 
 Developer notes for WiFiEqu. This project stitches together a family of small components (Linux daemon, Windows service, Angular client, and shared API contracts) that all speak the same JSON dialect for channel-strength data.
 
+## Current File Layout
+```
+wifiequ/
+├─ README.md                     # Project overview and usage guide
+├─ NOTES.md                      # Developer log and architecture decisions
+├─ LICENSE
+├─ VERSION                       # Release tag
+├─ Dockerfile                    # Container recipe for daemon + UI
+├─ Makefile                      # Build/test shortcuts
+├─ gen-version.py                # Bumps VERSION file
+├─ package.json / package-lock.json
+├─ .gitattributes / .gitignore
+├─ .vscode/
+│  ├─ c_cpp_properties.json      # Editor configuration
+│  └─ settings.json
+├─ api/                          # HTTP contract and supporting assets
+│  ├─ README.md
+│  ├─ NOTES.md
+│  ├─ openapi.yaml               # REST API specification
+│  └─ img/                       # Endpoint screenshots
+├─ docs/
+│  ├─ README.md
+│  └─ api/index.html             # Generated HTML docs
+├─ dist/                         # Built binaries (gitignored in tree)
+├─ linux/                        # Native daemon implementation (C)
+│  ├─ README.md / NOTES.md / ARCHITECTURE.md
+│  ├─ Makefile
+│  ├─ etc/
+│  │  ├─ wifiequd.conf           # Sample daemon config
+│  │  └─ systemd/system/wifiequd.service
+│  ├─ include/
+│  │  ├─ wifiequd.h
+│  │  ├─ wfq/*.h                 # Core signal interfaces
+│  │  └─ wfqapi/**/*.h           # HTTP endpoint headers
+│  ├─ src/
+│  │  ├─ wifiequd.c
+│  │  ├─ wfq/                    # Signal acquisition + config
+│  │  │  ├─ config/config.c
+│  │  │  └─ wlan/{wifisignal.c, wlanscan.c}
+│  │  └─ wfqapi/                 # HTTP routing + endpoints
+│  │     ├─ http.c / json.c / router.c
+│  │     └─ endpoints/{channels.c, channels_stream.c, stats.c}
+│  ├─ tests/                     # C unit tests
+│  │  ├─ test_version.c
+│  │  ├─ test_sample_stream.c
+│  │  └─ README.md
+│  ├─ examples/ex_wlanscan.c
+│  └─ img/                       # Architecture diagrams, screenshots
+├─ web-angular/
+│  ├─ README.md
+│  └─ NOTES.md
+├─ windows/
+│  ├─ README.md
+│  └─ NOTES.md
+└─ wifiequ.logo                  # Branding asset
+```
+
 ## Project Snapshot
 - Shared contract: [`api/`](api/README.md) and generated docs under [`docs/`](docs/README.md) drive the payload schemas for every runtime.
 - Linux reference implementation: [`linux/`](linux/README.md) already streams live or mock data via REST and SSE; it doubles as the truth source for behaviour and logs.

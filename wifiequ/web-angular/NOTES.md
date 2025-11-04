@@ -2,6 +2,13 @@
 
 Developer notes for the Angular client. These outline the milestones for bringing the browser UI in line with the daemon’s capabilities.
 
+## Current File Layout
+```
+web-angular/
+├─ README.md                     # Angular client vision and milestones
+├─ NOTES.md                      # Developer roadmap (this file)
+```
+
 ## Implementation Plan
 1. **Scaffold & hygiene**  
    - Keep the Angular workspace synced with the current CLI version.  

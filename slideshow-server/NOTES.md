@@ -2,6 +2,48 @@
 
 Developer notes for `slideshow-server`, the Python HTTP slideshow generator. This documents the build/test plan, design decisions, and future enhancements.
 
+## Current File Layout
+```
+slideshow-server/
+├─ README.md                     # Project overview and quickstart
+├─ NOTES.md                      # Developer notes and roadmap
+├─ VERSION                       # Release number
+├─ Dockerfile
+├─ Makefile
+├─ run-demo.sh                   # Launches bundled demo slideshow
+├─ slideshow-server.py           # Legacy runner wrapper
+├─ slideshow-server.html         # Static demo page
+├─ slideshow-server.css
+├─ slideshow-server.js
+├─ slideshow_server/             # Python package
+│  ├─ __init__.py
+│  ├─ __main__.py
+│  ├─ server.py                  # FastAPI app and routes
+│  ├─ media.py                   # Slideshow domain logic
+│  ├─ cli.py                     # CLI helpers
+│  └─ README.md
+├─ tests/
+│  ├─ README.md
+│  ├─ test_media.py
+│  └─ test_server.py
+├─ img/
+│  ├─ README.md
+│  ├─ slideshow-server-01.png
+│  └─ slideshow-server-02.png
+├─ publicdomainpictures.net/     # Bundled sample media
+│  ├─ README.md
+│  ├─ beach-wallpaper-1862007223.jpg
+│  ├─ nature-wallpaper-2924502136.jpg
+│  └─ winter-wallpaper-3962742168.jpg
+├─ dist/
+│  ├─ slideshow-server-0.1.0/    # Packaged distribution contents
+│  └─ slideshow-server-0.1.0.tar.gz
+├─ build/
+│  └─ slideshow_server/…         # PyInstaller/bytecode artifacts
+├─ .gitignore / .gitattributes
+└─ slideshow-server.logo         # Branding asset
+```
+
 ## Implementation Plan
 1. **Core server polish**  
    - Keep the single-file entry point (`slideshow-server.py`) lean; extract reusable pieces into `slideshow_server/` without breaking CLI simplicity.  

@@ -1,4 +1,4 @@
-"""Module entry point for ``python -m slideshow_server``.
+"""Module entry point for ``python -m pkixwebadm``.
 
 Running the package as a module simply delegates to the CLI ``main`` helper so
 the behaviour matches invoking the installed console script.

@@ -2,6 +2,15 @@
 
 Developer notes for the WiFiEqu API contract. Keep this file aligned with `openapi.yaml` so every module implements the same surface.
 
+## Current File Layout
+```
+api/
+├─ README.md                     # How the spec is maintained and consumed
+├─ NOTES.md                      # Contract stewardship plan (this file)
+├─ openapi.yaml                  # Authoritative REST specification
+└─ img/                          # Endpoint screenshots and diagrams
+```
+
 ## Contract Stewardship Plan
 1. **Spec governance**  
    - Treat `openapi.yaml` as the authoritative definition; regenerate docs after each change (`make docs`).  

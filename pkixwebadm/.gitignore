@@ -6,6 +6,8 @@ __pycache__/
 # Distribution / packaging
 build/
 dist/
+*.egg-info/
+pkixwebadm/.version
 
 # Python virtual environments
 .env/
@@ -24,3 +26,4 @@ Thumbs.db
 
 # Custom
 **/_pycache__/**
+.env

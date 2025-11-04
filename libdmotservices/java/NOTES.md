@@ -2,6 +2,30 @@
 
 Developer notes for the Java side of libdmotservices. This file captures the shared strategy for the Maven/Ant workspace and the submodules (`dmot-core`, `dmot-servlet-javax`).
 
+## Current File Layout
+```
+java/
+├─ README.md                     # Java track overview
+├─ NOTES.md                      # Developer roadmap (this file)
+├─ build.xml / build.sh / build.cmd
+├─ log4j2.xml                    # Logging configuration for samples/tests
+├─ mock/                         # Sample apps and test doubles
+├─ dmot-core/
+│  ├─ README.md / NOTES.md
+│  ├─ build.xml
+│  ├─ pom.xml
+│  ├─ dep/jars/json-20231013.jar
+│  └─ src/
+│     ├─ main/java/dev/dmotservices/**   # Core APIs and utilities
+│     └─ test/java/dev/dmotservices/**   # Unit tests
+└─ dmot-servlet-javax/
+   ├─ README.md / NOTES.md
+   ├─ build.xml
+   └─ src/
+      ├─ main/java/dev/dmotservices/servlet/**  # Servlet adapters
+      └─ test/java/dev/dmotservices/servlet/**  # Unit tests
+```
+
 ## Implementation Plan
 1. **Build orchestration**  
    - Keep Ant (`build.xml`) responsible for cross-module tasks (version stamping, artifact aggregation) while Maven handles per-module builds.  
