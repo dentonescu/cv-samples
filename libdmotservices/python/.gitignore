@@ -25,5 +25,5 @@ libdmotservices/.version
 Thumbs.db
 
 # Custom
-**/_pycache__/**
+**/__pycache__/**
 .env

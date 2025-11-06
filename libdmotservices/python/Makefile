@@ -24,7 +24,7 @@ TEST_CMD      ?= $(PYTHON) -m pytest -svv
 
 export PYTHONPATH := $(ROOT):$(VENDOR_ROOT):$(PYTHONPATH)
 
-vendor:
+vendor: prebuild
 	@$(MILESTONE) "Vendoring $(PACKAGE_DIR) into $(VENDOR_ROOT)"
 	@rm -rf "$(VENDOR_ROOT)/$(PACKAGE_DIR)"
 	@mkdir -p "$(VENDOR_ROOT)"
@@ -33,12 +33,12 @@ vendor:
 #####################################################################################
 ## Default build
 #####################################################################################
-all: prebuild build
+all: vendor build
 
 version:
 	@sed -i 's/^version = ".*"/version = "$(VERSION)"/' pyproject.toml
 
-prebuild: version vendor
+prebuild: version
 	@cp -v ../VERSION libdmotservices/.version
 
 build:

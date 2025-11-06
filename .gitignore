@@ -52,6 +52,7 @@ build/
 **/*.o
 **/*.log
 **/*.secret
+**/__pycache__/**
 **/access.token
 **/connection.properties
 **/connection*.properties
