@@ -2,7 +2,7 @@
 ## pkixwebadm/Makefile
 #################################################
 
-.PHONY: all build clean dist install example-demo prebuild test vendor-libdmotservices
+.PHONY: all build clean dist install example-demo logo prebuild test vendor-libdmotservices version
 
 # build prerequisites
 VERSION := $(strip $(shell cat VERSION))
@@ -31,11 +31,15 @@ vendor-libdmotservices:
 #####################################################################################
 ## Default build
 #####################################################################################
-all: prebuild build
+all: logo prebuild build
 
-prebuild: vendor-libdmotservices
+logo:
 	@cat pkixwebadm.logo
+
+version:
 	@cp -v VERSION pkixwebadm/.version
+
+prebuild: vendor-libdmotservices version
 
 build:
 	@$(MILESTONE) "Compiling Python bytecode"
@@ -64,7 +68,7 @@ install:
 ## Unit tests
 #####################################################################################
 
-test:
+test: prebuild
 	@$(MILESTONE) "Running unit tests"
 	@$(TEST_CMD)
 
@@ -87,7 +91,7 @@ dist: clean build
 #####################################################################################
 ## Examples
 #####################################################################################
-example-demo:
+example-demo: prebuild
 	@$(MILESTONE) "No examples here yet."
 
 #####################################################################################
