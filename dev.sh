@@ -48,6 +48,8 @@ ensure_dependencies() {
         openjdk-17-jdk \
         python3-pip \
         python3-pytest
+    
+    make -C libdmotservices/python vendor
 }
 
 git_log() {

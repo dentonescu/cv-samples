@@ -2,7 +2,7 @@
 ## pkixwebadm/Makefile
 #################################################
 
-.PHONY: all build clean dist install example-demo prebuild test
+.PHONY: all build clean dist install example-demo prebuild test vendor-libdmotservices
 
 # build prerequisites
 VERSION := $(strip $(shell cat VERSION))
@@ -14,22 +14,27 @@ DIST_DIR    := $(ROOT)/dist
 BUILD_DIR   := $(ROOT)/build
 DIST_NAME   := pkixwebadm-$(VERSION)
 DIST_STAGE  := $(DIST_DIR)/$(DIST_NAME)
+LIBDMOTSERVICES_ROOT ?= $(ROOT)/../libdmotservices/python
 
 # commands
 MILESTONE    := echo === 
 PYTHON       ?= python3
 TEST_CMD     ?= $(PYTHON) -m pytest -svv
-PIP			 ?= pip
-DEPS_CMD	 ?= $(PIP) install -e .
+
+# pip is blocked on some managed hosts, so we vendor libdmotservices instead.
+export PYTHONPATH := $(LIBDMOTSERVICES_ROOT):$(LIBDMOTSERVICES_ROOT)/vendor:$(PYTHONPATH)
+
+vendor-libdmotservices:
+	@$(MILESTONE) "Vendoring libdmotservices for pkixwebadm"
+	@$(MAKE) -C "$(LIBDMOTSERVICES_ROOT)" vendor
 
 #####################################################################################
 ## Default build
 #####################################################################################
 all: prebuild build
 
-prebuild:
+prebuild: vendor-libdmotservices
 	@cat pkixwebadm.logo
-	@$(DEPS_CMD)
 	@cp -v VERSION pkixwebadm/.version
 
 build:
@@ -70,6 +75,8 @@ test:
 dist: clean build
 	@$(MILESTONE) "Packaging pkixwebadm $(VERSION)"
 	@mkdir -p "$(DIST_STAGE)"
+	@mkdir -p "$(DIST_STAGE)/vendor"
+	@cp -Rv "$(LIBDMOTSERVICES_ROOT)/vendor/libdmotservices" "$(DIST_STAGE)/vendor/"
 	@cp -v README.md pkixwebadm.py VERSION "$(DIST_STAGE)"/
 	@cp -Rv pkixwebadm "$(DIST_STAGE)"/
 	@[ ! -d "$(BUILD_DIR)" ] || cp -Rv "$(BUILD_DIR)" "$(DIST_STAGE)"/

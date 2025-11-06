@@ -2,7 +2,7 @@
 ## libdmotservices/python/Makefile
 #################################################
 
-.PHONY: all build clean dist install example-demo prebuild test version
+.PHONY: all build clean dist install example-demo prebuild test version vendor
 
 # build prerequisites
 VERSION := $(strip $(shell cat ../VERSION))
@@ -14,13 +14,21 @@ DIST_DIR    := $(ROOT)/dist
 BUILD_DIR   := $(ROOT)/build
 DIST_NAME   := libdmotservices-py-$(VERSION)
 DIST_STAGE  := $(DIST_DIR)/$(DIST_NAME)
+VENDOR_ROOT := $(ROOT)/vendor
+PACKAGE_DIR := libdmotservices
 
 # commands
-MILESTONE    := echo === 
-PYTHON       ?= python3
-TEST_CMD     ?= $(PYTHON) -m pytest -svv
-PIP			 ?= pip
-DEPS_CMD	 ?= $(PIP) install -e .
+MILESTONE     := echo === 
+PYTHON        ?= python3
+TEST_CMD      ?= $(PYTHON) -m pytest -svv
+
+export PYTHONPATH := $(ROOT):$(VENDOR_ROOT):$(PYTHONPATH)
+
+vendor:
+	@$(MILESTONE) "Vendoring $(PACKAGE_DIR) into $(VENDOR_ROOT)"
+	@rm -rf "$(VENDOR_ROOT)/$(PACKAGE_DIR)"
+	@mkdir -p "$(VENDOR_ROOT)"
+	@cp -Rv "$(PACKAGE_DIR)" "$(VENDOR_ROOT)/"
 
 #####################################################################################
 ## Default build
@@ -30,8 +38,7 @@ all: prebuild build
 version:
 	@sed -i 's/^version = ".*"/version = "$(VERSION)"/' pyproject.toml
 
-prebuild: version
-	@$(DEPS_CMD)
+prebuild: version vendor
 	@cp -v ../VERSION libdmotservices/.version
 
 build:

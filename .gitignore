@@ -62,3 +62,4 @@ build.bat
 build.cmd
 build.ps1
 build.sh
+libdmotservices/python/vendor/
