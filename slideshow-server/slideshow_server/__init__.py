@@ -8,7 +8,9 @@ This module wires together the CLI entry point, media discovery helpers, and
 HTTP server utilities so callers can import a cohesive API via
 ``import slideshow_server``.
 """
-VERSION = Path("VERSION").read_text(encoding="utf-8").strip()
+DEFAULT_FILE_ENCODING: str = "utf-8"
+PROJECT_NAME: str = "slideshow-server"
+VERSION: str = (Path(__file__).resolve().parent/".version").read_text(encoding=DEFAULT_FILE_ENCODING).strip()
 
 from .cli import main  # noqa: E402
 
@@ -27,7 +29,9 @@ from .server import (
 )
 
 __all__ = [
+    "DEFAULT_FILE_ENCODING",
     "HTTP_ERR_FILE_NOT_FOUND",
+    "PROJECT_NAME",
     "VERSION",
     "SlideshowHandler",
     "build_ffmpeg_command",

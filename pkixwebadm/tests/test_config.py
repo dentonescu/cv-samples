@@ -1,8 +1,5 @@
-# test_config.py
-
 import logging
-from pkixwebadm import get_settings
-from pkixwebadm.config import Settings
+from pkixwebadm import get_settings, Settings
 
 logger = logging.getLogger(__name__)
 

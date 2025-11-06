@@ -6,7 +6,8 @@ __pycache__/
 # Distribution / packaging
 build/
 dist/
-slideshow_server/.version
+*.egg-info/
+libdmotservices/.version
 
 # Python virtual environments
 .env/
@@ -25,3 +26,4 @@ Thumbs.db
 
 # Custom
 **/_pycache__/**
+.env

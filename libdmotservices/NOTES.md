@@ -12,6 +12,9 @@ libdmotservices/
 ├─ gen-version.py                # Shared VERSION bumping helper
 ├─ .gitattributes / .gitignore
 ├─ dist/                         # Published artifacts (static libs, jars, demos)
+├─ python/
+│  ├─ README.md / tests/
+│  └─ libdmotservices/{args.py,string.py}
 ├─ c/
 │  ├─ README.md / NOTES.md
 │  ├─ Makefile
@@ -61,26 +64,28 @@ libdmotservices/
    - Keep `gen-version.py` as the single source of truth for Git metadata; call it from each subproject’s `Makefile`.  
    - Automate changelog fragments per language, then roll them up into a root `CHANGELOG.md` when publishing.  
    - Add release packaging target that produces language-specific tarballs plus a unified manifest.
-2. **C + Java parity**  
-   - Ensure both languages expose comparable modules (logging, timing, equalizer abstractions).  
+2. **Language parity**  
+   - Ensure C, Java, and Python expose comparable modules (logging/timing/equalizer abstractions for native code; CLI/helpers for Python).  
    - Document the shared conceptual model (signal channels, logging levels) so other languages can join later.  
-   - Evaluate generating bindings (e.g., C headers → Java JNI) only after both sides stabilise.
+   - Evaluate generating bindings (e.g., C headers → Java JNI/Python cffi) only after the APIs stabilise.
 3. **Testing discipline**  
    - Run `make test` (root) to execute C CMocka suites and Java JUnit suites sequentially; surface combined coverage metrics.  
    - Provide smoke demos (`make example-demo`) that tie into consumers (WiFiEqu) for regression checks.  
+   - Keep the Python pytest suites aligned with downstream consumers (pkixwebadm CLI, FastAPI app).
    - Add pre-commit hooks or CI steps to guard header/ABI compatibility.
 4. **Documentation & samples**  
    - Expand language-specific NOTES to capture design context (see `c/NOTES.md`, `java/NOTES.md`).  
    - Highlight cross-project integration examples (e.g., WiFiEqu CLI screenshot) and link them from this file.  
    - Consider publishing API references (Doxygen / Javadoc) under `docs/`.
 5. **Future languages**  
-   - Keep structure ready for additional folders (`python/`, `typescript/`).  
+   - Keep structure ready for additional folders (`typescript/`, etc.).  
    - Document expectations (tests, examples, packaging) so new languages plug in consistently.
 
 ## Domain Notes
 - Root `Makefile` orchestrates per-language builds via `$(MAKE) -C <dir>`—avoid adding language-specific tooling here; keep those within subdirectories.  
 - Version propagation relies on text replacements; ensure newline conventions remain consistent (LF).  
 - When updating shared assets (logos, docs), keep file paths stable to avoid breaking downstream references (e.g., WiFiEqu docs embed the equalizer image).
+- Python helpers are packaged via editable installs (`python -m pip install -e .`) so sibling projects can depend on them without extra path hacks.
 
 ## Implementation Timeline
 - **2021-10 – 2023-04: Early Java library era**  
@@ -93,6 +98,8 @@ libdmotservices/
   Timestamp helpers, string utilities, and labelled equalizer channels matured the C API, leading to a trio of releases that delivered channel hiding, smoothing, and stable redraws in time for WiFiEqu integration.
 - **2025-10-29 – 2025-11-02: Versioning parity & polish**  
   Cross-language semantic version helpers, documentation refreshes, and build corrections cemented the current state, keeping the shared library ready for downstream consumers.
+- **2025-11-06 – present: Python helper rollout**  
+  Introduced the Python package to share CLI and path utilities with pkixwebadm. Added pytest coverage and the `print_help_all` helper, replacing ad-hoc code in downstream projects.
 
 ## Testing Checklist
 - `make clean all` and `make test` succeed at the root on a clean machine.  

@@ -1,47 +1,51 @@
 #################################################
-## slideshow-server/Makefile
+## libdmotservices/python/Makefile
 #################################################
 
-.PHONY: all build clean dist install example-demo prebuild test
+.PHONY: all build clean dist install example-demo prebuild test version
 
 # build prerequisites
-VERSION := $(strip $(shell cat VERSION))
+VERSION := $(strip $(shell cat ../VERSION))
 export VERSION
 
 # locations
 ROOT        := $(CURDIR)
 DIST_DIR    := $(ROOT)/dist
 BUILD_DIR   := $(ROOT)/build
-DIST_NAME   := slideshow-server-$(VERSION)
+DIST_NAME   := libdmotservices-py-$(VERSION)
 DIST_STAGE  := $(DIST_DIR)/$(DIST_NAME)
 
 # commands
 MILESTONE    := echo === 
 PYTHON       ?= python3
 TEST_CMD     ?= $(PYTHON) -m pytest -svv
+PIP			 ?= pip
+DEPS_CMD	 ?= $(PIP) install -e .
 
 #####################################################################################
 ## Default build
 #####################################################################################
 all: prebuild build
 
-prebuild:
-	@cat slideshow-server.logo
-	@cp -v VERSION slideshow_server/.version
+version:
+	@sed -i 's/^version = ".*"/version = "$(VERSION)"/' pyproject.toml
+
+prebuild: version
+	@$(DEPS_CMD)
+	@cp -v ../VERSION libdmotservices/.version
 
 build:
 	@$(MILESTONE) "Compiling Python bytecode"
 	@rm -rf "$(BUILD_DIR)"
 	@mkdir -p "$(BUILD_DIR)"
-	@$(PYTHON) -m compileall -q -b slideshow_server slideshow-server.py
-	@find slideshow_server -name "*.pyc" -print | while IFS= read -r file; do \
+	@$(PYTHON) -m compileall -q -b libdmotservices
+	@find libdmotservices -name "*.pyc" -print | while IFS= read -r file; do \
 		rel=$${file#"$(ROOT)/"}; \
 		dest="$(BUILD_DIR)/$${rel}"; \
 		dest_dir="$$(dirname "$$dest")"; \
 		mkdir -p "$$dest_dir"; \
 		mv -vf "$$file" "$$dest"; \
 	done || true
-	@[ ! -f "slideshow-server.pyc" ] || mv -vf "slideshow-server.pyc" "$(BUILD_DIR)/slideshow-server.pyc"
 
 
 #####################################################################################
@@ -65,11 +69,10 @@ test:
 ## Distribution bundle
 #####################################################################################
 dist: clean build
-	@$(MILESTONE) "Packaging slideshow-server $(VERSION)"
+	@$(MILESTONE) "Packaging libdmotservices $(VERSION)"
 	@mkdir -p "$(DIST_STAGE)"
-	@cp -v README.md run-demo.sh slideshow-server.py slideshow-server.css \
-		slideshow-server.html slideshow-server.js VERSION "$(DIST_STAGE)"/
-	@cp -Rv slideshow_server "$(DIST_STAGE)"/
+	@cp -v README.md ../VERSION "$(DIST_STAGE)"/
+	@cp -Rv libdmotservices "$(DIST_STAGE)"/
 	@[ ! -d "$(BUILD_DIR)" ] || cp -Rv "$(BUILD_DIR)" "$(DIST_STAGE)"/
 	@tar -czf "$(DIST_DIR)/$(DIST_NAME).tar.gz" -C "$(DIST_DIR)" "$(DIST_NAME)"
 	@$(MILESTONE) "Bundle available at $(DIST_DIR)/$(DIST_NAME).tar.gz"
@@ -86,6 +89,5 @@ example-demo:
 #####################################################################################
 clean:
 	@$(MILESTONE) "Cleaning generated files"
-	@find slideshow_server -name "*.pyc" -delete || true
-	@rm -f "slideshow-server.pyc"
+	@find libdmotservices -name "*.pyc" -delete || true
 	@rm -rf "$(BUILD_DIR)" "$(DIST_DIR)"

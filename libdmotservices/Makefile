@@ -24,7 +24,7 @@ GATHER := 	find "${ROOT}" -name "*.a" -type f -exec cp -v "{}" "${DIST}" \; ; \
 			find "${ROOT}" -name "build" -type d -exec cp -vR "{}/." "${DIST}" \; ; \
 			find "${ROOT}" -name "bin" -type d -exec cp -vR "{}/." "${DIST}" \;
 
-.PHONY: all c clean example-demo examples java test tests version
+.PHONY: all c clean example-demo examples java python test tests version
 
 
 #####################################################################################
@@ -71,6 +71,15 @@ java:
 
 
 #####################################################################################
+## Python
+#####################################################################################
+python:
+	@$(MILESTONE) "Building the Python library..."
+	@$(MAKE) -C python all
+
+
+
+#####################################################################################
 ## Unit tests
 #####################################################################################
 tests:
@@ -91,6 +100,7 @@ test: tests
 	elif [ -f "java/build.xml" ]; then \
 		cd java && $(JAVA_BUILD) test; \
 	fi
+	@$(MAKE) -C python test
 
 
 #####################################################################################
@@ -106,6 +116,7 @@ example-demo: examples
 	@$(MILESTONE) "Executing all examples and demos..."
 	@$(MAKE) -C c example-demo
 	@echo "Skipping example-demo target for Java. Not relevant."
+	@$(MAKE) -C python example-demo
 
 
 #####################################################################################
@@ -115,4 +126,5 @@ clean:
 	@$(MILESTONE) "Removing previous builds..."
 	@$(MAKE) -C c clean || true
 	@(cd java && $(JAVA_BUILD) clean) || true
+	@$(MAKE) -C python clean || true
 	@rm -Rf "${DIST}"

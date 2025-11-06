@@ -26,8 +26,8 @@ all: prebuild build-all dist
 
 build-all:
 	@$(MILESTONE) "Building all projects with build files..."
-	@$(MAKE) -C slideshow-server dist
 	@$(MAKE) -C libdmotservices clean all
+	@$(MAKE) -C slideshow-server dist
 	@$(MAKE) -C wifiequ clean all
 
 dist:
@@ -63,8 +63,8 @@ tests:
 
 test: tests
 	@$(MILESTONE) "Executing all tests..."
-	@$(MAKE) -C slideshow-server test
 	@$(MAKE) -C libdmotservices test
+	@$(MAKE) -C slideshow-server test
 	@$(MAKE) -C wifiequ test
 
 
@@ -88,7 +88,7 @@ example-demo: examples
 #####################################################################################
 clean:
 	@$(MILESTONE) "Removing previous builds..."
-	@$(MAKE) -C slideshow-server clean || true
 	@$(MAKE) -C libdmotservices clean || true
+	@$(MAKE) -C slideshow-server clean || true
 	@$(MAKE) -C wifiequ clean || true
 	@rm -Rf "${DIST}"

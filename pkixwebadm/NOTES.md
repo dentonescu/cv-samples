@@ -3,11 +3,12 @@
 Developer notes for pkixwebadm. The aim is to keep the implementation plan visible as the project evolves.
 
 ## Architecture Snapshot
-- FastAPI application using Jinja templates; Bootstrap for first-pass styling.
+- FastAPI application using Jinja templates; Bootstrap utility classes will be reintroduced once the UI slice expands.
 - SQLAlchemy ORM with SQLite (`app.db`) persisted on a host-mounted path when containerised.
 - Passlib/bcrypt for password hashing; signed session cookie for authentication.
 - Business logic grouped in services (ingestion, expiry calculations, reminders).
 - Optional background scheduler (APScheduler) to refresh remote certificate data.
+- CLI is driven by `argparse` with a `--help-all` flag implemented via `libdmotservices`.
 
 ## Planned File Layout
 _Files marked “planned” are not yet created; others already live in the repository._
@@ -16,7 +17,8 @@ pkixwebadm/
 ├─ pkixwebadm/
 │  ├─ __init__.py
 │  ├─ README.md                 # Package overview
-│  ├─ app.py                     # FastAPI app factory (planned)
+│  ├─ app.py                     # FastAPI app factory
+│  ├─ cli.py                     # CLI entry point / argparse helpers
 │  ├─ config.py                  # Settings loader
 │  ├─ logging.py                 # Logging configuration (planned)
 │  ├─ db/
@@ -29,16 +31,17 @@ pkixwebadm/
 │  ├─ services/                  # Business logic (auth, ingestion, expiry) (planned)
 │  ├─ web/
 │  │  ├─ api/                    # JSON routers (planned)
-│  │  ├─ views/                  # HTML routers (planned)
-│  │  ├─ templates/              # Jinja templates (planned)
-│  │  └─ static/                 # CSS/JS/assets (planned)
+│  │  ├─ views/                  # HTML routers (root view implemented)
+│  │  ├─ templates/              # Jinja templates (base + ROOT live)
+│  │  └─ static/                 # CSS/JS/assets (base CSS live; extras planned)
 │  ├─ background/                # APScheduler wiring (future work)
 │  ├─ security/                  # Hashing/sessions/dependencies (planned)
 │  ├─ maintenance/               # CLI utilities (planned)
 │  └─ telemetry/                 # Optional observability hooks (future work)
 ├─ tests/
 │  ├─ README.md                  # Test suite overview
-│  └─ test_config.py             # Settings loader tests
+│  ├─ test_config.py             # Settings loader tests
+│  └─ test_http.py               # Landing page integration tests
 ├─ api/openapi.yaml              # REST contract
 ├─ docs/api/                     # Generated API docs
 ├─ alembic.ini
@@ -51,13 +54,13 @@ pkixwebadm/
 ```
 
 ## Development Plan
-**Current stage:** Milestone 2 (HTTP app foundation) is in progress; configuration scaffolding and initial tests are in place.
+**Current stage:** Milestone 2 (HTTP app foundation) is in progress; configuration, CLI scaffolding, and root-page rendering are implemented while logging/container work remains.
 
 0. **Architecture review** – document overall stack, packages, and data flow. ✅
 1. **Project scaffold** – create package structure, empty modules, configuration stubs, and initial dependencies. ✅
    - Manage dependencies exclusively through `pyproject.toml`; local installs use `python -m pip install -e .`. ✅
-2. **HTTP app foundation** – app factory, settings loader, static file serving, basic landing page with project name/version. _In progress (settings + tests delivered; FastAPI app factory pending)._
-3. **Templating layer** – integrate Jinja, add a base template, and verify rendering pipeline.
+2. **HTTP app foundation** – app factory, settings loader, static file serving, basic landing page with project name/version. _In progress (app factory, CLI, and templates delivered; logging + Docker baseline outstanding)._
+3. **Templating layer** – extend Jinja beyond the base/landing templates; introduce Bootstrap utility classes once the CSS slice returns.
 4. **Authentication slice**  
    - Design user/session tables and Pydantic schemas.  
    - Implement config for SQLite path and secret keys (env vars or `.env`).  
@@ -75,7 +78,8 @@ pkixwebadm/
 Iterate as needed, but aim to finish each slice as a demonstrable feature before moving on.
 
 ## Implementation Timeline
-- **2025-11-02: Repository bootstrap** — Initial commit framed the certificate inventory concept and seeded pipeline configuration. Follow-up changes added SAST/secret detection templates and captured early planning notes. Application code is still forthcoming, so the current focus remains on solidifying the architecture plan before scaffolding.
+- **2025-11-02: Repository bootstrap** — Initial commit framed the certificate inventory concept and seeded pipeline configuration. Follow-up changes added SAST/secret detection templates and captured early planning notes.
+- **2025-11-06 – present: HTTP foundation build-out** — Added the settings loader, FastAPI app factory, CLI `serve` command (with `--help-all`), and the first Jinja templates. Error handling now falls back to a static HTML page when templating is unavailable.
 
 ## Testing & QA
 - Introduce pytest early (during scaffold) with a TestClient fixture for FastAPI integration tests.

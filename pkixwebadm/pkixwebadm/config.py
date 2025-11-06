@@ -1,7 +1,4 @@
-# config.py
-
-from pkixwebadm import DEFAULT_FILE_ENCODING
-
+from libdmotservices import DEFAULT_FILE_ENCODING
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 

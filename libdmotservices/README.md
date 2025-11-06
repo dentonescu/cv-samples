@@ -1,6 +1,6 @@
 # libdmotservices
 
-**libdmotservices** is my personal multi-language code library — a curated collection of small, reusable utilities written in **C** and **Java** (with more languages to come). It showcases how I approach **cross-language API design**, **version management**, and **clean software architecture** across ecosystems.
+**libdmotservices** is my personal multi-language code library — a curated collection of small, reusable utilities written in **C**, **Java**, and now **Python** (with more languages to come). It showcases how I approach **cross-language API design**, **version management**, and **clean software architecture** across ecosystems.
 
 ## Project Summary
 This project demonstrates my ability to:
@@ -14,16 +14,18 @@ This project demonstrates my ability to:
 |------|--------------|
 | [`c/`](c/README.md) | Portable C modules (signals, logging, terminal equalizer). |
 | [`java/`](java/README.md) | Java modules (`dmot-core` and `dmot-servlet-javax`) with Ant/Maven builds. |
+| [`python/`](python/README.md) | Python helpers that complement the CLI tooling used across the portfolio. |
 | `VERSION` | Central version file used across all subprojects. |
 | `Makefile` | Top-level orchestrator that builds, tests, and runs examples across languages. |
 
 ## Highlights
 - Portable codebases: compiles cleanly across Linux systems.
-- Full test coverage with CMocka (C) and JUnit (Java).
+- Full test coverage with CMocka (C), JUnit (Java), and pytest (Python).
 - Minimal dependencies and clear build instructions.
 - API-first mindset: code is structured for reusability and clarity.
-- Automated via Ant+Maven with fail-fast targets; GitHub Actions (`../.github/workflows/cv-samples-ci.yml`) exercises both languages with the same revision metadata that `dev.sh` passes locally.
+- Automated via Make/Ant/Maven with fail-fast targets; GitHub Actions (`../.github/workflows/cv-samples-ci.yml`) exercises all supported languages with the same revision metadata that `dev.sh` passes locally.
 - Featured sample: an ANSI equalizer capable of labelled channels, also used in my WiFiEqu Linux monitor project.
+- Shared Python utilities (`libdmotservices.args.print_help_all`, `libdmotservices.string.get_resource_base_name`) power CLI ergonomics and FastAPI integrations in pkixwebadm.
 
 ## Build Overview
 ```bash
@@ -45,10 +47,11 @@ This repo collects tiny, battle-tested snippets I reach for repeatedly. They’r
 - Cross-language integration and build orchestration.
 - A disciplined, maintainable approach to multi-language software design.
 - Documentation and automation skills relevant to API development roles.
+- Ability to share utility code across portfolio projects (WiFiEqu, pkixwebadm, slideshow-server).
 
 ## Status
 
-Active work-in-progress. APIs may evolve as other portfolio samples (like [WiFiEqu](../wifiequ/README.md)) grow.
+Active work-in-progress. APIs may evolve as other portfolio samples (like [WiFiEqu](../wifiequ/README.md) and [pkixwebadm](../pkixwebadm/README.md)) grow.
 
 ## Screenshot
 
