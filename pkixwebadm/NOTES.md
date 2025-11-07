@@ -20,7 +20,7 @@ pkixwebadm/
 │  ├─ app.py                     # FastAPI app factory
 │  ├─ cli.py                     # CLI entry point / argparse helpers
 │  ├─ config.py                  # Settings loader
-│  ├─ logging.py                 # Logging configuration (planned)
+│  ├─ logging.py                 # Logging configuration
 │  ├─ db/
 │  │  ├─ __init__.py             # planned
 │  │  ├─ engine.py               # Engine/session factory (planned)
@@ -33,7 +33,7 @@ pkixwebadm/
 │  │  ├─ api/                    # JSON routers (planned)
 │  │  ├─ views/                  # HTML routers (root view implemented)
 │  │  ├─ templates/              # Jinja templates (base + ROOT live)
-│  │  └─ static/                 # CSS/JS/assets (base CSS live; extras planned)
+│  │  └─ static/                 # CSS/JS/assets (Bootstrap palette, ingestion widget scripts, error pages)
 │  ├─ background/                # APScheduler wiring (future work)
 │  ├─ security/                  # Hashing/sessions/dependencies (planned)
 │  ├─ maintenance/               # CLI utilities (planned)
@@ -103,3 +103,5 @@ Iterate as needed, but aim to finish each slice as a demonstrable feature before
 
 ## Future considerations
 - Scheduler- and notification-related features remain intentionally deferred until the core ingestion and expiry views stabilise.
+- Ingestion UI should surface validation feedback (toasts, inline errors) so drag/drop failures are obvious.
+- Backend ingestion endpoints must enforce CSRF protection and server-side MIME validation before accepting uploads or remote fetches.

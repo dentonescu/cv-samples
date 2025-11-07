@@ -12,6 +12,11 @@ libdmotservices/
 ├─ gen-version.py                # Shared VERSION bumping helper
 ├─ .gitattributes / .gitignore
 ├─ dist/                         # Published artifacts (static libs, jars, demos)
+├─ js/
+│  ├─ README.md / Makefile / package.json
+│  ├─ src/*.js                   # Browser helpers (logger, FormData utilities)
+│  ├─ dist/index.js              # Concatenated bundle (generated)
+│  └─ tests/*.test.js            # node --test suites
 ├─ python/
 │  ├─ README.md / tests/
 │  └─ libdmotservices/{args.py,string.py}
@@ -59,7 +64,7 @@ libdmotservices/
 - Cross-project usage: the equalizer renderer feeds WiFiEqu demos; Java utilities support planned Spring/Terraglean services.  
 - Documentation: language-specific READMEs (`c/`, `java/`) focus on build/run, while this file tracks overarching plans and design choices.
 
-## Development Plan
+## Development Plan _(currently executing: Step 2 – Language parity & shared tooling)_
 1. **Versioning & release hygiene**  
    - Keep `gen-version.py` as the single source of truth for Git metadata; call it from each subproject’s `Makefile`.  
    - Automate changelog fragments per language, then roll them up into a root `CHANGELOG.md` when publishing.  

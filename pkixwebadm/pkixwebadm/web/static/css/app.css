@@ -19,3 +19,43 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+.drop-zone {
+  border: 2px dashed rgba(148, 163, 184, 0.6);
+  border-radius: 0.75rem;
+  background: rgba(15, 23, 142, 0.65);
+  transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease;
+}
+
+.drop-zone:focus,
+.drop-zone:hover {
+  border-color: #38bdf8;
+  background: rgba(15, 23, 42, 0.9);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.ingest-separator {
+  position: relative;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+.ingest-separator::before,
+.ingest-separator::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 42%;
+  height: 1px;
+  background: rgba(148, 163, 184, 0.4);
+}
+
+.ingest-separator::before {
+  left: 0;
+}
+
+.ingest-separator::after {
+  right: 0;
+}

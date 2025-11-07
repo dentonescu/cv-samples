@@ -56,8 +56,6 @@ build/
 **/access.token
 **/connection.properties
 **/connection*.properties
-**/package.json
-**/package-lock.json
 **/Thumbs.db*
 build.bat
 build.cmd

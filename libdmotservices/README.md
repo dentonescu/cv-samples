@@ -15,6 +15,7 @@ This project demonstrates my ability to:
 | [`c/`](c/README.md) | Portable C modules (signals, logging, terminal equalizer). |
 | [`java/`](java/README.md) | Java modules (`dmot-core` and `dmot-servlet-javax`) with Ant/Maven builds. |
 | [`python/`](python/README.md) | Python helpers that complement the CLI tooling used across the portfolio. |
+| [`js/`](js/README.md) | Browser-friendly utilities (FormData helpers, logging) bundled for the front-end samples. |
 | `VERSION` | Central version file used across all subprojects. |
 | `Makefile` | Top-level orchestrator that builds, tests, and runs examples across languages. |
 
@@ -26,6 +27,7 @@ This project demonstrates my ability to:
 - Automated via Make/Ant/Maven with fail-fast targets; GitHub Actions (`../.github/workflows/cv-samples-ci.yml`) exercises all supported languages with the same revision metadata that `dev.sh` passes locally.
 - Featured sample: an ANSI equalizer capable of labelled channels, also used in my WiFiEqu Linux monitor project.
 - Shared Python utilities (`libdmotservices.args.print_help_all`, `libdmotservices.string.get_resource_base_name`) power CLI ergonomics and FastAPI integrations in pkixwebadm.
+- New JavaScript helpers (logger + FormData utilities) ship as a single vendored bundle for pkixwebadm’s drag-and-drop UI.
 
 ## Build Overview
 ```bash

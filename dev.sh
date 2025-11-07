@@ -46,11 +46,13 @@ ensure_dependencies() {
         libnl-3-dev \
         libnl-genl-3-dev \
         openjdk-17-jdk \
+        nodejs \
         python3-pip \
         python3-pytest
 }
 
 ensure_vendoring() {
+    make -C libdmotservices/js vendor
     make -C libdmotservices/python vendor
 }
 
@@ -167,8 +169,8 @@ echo "JAVA_HOME=$JAVA_HOME"
 
 ## build, deploy, and run operations
 
-[ ! "$install_deps" -eq 1 ] || (ensure_dependencies; ensure_vendoring)
-[ ! "$build" -eq 1 ] || (ensure_vendoring; make clean all docs)
+[ ! "$install_deps" -eq 1 ] || (ensure_dependencies && ensure_vendoring)
+[ ! "$build" -eq 1 ] || (ensure_vendoring && make clean all docs)
 [ ! "$install_prj" -eq 1 ] || make install
-[ ! "$run_tests" -eq 1 ] || (ensure_vendoring; make test)
-[ ! "$run_examples" -eq 1 ] || (ensure_vendoring; WFQ_IFACE="$iface" WFQ_MOCK="$mock" make example-demo)
+[ ! "$run_tests" -eq 1 ] || (ensure_vendoring && make test)
+[ ! "$run_examples" -eq 1 ] || (ensure_vendoring && WFQ_IFACE="$iface" WFQ_MOCK="$mock" make example-demo)

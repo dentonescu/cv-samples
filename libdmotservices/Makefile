@@ -24,13 +24,13 @@ GATHER := 	find "${ROOT}" -name "*.a" -type f -exec cp -v "{}" "${DIST}" \; ; \
 			find "${ROOT}" -name "build" -type d -exec cp -vR "{}/." "${DIST}" \; ; \
 			find "${ROOT}" -name "bin" -type d -exec cp -vR "{}/." "${DIST}" \;
 
-.PHONY: all c clean example-demo examples java python test tests version
+.PHONY: all c clean example-demo examples java js python test tests version
 
 
 #####################################################################################
 ## Default build
 #####################################################################################
-all: prebuild version c java dist
+all: prebuild version c java js dist
 
 dist:
 	@$(MILESTONE) "Populating the distribution directory..."
@@ -71,6 +71,14 @@ java:
 
 
 #####################################################################################
+## JavaScript
+#####################################################################################
+js:
+	@$(MILESTONE) "Building the JavaScript helpers..."
+	@$(MAKE) -C js build
+
+
+#####################################################################################
 ## Python
 #####################################################################################
 python:
@@ -100,6 +108,7 @@ test: tests
 	elif [ -f "java/build.xml" ]; then \
 		cd java && $(JAVA_BUILD) test; \
 	fi
+	@$(MAKE) -C js test
 	@$(MAKE) -C python test
 
 
@@ -115,7 +124,12 @@ examples:
 example-demo: examples
 	@$(MILESTONE) "Executing all examples and demos..."
 	@$(MAKE) -C c example-demo
-	@echo "Skipping example-demo target for Java. Not relevant."
+	@if [ -f "java/Makefile" ]; then \
+		$(MAKE) -C java example-demo; \
+	elif [ -f "java/build.xml" ]; then \
+		cd java && $(JAVA_BUILD) example-demo; \
+	fi
+	@$(MAKE) -C js example-demo
 	@$(MAKE) -C python example-demo
 
 
@@ -126,5 +140,6 @@ clean:
 	@$(MILESTONE) "Removing previous builds..."
 	@$(MAKE) -C c clean || true
 	@(cd java && $(JAVA_BUILD) clean) || true
+	@$(MAKE) -C js clean || true
 	@$(MAKE) -C python clean || true
 	@rm -Rf "${DIST}"

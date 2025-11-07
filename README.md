@@ -22,7 +22,7 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 | **[pkixwebadm](https://github.com/dentonescu/cv-samples/tree/main/pkixwebadm)** (HTTP foundation in progress) | Certificate inventory web app pairing FastAPI with SQLite; configuration and scaffold are in place while the app factory and landing page are being implemented. | Python, FastAPI, SQLite, Docker |
 
 ## Tooling & automation
-- `dev.sh` in the repository root orchestrates dependency setup, builds, tests, installs, and demo runs from a single entrypoint. It now recognises mock vs. hardware example runs, optional interface overrides, and selective subcommands so you can rehearse exactly what the CI job performs. See the usage recipes below for common scenarios.
+- `dev.sh` in the repository root orchestrates dependency setup, builds, tests, installs, and demo runs from a single entrypoint. It now recognises mock vs. hardware example runs, optional interface overrides, and selective subcommands so you can rehearse exactly what the CI job performs. See the usage recipes below for common scenarios. The `--install-deps` slice now installs Node.js so libdmotservices’ JavaScript helpers and tests run consistently in CI and locally.
 - `.github/workflows/cv-samples-ci.yml` mirrors the `dev.sh` flow on GitHub Actions: dependencies → build → tests → example runs. The pipeline ensures every project stays buildable on a clean Ubuntu runner (the Wi-Fi scan demo skips gracefully when no wireless interface is available).
 - `docker-compose.yml` spins up containerised demos (`slideshow-server` on host port `8081`, `wifiequ` on host port `8082`) using the project-specific Dockerfiles. Great for a one-command tour: `docker compose up --build`. See [Docker stack notes](docker/README.md) for the full command list, group permissions, and snap service tips.
 - `.gitattributes` files have been introduced across the projects to normalise line endings and enforce consistent attributes, making diffs reliable across platforms.
@@ -74,7 +74,7 @@ All content is provided under the license in `/LICENSE`. You’re free to read a
 Check back regularly — new samples will be added and existing ones improved as the gallery evolves.
 
 ## Upcoming work
-- **pkixwebadm**: finish the HTTP app foundation slice—add the FastAPI app factory, bootstrap the landing page, then expand into Jinja templating before circling back to ingestion workflows and container packaging.
+- **pkixwebadm**: finish the HTTP app foundation slice—wire the ingestion APIs, add UI validation/feedback, and land CSRF + server-side MIME checks before circling back to container packaging.
 - **WiFiEqu**: prototype the Windows worker that mirrors the Linux API, factor shared DTO/config plumbing into a reusable C# library, and round out the Docker Compose story with health checks and metrics before pursuing CI/CD builds.
 - **Terraglean**: spike a Spring Boot REST service backed by lightweight JDBC persistence, then layer unit/integration coverage and Gradle build tooling ahead of a possible React/Angular dashboard.
 - **Portfolio glue**: continue aligning DevOps expectations—multi-language builds, container images, and cross-project Compose entries—so each sample can graduate from `_private_staging` once the future work above solidifies.

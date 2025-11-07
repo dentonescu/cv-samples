@@ -1,0 +1,13 @@
+{
+  "name": "libdmotservices-js",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "lint": "eslint src tests --ext .js",
+    "test": "node --test tests"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1"
+  }
+}

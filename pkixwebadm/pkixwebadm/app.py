@@ -1,7 +1,10 @@
+import logging
+
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from libdmotservices import get_resource_base_name
 
+from .logging import configure_logging
 from . import (
     PATH_WEB_STATIC,
     PROJECT_NAME,
@@ -14,6 +17,7 @@ from . import (
 
 def create_app() -> FastAPI:
     settings = get_settings()
+    configure_logging(logging.DEBUG if settings.dev_mode else logging.INFO)
     app = FastAPI(
         title=PROJECT_NAME,
         version=VERSION or "0.0.0",

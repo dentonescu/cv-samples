@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+	/*
+	 * Elements
+	 */
+
 	const nullCipherForm = document.querySelector('#nullCipherForm');
 	const inputBox = document.querySelector('#input');
 	const cipherKeyBox = document.querySelector('#cipherKey');

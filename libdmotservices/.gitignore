@@ -57,6 +57,9 @@ build/
 **/connection*.properties
 **/Thumbs.db*
 python/vendor
+js/dist/
+js/vendor/
+js/node_modules/
 build.bat
 build.cmd
 build.ps1

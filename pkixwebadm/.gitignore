@@ -8,6 +8,8 @@ build/
 dist/
 *.egg-info/
 pkixwebadm/.version
+pkixwebadm/web/static/vendor/
+node_modules/
 
 # Python virtual environments
 .env/

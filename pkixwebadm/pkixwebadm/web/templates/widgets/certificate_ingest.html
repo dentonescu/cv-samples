@@ -1,0 +1,47 @@
+<section class="certificate-ingest my-5">
+  <div class="card bg-dark text-light shadow-sm border-secondary-subtle">
+    <div class="card-body">
+      <p class="text-uppercase text-secondary fw-semibold small mb-2">Import certificate</p>
+      <div
+        class="drop-zone text-center p-4 mb-4"
+        role="button"
+        tabindex="0"
+        data-endpoint="/api/v1/certificates/file"
+      >
+        <div class="fw-semibold fs-5 mb-1">Drag &amp; drop a PEM/DER/PFX file</div>
+        <p class="mb-3 text-secondary">
+          Drop the certificate anywhere in this box or click to browse your filesystem.
+        </p>
+        <button type="button" class="btn btn-outline-info btn-sm">Browse files</button>
+      </div>
+      <div class="ingest-separator text-center text-uppercase fw-semibold text-secondary my-3">
+        or
+      </div>
+      <form class="row g-2 align-items-center" data-endpoint="/api/v1/certificates/url">
+        <div class="col-12 col-md">
+          <label class="form-label text-uppercase text-secondary small mb-1" for="certificate-url">
+            Fetch from URL
+          </label>
+          <input
+            id="certificate-url"
+            name="certificate_url"
+            type="url"
+            class="form-control form-control-lg bg-dark-subtle text-dark border-0"
+            placeholder="https://example.com"
+            autocomplete="off"
+          />
+        </div>
+        <div class="col-12 col-md-auto">
+          <label class="form-label text-uppercase text-secondary small mb-1 invisible d-none d-md-block" for="certificate-url">
+            &nbsp;
+          </label>
+          <button type="button" class="btn btn-info btn-lg w-100 w-md-auto">
+            Fetch certificate
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+<script src="{{ url_for('static', path='js/certificate_ingest--dragndrop.js') }}"></script>
+<script src="{{ url_for('static', path='js/certificate_ingest--fetch_url.js') }}"></script>

@@ -7,13 +7,14 @@ Application code for the pkixwebadm certificate inventory service.
 - `app.py` – FastAPI app factory mounting static assets and wiring the root router.
 - `cli.py` – command-line entry point with `serve`, `--help-all`, and CLI-to-uvicorn wiring.
 - `config.py` – `pydantic-settings` backed configuration loader that reads `PKIXWA_*` environment variables.
+- `logging.py` – shared logging configuration invoked by the app factory.
 - `web/` – view routers, templates, static assets, and error page helpers.
 - `__main__.py` – supports `python -m pkixwebadm` by delegating to the CLI helper.
 
 Generated artifacts (`__pycache__`, compiled bytecode) are cleaned by `make clean` and intentionally omitted from version control.
 
 ## Next steps
-- Add logging configuration and database scaffolding.
-- Expand the router set with certificate ingestion and API endpoints described in [NOTES.md](../NOTES.md).
+- Flesh out the database layer (SQLAlchemy models + migrations) ahead of ingestion.
+- Add the certificate ingestion APIs plus UI feedback loops described in [NOTES.md](../NOTES.md).
 
 Return to the [project README](../README.md) for a broader overview.

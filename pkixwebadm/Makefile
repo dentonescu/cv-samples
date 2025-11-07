@@ -2,7 +2,7 @@
 ## pkixwebadm/Makefile
 #################################################
 
-.PHONY: all build clean dist install example-demo logo prebuild test vendor-libdmotservices version
+.PHONY: all build clean dist install example-demo lint-js logo prebuild test vendor-libdmotservices version
 
 # build prerequisites
 VERSION := $(strip $(shell cat VERSION))
@@ -14,7 +14,12 @@ DIST_DIR    := $(ROOT)/dist
 BUILD_DIR   := $(ROOT)/build
 DIST_NAME   := pkixwebadm-$(VERSION)
 DIST_STAGE  := $(DIST_DIR)/$(DIST_NAME)
-LIBDMOTSERVICES_ROOT ?= $(ROOT)/../libdmotservices/python
+LIBDMOTSERVICES_PY_ROOT ?= $(ROOT)/../libdmotservices/python
+LIBDMOTSERVICES_JS_ROOT ?= $(ROOT)/../libdmotservices/js
+LIBDMOTSERVICES_JS_VENDOR_FILE ?= $(LIBDMOTSERVICES_JS_ROOT)/vendor/libdmotservices/index.js
+PKIXWA_VENDOR_JS_DIR := $(ROOT)/pkixwebadm/web/static/vendor/libdmotservices
+NPM ?= npm
+NODE_MODULES := node_modules
 
 # commands
 MILESTONE    := echo === 
@@ -22,11 +27,14 @@ PYTHON       ?= python3
 TEST_CMD     ?= $(PYTHON) -m pytest -svv
 
 # pip is blocked on some managed hosts, so we vendor libdmotservices instead.
-export PYTHONPATH := $(LIBDMOTSERVICES_ROOT):$(LIBDMOTSERVICES_ROOT)/vendor:$(PYTHONPATH)
+export PYTHONPATH := $(LIBDMOTSERVICES_PY_ROOT):$(LIBDMOTSERVICES_PY_ROOT)/vendor:$(PYTHONPATH)
 
 vendor-libdmotservices:
 	@$(MILESTONE) "Vendoring libdmotservices for pkixwebadm"
-	@$(MAKE) -C "$(LIBDMOTSERVICES_ROOT)" vendor
+	@$(MAKE) -C "$(LIBDMOTSERVICES_PY_ROOT)" vendor
+	@$(MAKE) -C "$(LIBDMOTSERVICES_JS_ROOT)" vendor
+	@mkdir -p "$(PKIXWA_VENDOR_JS_DIR)"
+	@cp -uv "$(LIBDMOTSERVICES_JS_VENDOR_FILE)" "$(PKIXWA_VENDOR_JS_DIR)/index.js"
 
 #####################################################################################
 ## Default build
@@ -40,6 +48,18 @@ version:
 	@cp -v VERSION pkixwebadm/.version
 
 prebuild: vendor-libdmotservices version
+
+lint-js:
+	@set -e; \
+	if [ ! -d "$(NODE_MODULES)" ]; then \
+		$(MILESTONE) "Installing pkixwebadm JavaScript dependencies"; \
+		if ! $(NPM) install; then \
+			echo "=== Warning: npm install failed; skipping lint (run manually when network is available)"; \
+			exit 0; \
+		fi; \
+	fi; \
+	$(MILESTONE) "Linting pkixwebadm JavaScript sources"; \
+	$(NPM) run lint:js
 
 build:
 	@$(MILESTONE) "Compiling Python bytecode"
@@ -68,7 +88,7 @@ install:
 ## Unit tests
 #####################################################################################
 
-test: prebuild
+test: prebuild lint-js
 	@$(MILESTONE) "Running unit tests"
 	@$(TEST_CMD)
 
@@ -101,4 +121,4 @@ clean:
 	@$(MILESTONE) "Cleaning generated files"
 	@find pkixwebadm -name "*.pyc" -delete || true
 	@rm -f "pkixwebadm.pyc"
-	@rm -rf "$(BUILD_DIR)" "$(DIST_DIR)"
+	@rm -rf "$(BUILD_DIR)" "$(DIST_DIR)" "$(NODE_MODULES)" package-lock.json

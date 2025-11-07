@@ -10,6 +10,11 @@ from .config import (
     Settings,
     get_settings
 )
+
+from .logging import (
+    configure_logging
+)
+
 from pkixwebadm.web import (
     PAGE_WEB_ERROR,
     PAGE_WEB_ROOT,
@@ -21,6 +26,7 @@ from pkixwebadm.web import (
     URL_STATIC,
     get_error_page
 )
+
 from pkixwebadm.web.views import root
 
 from .app import create_app
@@ -38,6 +44,7 @@ __all__ = [
     "VERSION",
     "URL_STATIC",
     "Settings",
+    "configure_logging",
     "create_app",
     "get_error_page",
     "get_settings",
