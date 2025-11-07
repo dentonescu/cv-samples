@@ -14,12 +14,22 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 
 | Project | What it is | Primary skills |
 |---|---|---|
-| **[libdmotservices](https://github.com/dentonescu/cv-samples/tree/main/libdmotservices)** | Personal multi‑language utility library with unit tests and examples. | C, Java, Makefile, Unit Testing |
+| **[libdmotservices](https://github.com/dentonescu/cv-samples/tree/main/libdmotservices)** | Personal multi‑language utility library with unit tests and examples. | C, Java, Python, JavaScript, Cross-language build tooling |
 | **[null-cipher](https://github.com/dentonescu/cv-samples/tree/main/null-cipher)** | Single‑page visual demo of a simple cipher (encrypt/decrypt) in the browser. | JavaScript, HTML, CSS |
 | **[slideshow-server](https://github.com/dentonescu/cv-samples/tree/main/slideshow-server)** | Tiny Python web server that generates responsive media slideshows. | Python, HTML, JS |
 | **[WiFiEqu](https://github.com/dentonescu/cv-samples/tree/main/wifiequ)** (in progress) | Terminal Wi‑Fi channel “equalizer” visualizer with a C JSON daemon, Windows service, and Angular web UI. The Linux daemon streams live/mock readings over SSE, honours configurable refresh cadences, and secures `/api/v1/stats` with an API key. | C, ANSI/terminal, JSON APIs, C#, Angular |
 | **[Terraglean](https://github.com/dentonescu/cv-samples/tree/main/terraglean)** (planned) | Interactive map showing world data layers (time, weather, country stats). | Java, Spring Boot, Leaflet.js |
-| **[pkixwebadm](https://github.com/dentonescu/cv-samples/tree/main/pkixwebadm)** (HTTP foundation in progress) | Certificate inventory web app pairing FastAPI with SQLite; configuration and scaffold are in place while the app factory and landing page are being implemented. | Python, FastAPI, SQLite, Docker |
+| **[pkixwebadm](https://github.com/dentonescu/cv-samples/tree/main/pkixwebadm)** (HTTP foundation in progress) | Certificate inventory web app pairing FastAPI with SQLite; configuration and scaffold are in place while the app factory and landing page are being implemented. | Python, FastAPI, Bootstrap UI, vendored JS tooling |
+
+## Gallery
+
+| libdmotservices | null-cipher | slideshow-server |
+|---|---|---|
+| [![libdmotservices thumbnail](thumbnails/th-libdmotservices-01.png)](libdmotservices/README.md) | [![null-cipher thumbnail](thumbnails/th-null-cipher-01.png)](null-cipher/README.md) | [![slideshow-server thumbnail](thumbnails/th-slideshow-server-01.png)](slideshow-server/README.md) |
+
+| WiFiEqu | pkixwebadm | Terraglean |
+|---|---|---|
+| [![WiFiEqu thumbnail](thumbnails/th-wifiequ-01.png)](wifiequ/README.md) | [![pkixwebadm thumbnail](thumbnails/th-pkixwebadm-01.png)](pkixwebadm/README.md) | [![Terraglean placeholder thumbnail](thumbnails/th--coming_soon.png)](terraglean/README.md) |
 
 ## Tooling & automation
 - `dev.sh` in the repository root orchestrates dependency setup, builds, tests, installs, and demo runs from a single entrypoint. It now recognises mock vs. hardware example runs, optional interface overrides, and selective subcommands so you can rehearse exactly what the CI job performs. See the usage recipes below for common scenarios. The `--install-deps` slice now installs Node.js so libdmotservices’ JavaScript helpers and tests run consistently in CI and locally.
