@@ -2,10 +2,10 @@
 Part of the [`cv-samples`](../README.md) portfolio. The short-form summary lives in the [research incubator overview](../README.md#research-incubator-prng-tools).
 
 ## Overview
-`prng-tools` is a long-range laboratory for studying pseudorandom number generators (PRNGs), entropy sources, and cryptographically secure randomness. The project focuses on comparable generators written in C, Python, Java, C#, Rust, plus an optional hardware RNG (HRNG) stream so experiments span both software and physical entropy.
+`prng-tools` is my long-range sandbox for exploring pseudorandom number generators (PRNGs), entropy sources, and cryptographically secure randomness. I'm chasing curiosity more than publications, so the vibe leans playful experimentation while I line up comparable generators written in C, Python, Java, C#, Rust, plus an optional hardware RNG (HRNG) stream.
 
 ## Motivation
-We want empirical answers to three questions: how random the default generators across languages really are, how their “secure” APIs map onto operating-system CSPRNGs, and how hardware entropy compares when visualised and benchmarked alongside software streams. The lab emphasises reproducibility—automatable tests, shareable plots, and containerised runs.
+I want empirical answers to three questions: how random the default generators across languages really are, how their “secure” APIs map onto operating-system CSPRNGs, and how hardware entropy compares when visualised and benchmarked alongside software streams. I'm mostly doing this for fun and deeper understanding, but even a hobby lab deserves reproducibility—automatable tests, shareable plots, and containerised runs.
 
 ## Goals
 - Ship lightweight language services that expose random bytes via HTTP streaming or SSE so every generator produces uniform telemetry.
@@ -18,14 +18,14 @@ We want empirical answers to three questions: how random the default generators 
 ```mermaid
 flowchart LR
     subgraph Software Generators
-        C[C shim]\nlibsodium
+        C["C shim<br/>libsodium"]
         PY[Python FastAPI]
         JAVA[Java Spring SSE]
         CS[C# minimal API]
         RUST[Rust Axum]
     end
     HRNG[USB-CDC HRNG daemon]
-    ANALYZER[Analyzer service\n(stat tests + reports)]
+    ANALYZER["Analyzer service<br/>(stat tests + reports)"]
     WEB[Bootstrap/Plotly dashboard]
 
     C -->|HTTP/SSE bytes| ANALYZER
@@ -83,7 +83,7 @@ prng-tools/
 | 6 | Container images + published research notes for reproducible reruns |
 
 ## Academic relevance
-`prng-tools` bridges systems engineering, applied cryptography, and statistics. Its containerised runs, cross-language experiments, and shareable datasets make it suitable for open research notes, student publications, or reproducible demonstrations.
+`prng-tools` bridges systems engineering, applied cryptography, and statistics, even if it's “just” my curiosity project. Containerised runs, cross-language experiments, and shareable datasets make it handy for personal study notes or informal demos, and maybe it will inspire future, more formal work.
 
 ## Future work
 - Integrate broader PRNG batteries (PractRand, TestU01) alongside Dieharder/NIST.
@@ -95,4 +95,3 @@ prng-tools/
 ## Related documents
 - [Future work index](future_work.md)
 - [Top-level README overview](../README.md#research-incubator-prng-tools)
-
