@@ -1,3 +1,5 @@
+"""Application factory and static-asset wiring for pkixwebadm."""
+
 import logging
 
 from fastapi import FastAPI
@@ -10,12 +12,15 @@ from . import (
     PROJECT_NAME,
     URL_STATIC,
     VERSION,
-    root,
     Settings,
-    get_settings
+    get_settings,
 )
+from .web.views import root
+
 
 def create_app() -> FastAPI:
+    """Instantiate and configure the FastAPI application."""
+
     settings = get_settings()
     configure_logging(logging.DEBUG if settings.dev_mode else logging.INFO)
     app = FastAPI(

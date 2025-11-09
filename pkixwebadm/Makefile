@@ -2,7 +2,7 @@
 ## pkixwebadm/Makefile
 #################################################
 
-.PHONY: all build clean dist install example-demo lint-js logo prebuild test vendor-libdmotservices version
+.PHONY: all auth build clean dist install example-demo lint-js logo prebuild test vendor-libdmotservices version
 
 # build prerequisites
 VERSION := $(strip $(shell cat VERSION))
@@ -24,7 +24,12 @@ NODE_MODULES := node_modules
 # commands
 MILESTONE    := echo === 
 PYTHON       ?= python3
-TEST_CMD     ?= $(PYTHON) -m pytest -svv
+TEST_CMD     ?= $(PYTHON) -m pytest -svv -o log-cli=true --log-cli-level=DEBUG
+
+# ANSI
+ANSI_GREEN	:= \e[0;32m
+ANSI_RED	:= \e[0;31m
+ANSI_RESET	:= \e[0m
 
 # pip is blocked on some managed hosts, so we vendor libdmotservices instead.
 export PYTHONPATH := $(LIBDMOTSERVICES_PY_ROOT):$(LIBDMOTSERVICES_PY_ROOT)/vendor:$(PYTHONPATH)
@@ -62,7 +67,7 @@ lint-js:
 	$(NPM) run lint:js
 
 build:
-	@$(MILESTONE) "Compiling Python bytecode"
+	@$(MILESTONE) "Compiling Python bytecode..."
 	@rm -rf "$(BUILD_DIR)"
 	@mkdir -p "$(BUILD_DIR)"
 	@$(PYTHON) -m compileall -q -b pkixwebadm pkixwebadm.py
@@ -80,6 +85,40 @@ build:
 ## Deployment
 #####################################################################################
 
+auth:
+	@$(MILESTONE) "Generating bootstrap administrator's credentials..."
+	@[ -f ".env" ] || cp -vf ".env.example" ".env"
+	@set -e; \
+	# capture plaintext + hash emitted by gen_pw.py \
+	pw_tmp="$$(mktemp)"; \
+	python3 scripts/gen_pw.py > "$$pw_tmp"; \
+	pw_plaintext="$$(grep '^PKIXWA_BOOTSTRAP_ADMIN_PASS=' "$$pw_tmp" | cut -d= -f2-)"; \
+	pw_hash="$$(grep '^PKIXWA_BOOTSTRAP_ADMIN_PASS_HASH=' "$$pw_tmp" | cut -d= -f2-)"; \
+	rm -f "$$pw_tmp"; \
+	# generate an admin user from admin00000 to admin65535 \
+	admin_rand="$$(od -An -N2 -tu2 /dev/urandom | tr -d ' ')"; \
+	admin_user="$$(printf 'admin%05d' "$$admin_rand")"; \
+	# insert or update the bootstrap admin user \
+	if grep -qi "^PKIXWA_BOOTSTRAP_ADMIN_USER=" ".env"; then \
+		# the user field already exists in .env \
+		sed -i "s|PKIXWA_BOOTSTRAP_ADMIN_USER=.*|PKIXWA_BOOTSTRAP_ADMIN_USER=$$admin_user|" .env; \
+	else \
+		# the user field does not exist in .env \
+		printf "PKIXWA_BOOTSTRAP_ADMIN_USER=$$admin_user\n" >> .env; \
+	fi; \
+	# insert or update the bootstrap admin password \
+	if grep -qi "^PKIXWA_BOOTSTRAP_ADMIN_PASS_HASH=" ".env"; then \
+		# the password field already exists in .env \
+		sed -i "s|PKIXWA_BOOTSTRAP_ADMIN_PASS_HASH=.*|PKIXWA_BOOTSTRAP_ADMIN_PASS_HASH=$$pw_hash|" .env; \
+	else \
+		# the password field does not exist in .env \
+		printf "PKIXWA_BOOTSTRAP_ADMIN_PASS_HASH=$$pw_hash\n" >> .env; \
+	fi; \
+	echo "$(ANSI_RESET)$(ANSI_GREEN)STORE YOUR PASSWORD SAFELY"; \
+	echo "Admin user: $$admin_user"; \
+	echo "Admin password: $$pw_plaintext$(ANSI_RESET)"; \
+
+
 install:
 	@$(MILESTONE) "Nothing to install yet."
 
@@ -89,7 +128,7 @@ install:
 #####################################################################################
 
 test: prebuild lint-js
-	@$(MILESTONE) "Running unit tests"
+	@$(MILESTONE) "Running unit tests..."
 	@$(TEST_CMD)
 
 
@@ -97,7 +136,7 @@ test: prebuild lint-js
 ## Distribution bundle
 #####################################################################################
 dist: clean build
-	@$(MILESTONE) "Packaging pkixwebadm $(VERSION)"
+	@$(MILESTONE) "Packaging pkixwebadm $(VERSION)..."
 	@mkdir -p "$(DIST_STAGE)"
 	@mkdir -p "$(DIST_STAGE)/vendor"
 	@cp -Rv "$(LIBDMOTSERVICES_ROOT)/vendor/libdmotservices" "$(DIST_STAGE)/vendor/"
@@ -112,13 +151,14 @@ dist: clean build
 ## Examples
 #####################################################################################
 example-demo: prebuild
-	@$(MILESTONE) "No examples here yet."
+	@$(MILESTONE) "No examples here yet..."
+
 
 #####################################################################################
 ## Housekeeping
 #####################################################################################
 clean:
-	@$(MILESTONE) "Cleaning generated files"
+	@$(MILESTONE) "Cleaning generated files..."
 	@find pkixwebadm -name "*.pyc" -delete || true
 	@rm -f "pkixwebadm.pyc"
 	@rm -rf "$(BUILD_DIR)" "$(DIST_DIR)" "$(NODE_MODULES)" package-lock.json

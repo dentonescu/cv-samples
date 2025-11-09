@@ -1,9 +1,9 @@
 import logging
 import sys
 from pathlib import Path
-from pkixwebadm import configure_logging
+from pkixwebadm import PROJECT_NAME, configure_logging
 
-PROJECT_SRC = Path(__file__).resolve().parents[1] / "pkixwebadm"
+PROJECT_SRC = Path(__file__).resolve().parents[1] / PROJECT_NAME
 if PROJECT_SRC.exists():
     sys.path.insert(0, str(PROJECT_SRC))
 

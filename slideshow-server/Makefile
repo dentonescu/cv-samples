@@ -19,7 +19,7 @@ LIBDMOTSERVICES_ROOT ?= $(ROOT)/../libdmotservices/python
 # commands
 MILESTONE    := echo === 
 PYTHON       ?= python3
-TEST_CMD     ?= $(PYTHON) -m pytest -svv
+TEST_CMD     ?= $(PYTHON) -m pytest -svv -o log-cli=true --log-cli-level=DEBUG
 
 # pip is blocked on some managed hosts, so we vendor libdmotservices instead.
 export PYTHONPATH := $(LIBDMOTSERVICES_ROOT):$(LIBDMOTSERVICES_ROOT)/vendor:$(PYTHONPATH)

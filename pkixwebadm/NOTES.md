@@ -3,9 +3,9 @@
 Developer notes for pkixwebadm. The aim is to keep the implementation plan visible as the project evolves.
 
 ## Architecture Snapshot
-- FastAPI application using Jinja templates; Bootstrap utility classes will be reintroduced once the UI slice expands.
+- FastAPI application using Jinja templates; Bootstrap utility classes already power the landing page and ingestion widget.
 - SQLAlchemy ORM with SQLite (`app.db`) persisted on a host-mounted path when containerised.
-- Passlib/bcrypt for password hashing; signed session cookie for authentication.
+- Passlib/bcrypt for password hashing; the `pkixwebadm.security` package currently ships the native auth manager and immutable credential/identity models while the OIDC backend incubates.
 - Business logic grouped in services (ingestion, expiry calculations, reminders).
 - Optional background scheduler (APScheduler) to refresh remote certificate data.
 - CLI is driven by `argparse` with a `--help-all` flag implemented via `libdmotservices`.
@@ -17,69 +17,81 @@ pkixwebadm/
 ├─ pkixwebadm/
 │  ├─ __init__.py
 │  ├─ README.md                 # Package overview
-│  ├─ app.py                     # FastAPI app factory
-│  ├─ cli.py                     # CLI entry point / argparse helpers
-│  ├─ config.py                  # Settings loader
-│  ├─ logging.py                 # Logging configuration
+│  ├─ app.py                    # FastAPI app factory
+│  ├─ cli.py                    # CLI entry point / argparse helpers
+│  ├─ config.py                 # Settings loader
+│  ├─ logging.py                # Logging configuration
+│  ├─ security/
+│  │  ├─ README.md              # Overview
+│  │  ├─ credentials.py         # Auth payloads (live)
+│  │  ├─ identity.py            # Authenticated principal (live)
+│  │  ├─ auth/
+│  │  │  ├─ README.md
+│  │  │  ├─ auth_manager.py     # Shared contract (live)
+│  │  │  ├─ native/             # Native backend (live)
+│  │  │  └─ oidc/               # Federated backend (planned)
 │  ├─ db/
-│  │  ├─ __init__.py             # planned
-│  │  ├─ engine.py               # Engine/session factory (planned)
-│  │  ├─ base.py                 # Declarative base metadata (planned)
-│  │  └─ migrations/             # Alembic scripts (planned)
-│  ├─ models/                    # SQLAlchemy ORM models (planned)
-│  ├─ schemas/                   # Pydantic DTOs (planned)
-│  ├─ services/                  # Business logic (auth, ingestion, expiry) (planned)
+│  │  ├─ __init__.py            # planned
+│  │  ├─ engine.py              # Engine/session factory (planned)
+│  │  ├─ base.py                # Declarative base metadata (planned)
+│  │  └─ migrations/            # Alembic scripts (planned)
+│  ├─ models/                   # SQLAlchemy ORM models (planned)
+│  ├─ schemas/                  # Pydantic DTOs (planned)
+│  ├─ services/                 # Business logic (auth, ingestion, expiry) (planned)
 │  ├─ web/
-│  │  ├─ api/                    # JSON routers (planned)
-│  │  ├─ views/                  # HTML routers (root view implemented)
-│  │  ├─ templates/              # Jinja templates (base + ROOT live)
-│  │  └─ static/                 # CSS/JS/assets (Bootstrap palette, ingestion widget scripts, error pages)
-│  ├─ background/                # APScheduler wiring (future work)
-│  ├─ security/                  # Hashing/sessions/dependencies (planned)
-│  ├─ maintenance/               # CLI utilities (planned)
-│  └─ telemetry/                 # Optional observability hooks (future work)
+│  │  ├─ views/                 # HTML routers (root view implemented)
+│  │  ├─ templates/             # Jinja templates (base + ROOT live)
+│  │  ├─ widgets/               # Template partials (live under templates/)
+│  │  └─ static/                # CSS/JS/assets (Bootstrap palette, ingestion widget scripts, error pages)
+│  ├─ background/               # APScheduler wiring (future work)
+│  ├─ maintenance/              # CLI utilities (planned)
+│  └─ telemetry/                # Optional observability hooks (future work)
 ├─ tests/
-│  ├─ README.md                  # Test suite overview
-│  ├─ test_config.py             # Settings loader tests
-│  └─ test_http.py               # Landing page integration tests
-├─ api/openapi.yaml              # REST contract
-├─ docs/api/                     # Generated API docs
+│  ├─ README.md                 # Test suite overview
+│  ├─ test_config.py            # Settings loader tests
+│  ├─ test_http.py              # Landing page helpers
+│  ├─ test_credentials.py       # Security primitives
+│  ├─ test_identity.py          # Security primitives
+│  └─ test_crypto.py            # Password helpers
+├─ scripts/                     # Bootstrap helpers (password generator, etc.)
+├─ api/openapi.yaml             # REST contract
+├─ docs/api/                    # Generated API docs
 ├─ alembic.ini
 ├─ pyproject.toml
 ├─ README.md / NOTES.md
 ├─ .env.example
 ├─ Dockerfile / docker-compose.yml
 ├─ Makefile
-└─ var/data/app.db               # SQLite storage (gitignored)
+└─ var/data/app.db              # SQLite storage (gitignored)
 ```
 
 ## Development Plan
-**Current stage:** Milestone 2 (HTTP app foundation) is in progress; configuration, CLI scaffolding, and root-page rendering are implemented while logging/container work remains.
+**Current stage:** HTTP + security foundation is underway; app factory, CLI, templates, and credential/identity scaffolding are done while logging refinements, ingestion APIs, and Docker packaging remain.
 
 0. **Architecture review** – document overall stack, packages, and data flow. ✅
 1. **Project scaffold** – create package structure, empty modules, configuration stubs, and initial dependencies. ✅
    - Manage dependencies exclusively through `pyproject.toml`; local installs use `python -m pip install -e .`. ✅
-2. **HTTP app foundation** – app factory, settings loader, static file serving, basic landing page with project name/version. _In progress (app factory, CLI, and templates delivered; logging + Docker baseline outstanding)._
-3. **Templating layer** – extend Jinja beyond the base/landing templates; introduce Bootstrap utility classes once the CSS slice returns.
+2. **HTTP + security foundation** – app factory, settings loader, static file serving, landing page widget, native auth contracts, and bootstrap script. ⏳ (logging + container baseline pending).
+3. **Templating layer** – extend Jinja beyond the base/landing templates; add Bootstrap-powered cards, tables, and status badges.
 4. **Authentication slice**  
-   - Design user/session tables and Pydantic schemas.  
-   - Implement config for SQLite path and secret keys (env vars or `.env`).  
-   - Build login/logout views, password hashing, session cookie handling, and `current_user` dependency.  
+   - Finalise user/session tables and Pydantic schemas.  
+   - Implement login/logout views, password hashing, session cookie handling, and `current_user` dependency.  
    - Provide CLI utilities for user creation, password updates, and deactivation.
 5. **Certificate ingestion slice**  
-   - UI/drag-and-drop + API endpoint to upload PEM or trigger host fetch.  
+   - Back the drag-and-drop + URL widgets with FastAPI endpoints.  
    - Parse certificates (subject, issuer, SANs, validity window, fingerprint, chain order).  
-   - Persist metadata with “added at” timestamps and “added by” references.
+   - Persist metadata with timestamps and ownership metadata.
 6. **Expiry list view** – colour-coded status (valid, expiring, expired), filters/search, and links to detail pages.
-7. **Calendar view & ICS** – render calendar with expiry highlights; expose optional `.ics` feed if effort stays low.
+7. **Calendar view & ICS** – render calendar with expiry highlights; expose optional `.ics` feed.
 8. **Background refresh (optional)** – wire APScheduler to poll endpoints and update stored metadata.
 9. **Containerisation** – Dockerfile, compose setup, volume-mounted SQLite path, non-root runtime user, health check.
 
 Iterate as needed, but aim to finish each slice as a demonstrable feature before moving on.
 
 ## Implementation Timeline
-- **2025-11-02: Repository bootstrap** — Initial commit framed the certificate inventory concept and seeded pipeline configuration. Follow-up changes added SAST/secret detection templates and captured early planning notes.
-- **2025-11-06 – present: HTTP foundation build-out** — Added the settings loader, FastAPI app factory, CLI `serve` command (with `--help-all`), and the first Jinja templates. Error handling now falls back to a static HTML page when templating is unavailable.
+- **Bootstrap phase (complete):** repository created, planning notes captured, CI plumbing validated.
+- **HTTP foundation (active):** settings loader, FastAPI app factory, CLI `serve` command (`--help-all`), landing page templates, and error-page fallback landed; logging/Docker polish pending.
+- **Security scaffolding (active):** credential + identity models, bcrypt helpers, native `AuthManager`, and bootstrap password script delivered; backing stores + UI wiring next.
 
 ## Testing & QA
 - Introduce pytest early (during scaffold) with a TestClient fixture for FastAPI integration tests.

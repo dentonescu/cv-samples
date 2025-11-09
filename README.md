@@ -18,7 +18,6 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 | **[null-cipher](https://github.com/dentonescu/cv-samples/tree/main/null-cipher)** | Single‑page visual demo of a simple cipher (encrypt/decrypt) in the browser. | JavaScript, HTML, CSS |
 | **[slideshow-server](https://github.com/dentonescu/cv-samples/tree/main/slideshow-server)** | Tiny Python web server that generates responsive media slideshows. | Python, HTML, JS |
 | **[WiFiEqu](https://github.com/dentonescu/cv-samples/tree/main/wifiequ)** (in progress) | Terminal Wi‑Fi channel “equalizer” visualizer with a C JSON daemon, Windows service, and Angular web UI. The Linux daemon streams live/mock readings over SSE, honours configurable refresh cadences, and secures `/api/v1/stats` with an API key. | C, ANSI/terminal, JSON APIs, C#, Angular |
-| **[Terraglean](https://github.com/dentonescu/cv-samples/tree/main/terraglean)** (planned) | Interactive map showing world data layers (time, weather, country stats). | Java, Spring Boot, Leaflet.js |
 | **[pkixwebadm](https://github.com/dentonescu/cv-samples/tree/main/pkixwebadm)** (HTTP foundation in progress) | Certificate inventory web app pairing FastAPI with SQLite; configuration and scaffold are in place while the app factory and landing page are being implemented. | Python, FastAPI, Bootstrap UI, vendored JS tooling |
 
 ## Gallery
@@ -29,7 +28,7 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 
 | WiFiEqu | pkixwebadm | Terraglean |
 |---|---|---|
-| [![WiFiEqu thumbnail](thumbnails/th-wifiequ-01.png)](wifiequ/README.md) | [![pkixwebadm thumbnail](thumbnails/th-pkixwebadm-01.png)](pkixwebadm/README.md) | [![Terraglean placeholder thumbnail](thumbnails/th--coming_soon.png)](terraglean/README.md) |
+| [![WiFiEqu thumbnail](thumbnails/th-wifiequ-01.png)](wifiequ/README.md) | [![pkixwebadm thumbnail](thumbnails/th-pkixwebadm-01.png)](pkixwebadm/README.md) | [![Terraglean placeholder thumbnail](thumbnails/th--coming_soon.png)](docs/terraglean.md) |
 
 ## Tooling & automation
 - `dev.sh` in the repository root orchestrates dependency setup, builds, tests, installs, and demo runs from a single entrypoint. It now recognises mock vs. hardware example runs, optional interface overrides, and selective subcommands so you can rehearse exactly what the CI job performs. See the usage recipes below for common scenarios. The `--install-deps` slice now installs Node.js so libdmotservices’ JavaScript helpers and tests run consistently in CI and locally.
@@ -84,7 +83,11 @@ All content is provided under the license in `/LICENSE`. You’re free to read a
 Check back regularly — new samples will be added and existing ones improved as the gallery evolves.
 
 ## Upcoming work
-- **pkixwebadm**: finish the HTTP app foundation slice—wire the ingestion APIs, add UI validation/feedback, and land CSRF + server-side MIME checks before circling back to container packaging.
+- **pkixwebadm**: extend the new security scaffolding with live ingestion APIs, add UI validation/feedback, and land CSRF + server-side MIME checks before circling back to container packaging.
 - **WiFiEqu**: prototype the Windows worker that mirrors the Linux API, factor shared DTO/config plumbing into a reusable C# library, and round out the Docker Compose story with health checks and metrics before pursuing CI/CD builds.
-- **Terraglean**: spike a Spring Boot REST service backed by lightweight JDBC persistence, then layer unit/integration coverage and Gradle build tooling ahead of a possible React/Angular dashboard.
+- **Terraglean**: now tracked in [docs/terraglean.md](docs/terraglean.md); once WiFiEqu stabilises, kick off the Spring Boot/Micronaut service spike, persistence plan, and UI exploration documented there.
 - **Portfolio glue**: continue aligning DevOps expectations—multi-language builds, container images, and cross-project Compose entries—so each sample can graduate from `_private_staging` once the future work above solidifies.
+
+
+## Research incubator: prng-tools
+`prng-tools` is a long-horizon lab for studying pseudorandom number generators (PRNGs), entropy sources, and cryptographically secure randomness across languages and optional hardware. The motivation is simple curiosity: how random are the stock generators in C, Python, Java, C#, Rust, etc., how does their “secure” API behave across platforms, and how do we quantify and visualise those differences reproducibly? The project will live inside this repo once the early prototypes settle; for now this README captures the intent and [docs/future_work.md](docs/future_work.md) holds the deeper roadmap.

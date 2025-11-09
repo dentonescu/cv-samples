@@ -46,6 +46,7 @@ build/
 **/log/
 **/logs/
 **/node_modules/
+**/.pytest_cache/
 **/.sync*
 **/*.a
 **/*.d

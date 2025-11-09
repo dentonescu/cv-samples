@@ -1,10 +1,8 @@
 import logging
-import sys
 
 from http import HTTPStatus
 from fastapi.responses import HTMLResponse
-from fastapi.testclient import TestClient
-from pkixwebadm import create_app, get_error_page
+from pkixwebadm import get_error_page
 
 logger = logging.getLogger(__name__)
 

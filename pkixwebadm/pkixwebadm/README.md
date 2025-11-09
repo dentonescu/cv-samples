@@ -8,6 +8,7 @@ Application code for the pkixwebadm certificate inventory service.
 - `cli.py` – command-line entry point with `serve`, `--help-all`, and CLI-to-uvicorn wiring.
 - `config.py` – `pydantic-settings` backed configuration loader that reads `PKIXWA_*` environment variables.
 - `logging.py` – shared logging configuration invoked by the app factory.
+- `security/` – credentials, identity models, and auth backends (native + placeholder OIDC).
 - `web/` – view routers, templates, static assets, and error page helpers.
 - `__main__.py` – supports `python -m pkixwebadm` by delegating to the CLI helper.
 

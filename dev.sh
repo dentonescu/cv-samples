@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -e
+SCRIPT_DIR="$(cd -- "$(dirname -- "$0")" && pwd)"
 
 SUB_PROJECTS=()
 while IFS= read -r git_dir; do
     SUB_PROJECTS+=("$(dirname "$git_dir")")
-done < <(find . -maxdepth 2 -type d -name ".git")
+done < <(find "$SCRIPT_DIR" -maxdepth 2 -type d -name ".git")
 
 print_usage_block() {
     printf '  %-18s %s\n' "$1" "$2"
@@ -47,16 +48,26 @@ ensure_dependencies() {
         libnl-genl-3-dev \
         openjdk-17-jdk \
         nodejs \
+        python3-bcrypt \
+	    python3-fastapi \
+	    python3-jinja2 \
+        python3-passlib \
         python3-pip \
-        python3-pytest
+	    python3-pydantic \
+        python3-pytest \
+	    python3-uvicorn
 }
 
 ensure_vendoring() {
-    make -C libdmotservices/js vendor
-    make -C libdmotservices/python vendor
+    make -C "$SCRIPT_DIR/libdmotservices/js" vendor
+    make -C "$SCRIPT_DIR/libdmotservices/python" vendor
 }
 
 git_log() {
+    pushd "$SCRIPT_DIR"
+    echo "== $SCRIPT_DIR"
+    git log
+    popd >/dev/null
     for prj in "${SUB_PROJECTS[@]}"; do
         echo "== ${prj#./}"
         pushd "$prj" >/dev/null
@@ -66,6 +77,10 @@ git_log() {
 }
 
 git_status() {
+    pushd "$SCRIPT_DIR"
+    echo "== $SCRIPT_DIR"
+    git status -sb
+    popd >/dev/null
     for prj in "${SUB_PROJECTS[@]}"; do
         echo "== ${prj#./}"
         pushd "$prj" >/dev/null
@@ -75,6 +90,10 @@ git_status() {
 }
 
 git_push() {
+    pushd "$SCRIPT_DIR"
+    echo "== $SCRIPT_DIR"
+    git push
+    popd >/dev/null
     for prj in "${SUB_PROJECTS[@]}"; do
         echo "== ${prj#./}"
         pushd "$prj" >/dev/null
@@ -170,7 +189,7 @@ echo "JAVA_HOME=$JAVA_HOME"
 ## build, deploy, and run operations
 
 [ ! "$install_deps" -eq 1 ] || (ensure_dependencies && ensure_vendoring)
-[ ! "$build" -eq 1 ] || (ensure_vendoring && make clean all docs)
-[ ! "$install_prj" -eq 1 ] || make install
-[ ! "$run_tests" -eq 1 ] || (ensure_vendoring && make test)
-[ ! "$run_examples" -eq 1 ] || (ensure_vendoring && WFQ_IFACE="$iface" WFQ_MOCK="$mock" make example-demo)
+[ ! "$build" -eq 1 ] || (ensure_vendoring && make -C "$SCRIPT_DIR" clean all docs)
+[ ! "$install_prj" -eq 1 ] || make -C "$SCRIPT_DIR" install
+[ ! "$run_tests" -eq 1 ] || (ensure_vendoring && make -C "$SCRIPT_DIR" test)
+[ ! "$run_examples" -eq 1 ] || (ensure_vendoring && WFQ_IFACE="$iface" WFQ_MOCK="$mock" make -C "$SCRIPT_DIR" example-demo)

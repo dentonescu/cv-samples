@@ -15,7 +15,16 @@ from .logging import (
     configure_logging
 )
 
-from pkixwebadm.web import (
+from .security import (
+    Credentials,
+    Identity
+)
+
+from .security.auth import AuthManager
+
+from .security.auth.native.crypto import password_hash, password_verify
+
+from .web import (
     PAGE_WEB_ERROR,
     PAGE_WEB_ROOT,
     PATH_WEB_ROOT,
@@ -26,8 +35,6 @@ from pkixwebadm.web import (
     URL_STATIC,
     get_error_page
 )
-
-from pkixwebadm.web.views import root
 
 from .app import create_app
 from .cli import main  # noqa: E402
@@ -43,11 +50,15 @@ __all__ = [
     "PROJECT_NAME",
     "VERSION",
     "URL_STATIC",
+    "AuthManager",
+    "Credentials",
+    "Identity",
     "Settings",
     "configure_logging",
     "create_app",
     "get_error_page",
     "get_settings",
     "main",
-    "root"
+    "password_hash",
+    "password_verify"
 ]

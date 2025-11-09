@@ -3,7 +3,8 @@ name = "pkixwebadm"
 version = "0.1.0"
 dependencies = [
     "fastapi",
-    "uvicorn[standard]",
-    "pydantic-settings",
     "jinja2",
+    "passlib",
+    "pydantic-settings",
+    "uvicorn[standard]",
 ]

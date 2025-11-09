@@ -5,7 +5,9 @@ Small self-contained certificate inventory web app that will track X.509 expirat
 ## Current status
 - HTTP foundation milestone is underway: the FastAPI app factory mounts static assets, renders the root template, and exposes a CLI `serve` command.
 - Configuration lives in `config.Settings`; unit tests assert default/env overrides.
-- Jinja templates render project metadata and now surface the certificate-ingestion widget powered by the vendored libdmotservices JS helpers; when the template loader fails the app falls back to a static error page.
+- Jinja templates render project metadata and surface the certificate-ingestion widget powered by the vendored libdmotservices JS helpers; when the template loader fails the app falls back to a static error page.
+- `pkixwebadm.security` now exposes immutable credential/identity models plus the native authentication manager (cookie sessions). The placeholder OIDC backend lives in the same tree so future slices can fill it in without refactoring imports.
+- Utility scripts (see [`scripts/`](scripts/README.md)) help bootstrap admin accounts by producing throwaway passwords + bcrypt hashes.
 - Docker image layout, background schedulers, and notification channels are still being designed.
 
 ## Getting started (developer preview)
@@ -26,6 +28,12 @@ Small self-contained certificate inventory web app that will track X.509 expirat
   python3 -m pytest
   ```
 
+- Generate disposable admin credentials when seeding a local database:
+
+  ```bash
+  python3 scripts/gen_pw.py
+  ```
+
 ## Why build it
 Keeping TLS certificates fresh across hobby projects is still a manual, spreadsheet-driven process. pkixwebadm will ingest PEM/DER files or reach out to endpoints via `openssl s_client`, capture the full chain, and surface the data in a concise dashboard with calendar exports and reminder hooks.
 
@@ -34,7 +42,7 @@ Keeping TLS certificates fresh across hobby projects is still a manual, spreadsh
    - [x] FastAPI app factory mounting static files.
    - [x] Root view renders `ROOT.html` with project metadata.
    - [x] CLI `serve` command and `--help-all` helper (powered by `libdmotservices`).
-   - [ ] Logging configuration and Docker image baseline.
+   - [ ] Logging configuration refinements and Docker image baseline.
 2. **Ingestion & storage foundation**
    - Accept drag-and-drop uploads and local path imports for PEM/DER material.
    - Normalise certificate metadata (issuer, subject, SANs, key usage, chain depth) into SQLite via SQLAlchemy models.
@@ -54,6 +62,14 @@ Keeping TLS certificates fresh across hobby projects is still a manual, spreadsh
 - Define the minimal RBAC/auth approach for an admin-only deployment (session cookie vs. token).
 - Add UI validation/feedback on the landing page (toasts/snackbars for drag-and-drop errors, success states, etc.).
 - Plan CSRF protections and server-side MIME-type validation ahead of wiring the ingestion endpoints.
+
+## Navigation
+- Package internals: [`pkixwebadm/README.md`](pkixwebadm/README.md)
+- Web layer overview: [`pkixwebadm/web/README.md`](pkixwebadm/pkixwebadm/web/README.md)
+- Security/auth scaffolding: [`pkixwebadm/security/README.md`](pkixwebadm/pkixwebadm/security/README.md)
+- Tests: [`tests/README.md`](tests/README.md)
+- Scripts: [`scripts/README.md`](scripts/README.md)
+- Developer notes & implementation plan: [NOTES.md](NOTES.md)
 
 ## Related
 - Package layout: [pkixwebadm/README.md](pkixwebadm/README.md)

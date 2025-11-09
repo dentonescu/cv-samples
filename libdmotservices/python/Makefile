@@ -20,7 +20,7 @@ PACKAGE_DIR := libdmotservices
 # commands
 MILESTONE     := echo === 
 PYTHON        ?= python3
-TEST_CMD      ?= $(PYTHON) -m pytest -svv
+TEST_CMD      ?= $(PYTHON) -m pytest -svv -o log-cli=true --log-cli-level=DEBUG
 
 export PYTHONPATH := $(ROOT):$(VENDOR_ROOT):$(PYTHONPATH)
 
