@@ -65,8 +65,8 @@ Keeping TLS certificates fresh across hobby projects is still a manual, spreadsh
 
 ## Navigation
 - Package internals: [`pkixwebadm/README.md`](pkixwebadm/README.md)
-- Web layer overview: [`pkixwebadm/web/README.md`](pkixwebadm/pkixwebadm/web/README.md)
-- Security/auth scaffolding: [`pkixwebadm/security/README.md`](pkixwebadm/pkixwebadm/security/README.md)
+- Web layer overview: [`pkixwebadm/web/README.md`](pkixwebadm/web/README.md)
+- Security/auth scaffolding: [`pkixwebadm/security/README.md`](pkixwebadm/security/README.md)
 - Tests: [`tests/README.md`](tests/README.md)
 - Scripts: [`scripts/README.md`](scripts/README.md)
 - Developer notes & implementation plan: [NOTES.md](NOTES.md)
