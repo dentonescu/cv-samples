@@ -5,7 +5,7 @@ Developer notes for pkixwebadm. The aim is to keep the implementation plan visib
 ## Architecture Snapshot
 - FastAPI application using Jinja templates; Bootstrap utility classes already power the landing page and ingestion widget.
 - SQLAlchemy ORM with SQLite (`app.db`) persisted on a host-mounted path when containerised.
-- Passlib/bcrypt for password hashing; the `pkixwebadm.security` package currently ships the native auth manager and immutable credential/identity models while the OIDC backend incubates.
+- bcrypt for password hashing; the `pkixwebadm.security` package currently ships the native auth manager and immutable credential/identity models while the OIDC backend incubates.
 - Business logic grouped in services (ingestion, expiry calculations, reminders).
 - Optional background scheduler (APScheduler) to refresh remote certificate data.
 - CLI is driven by `argparse` with a `--help-all` flag implemented via `libdmotservices`.
@@ -66,12 +66,12 @@ pkixwebadm/
 ```
 
 ## Development Plan
-**Current stage:** HTTP + security foundation is underway; app factory, CLI, templates, and credential/identity scaffolding are done while logging refinements, ingestion APIs, and Docker packaging remain.
+**Current stage:** HTTP + security foundation is underway; app factory, CLI, templates, and credential/identity scaffolding are done while ingestion APIs and Docker packaging remain.
 
 0. **Architecture review** – document overall stack, packages, and data flow. ✅
 1. **Project scaffold** – create package structure, empty modules, configuration stubs, and initial dependencies. ✅
    - Manage dependencies exclusively through `pyproject.toml`; local installs use `python -m pip install -e .`. ✅
-2. **HTTP + security foundation** – app factory, settings loader, static file serving, landing page widget, native auth contracts, and bootstrap script. ⏳ (logging + container baseline pending).
+2. **HTTP + security foundation** – app factory, settings loader, static file serving, landing page widget, native auth contracts, and bootstrap script. ⏳ (container baseline pending).
 3. **Templating layer** – extend Jinja beyond the base/landing templates; add Bootstrap-powered cards, tables, and status badges.
 4. **Authentication slice**  
    - Finalise user/session tables and Pydantic schemas.  
@@ -90,7 +90,7 @@ Iterate as needed, but aim to finish each slice as a demonstrable feature before
 
 ## Implementation Timeline
 - **Bootstrap phase (complete):** repository created, planning notes captured, CI plumbing validated.
-- **HTTP foundation (active):** settings loader, FastAPI app factory, CLI `serve` command (`--help-all`), landing page templates, and error-page fallback landed; logging/Docker polish pending.
+- **HTTP foundation (active):** settings loader, FastAPI app factory, CLI `serve` command (`--help-all`), landing page templates, and error-page fallback landed; container polish pending.
 - **Security scaffolding (active):** credential + identity models, bcrypt helpers, native `AuthManager`, and bootstrap password script delivered; backing stores + UI wiring next.
 
 ## Testing & QA
@@ -102,11 +102,6 @@ Iterate as needed, but aim to finish each slice as a demonstrable feature before
 - Use `.env` files (key=value pairs) alongside environment variables; `.env` loaded by a settings class (e.g., `pydantic-settings`) to supply DB paths, session cookies, and optional secrets.
 - Commit a `.env.example` showing required keys (sans secrets); actual `.env` ignored via `.gitignore`.
 - For deployment, prefer real environment variables or orchestrator secrets; `.env` acts as local convenience.
-
-## Logging & Telemetry
-- Centralise logging setup in the app factory using Python’s `logging` module (`dictConfig` with JSON/text format).
-- Standardise log fields (request id, user id, certificate id) so downstream analysis is consistent.
-- Telemetry expectations: HTTP request logging, certificate ingestion outcomes, scheduler job results, and warn-level alerts for imminent expiries; consider optional hooks for metrics/export later.
 
 ## Data Maintenance
 - Document SQLite storage location, backup cadence (copy file while app is quiesced or using `.backup` pragma), and restore process.

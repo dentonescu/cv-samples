@@ -19,26 +19,21 @@ WiFiEqu demonstrates how system services on different operating systems can expo
 ## Architecture
 
 
-```
-           +------------------------------------+
-           |             Clients                |
-           |------------------------------------|
-           |  • CLI Equalizer (C)               |
-           |  • Web UI (Angular)                |
-           +--------------------^---------------+
-                                |
-                        JSON over HTTP (REST)
-                                |
-      +-------------------------+-------------------------+
-      |                                                   |
+```mermaid
+flowchart TB
+    subgraph Clients
+        cli["CLI Equalizer (C)"]
+        web["Web UI (Angular)"]
+    end
 
-+-----------------------+               +------------------------+
-| Linux Daemon (C)      |               | Windows Service (C#)   |
-|     wifiequd          |               |      WiFiEquD          |
-| • Uses Netlink API    |               | • Uses WLAN API        |
-| • Aggregates RSSI     |               | • Aggregates RSSI      |
-| • Serves JSON API     |               | • Serves JSON API      |
-+-----------------------+               +------------------------+
+    gateway["JSON over HTTP (REST)"]
+    linux["Linux Daemon<br/>wifiequd<br/>• Uses Netlink API<br/>• Aggregates RSSI<br/>• Serves JSON API"]
+    windows["Windows Service<br/>WiFiEquD<br/>• Uses WLAN API<br/>• Aggregates RSSI<br/>• Serves JSON API"]
+
+    cli --> gateway
+    web --> gateway
+    gateway --> linux
+    gateway --> windows
 ```
 
 - **Daemon (Linux, `wifiequd`)**: runs as a systemd service, polls Wi‑Fi, exposes JSON endpoints.

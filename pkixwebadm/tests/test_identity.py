@@ -1,11 +1,13 @@
 import pytest
+from pydantic import ValidationError
 
 from pkixwebadm import Identity
 
 
 def test_identity_is_immutable():
     identity = Identity(user_id="1", username="admin")
-    with pytest.raises(TypeError):
+    # Pydantic v1 mutability checks raise TypeError; v2 raises ValidationError.
+    with pytest.raises((TypeError, ValidationError)):
         identity.username = "new"
 
 

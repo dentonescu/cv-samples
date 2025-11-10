@@ -38,11 +38,11 @@ Small self-contained certificate inventory web app that will track X.509 expirat
 Keeping TLS certificates fresh across hobby projects is still a manual, spreadsheet-driven process. pkixwebadm will ingest PEM/DER files or reach out to endpoints via `openssl s_client`, capture the full chain, and surface the data in a concise dashboard with calendar exports and reminder hooks.
 
 ## Planned milestones
-1. **HTTP app foundation** ✅ _in progress_
+ 1. **HTTP app foundation** ✅ _in progress_
    - [x] FastAPI app factory mounting static files.
    - [x] Root view renders `ROOT.html` with project metadata.
    - [x] CLI `serve` command and `--help-all` helper (powered by `libdmotservices`).
-   - [ ] Logging configuration refinements and Docker image baseline.
+   - [ ] Docker image baseline.
 2. **Ingestion & storage foundation**
    - Accept drag-and-drop uploads and local path imports for PEM/DER material.
    - Normalise certificate metadata (issuer, subject, SANs, key usage, chain depth) into SQLite via SQLAlchemy models.

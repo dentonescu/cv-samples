@@ -51,7 +51,6 @@ ensure_dependencies() {
         python3-bcrypt \
 	    python3-fastapi \
 	    python3-jinja2 \
-        python3-passlib \
         python3-pip \
 	    python3-pydantic \
         python3-pytest \

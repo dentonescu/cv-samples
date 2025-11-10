@@ -2,9 +2,13 @@
 name = "pkixwebadm"
 version = "0.1.0"
 dependencies = [
+    "bcrypt",
     "fastapi",
     "jinja2",
-    "passlib",
     "pydantic-settings",
     "uvicorn[standard]",
 ]
+
+[tool.setuptools.packages.find]
+include = ["pkixwebadm*"]
+exclude = ["node_modules"]

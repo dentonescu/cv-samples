@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from passlib.hash import bcrypt
+import bcrypt
 
-from pkixwebadm import get_settings
+from pkixwebadm import DEFAULT_FILE_ENCODING, get_settings
 
 
 def password_hash(password: str | None = None) -> str | None:
@@ -12,8 +12,9 @@ def password_hash(password: str | None = None) -> str | None:
         return None
     settings = get_settings()
     password_rounds = settings.pass_rounds
-    password_hash = bcrypt.using(rounds=password_rounds).hash(password)
-    return password_hash
+    salt = bcrypt.gensalt(rounds=password_rounds)
+    password_hash = bcrypt.hashpw(password.encode(DEFAULT_FILE_ENCODING), salt)
+    return password_hash.decode(DEFAULT_FILE_ENCODING)
 
 
 def password_verify(password: str | None, hashed: str | None) -> bool:
@@ -21,5 +22,4 @@ def password_verify(password: str | None, hashed: str | None) -> bool:
 
     if not password or not hashed:
         return False
-    # note: rehashing the password and comparing would produce a new salt and the function would always fail
-    return bcrypt.verify(password, hashed)
+    return bcrypt.checkpw(password.encode(DEFAULT_FILE_ENCODING), hashed.encode(DEFAULT_FILE_ENCODING))

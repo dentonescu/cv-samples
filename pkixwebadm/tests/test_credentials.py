@@ -1,11 +1,13 @@
 import pytest
+from pydantic import ValidationError
 
 from pkixwebadm import Credentials
 
 def test_credentials_is_immutable():
     credentials = Credentials(username="admin", 
                               password="not-the-real-password")
-    with pytest.raises(TypeError):
+    # Pydantic v1 raises TypeError, v2 raises ValidationError for frozen models.
+    with pytest.raises((TypeError, ValidationError)):
         credentials.password = "changed"
 
 

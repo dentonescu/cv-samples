@@ -8,6 +8,7 @@ from .media import (
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler
 from typing import Callable, Iterable, Sequence
+from slideshow_server import DEFAULT_FILE_ENCODING
 
 """HTTP handlers and helpers for serving the slideshow application."""
 
@@ -88,7 +89,7 @@ def serve_index_response(
     handler.send_response(HTTPStatus.OK)
     handler.send_header("Content-type", "text/html")
     handler.end_headers()
-    handler.wfile.write(html_document.encode("utf-8"))
+    handler.wfile.write(html_document.encode(DEFAULT_FILE_ENCODING))
     return True
 
 class SlideshowHandler(SimpleHTTPRequestHandler):

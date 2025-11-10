@@ -4,32 +4,24 @@
 
 WiFiEqu is built as a small pipeline that turns raw wireless scans into console-friendly visuals and JSON output.
 
-```
-          nl80211 scan (live) / mock generator
-                          |
-                          v
-                +---------------------+
-                | scanner (wlanscan.c)| --> wfq_signal[]
-                +---------------------+
-                          |
-                          v
-             +-----------------------------+
-             | config (config.c)           | --> wfq_config_context
-             +-----------------------------+
-                    /                \
-                   /                  \
-                  v                    v
-        +----------------+      +---------------------+
-        | daemon         |      | ex_wlanscan example |
-        | (wifiequd.c)   |      | (libdmotservices UI)|
-        +----------------+      +---------------------+
-                  |                         |
-          +-----------------+               |
-          | HTTP façade     |               |
-          | (wfqapi/http.c) |               |
-          +--------+--------+               |
-                   |                        |
-       REST endpoints + SSE stream      Terminal equalizer
+```mermaid
+flowchart TB
+    source["nl80211 scan (live)<br/>/ mock generator"]
+    scanner["scanner (wlanscan.c)"]
+    config["config (config.c)"]
+    daemon["daemon (wifiequd.c)"]
+    example["ex_wlanscan example<br/>(libdmotservices UI)"]
+    http["HTTP façade<br/>(wfqapi/http.c)"]
+    rest["REST endpoints<br/>+ SSE stream"]
+    terminal["Terminal equalizer"]
+
+    source --> scanner
+    scanner -->|"wfq_signal[]"| config
+    config -->|"wfq_config_context"| daemon
+    config -->|"wfq_config_context"| example
+    daemon --> http
+    http --> rest
+    example --> terminal
 ```
 
 ## Key modules

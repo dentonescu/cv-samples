@@ -3,10 +3,11 @@
 
 from __future__ import annotations
 
+import bcrypt
 import os
 import secrets
 
-from passlib.hash import bcrypt
+from pkixwebadm import password_hash
 
 
 def _read_int(name: str, default: int) -> int:
@@ -20,12 +21,11 @@ def _read_int(name: str, default: int) -> int:
 
 
 def main() -> None:
-    password_len = _read_int("PKIXWA_PASS_LEN", 16)
-    password_rounds = _read_int("PKIXWA_PASS_ROUNDS", 12)
-    password = secrets.token_urlsafe(password_len)
-    password_hash = bcrypt.using(rounds=password_rounds).hash(password)
-    print(f"PKIXWA_BOOTSTRAP_ADMIN_PASS={password}")  # Do not record in .env
-    print(f"PKIXWA_BOOTSTRAP_ADMIN_PASS_HASH={password_hash}")
+    pw_len = _read_int("PKIXWA_PASS_LEN", 16)
+    pw = secrets.token_urlsafe(pw_len)
+    pw_hashed = password_hash(pw)
+    print(f"PKIXWA_BOOTSTRAP_ADMIN_PASS={pw}")  # Do not record in .env
+    print(f"PKIXWA_BOOTSTRAP_ADMIN_PASS_HASH={pw_hashed}")
 
 
 if __name__ == "__main__":

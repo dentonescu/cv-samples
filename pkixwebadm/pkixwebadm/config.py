@@ -1,11 +1,11 @@
 """Settings management for pkixwebadm."""
 
 from libdmotservices import DEFAULT_FILE_ENCODING
-from pydantic import BaseSettings
 
 try:
-    from pydantic_settings import SettingsConfigDict
+    from pydantic_settings import BaseSettings, SettingsConfigDict
 except ImportError:  # pragma: no cover - fallback for environments without pydantic-settings
+    from pydantic import BaseSettings # v1: BaseSettings was in the pydantic package
     SettingsConfigDict = None
 
 from typing import Literal
@@ -22,12 +22,14 @@ MODEL_CONFIG = dict(
 class Settings(BaseSettings):
     """Project configuration sourced from environment variables and ``.env``."""
 
-    host: str = "localhost"  # PKIXWA_HOST
-    port: int = 8080  # PKIXWA_PORT
+    auth_method: Literal["native", "oidc"] = "native"  # PKIXWA_AUTH_METHOD
+    bootstrap_admin_user: str | None = None # PKIXWA_BOOTSTRAP_ADMIN_USER
+    bootstrap_admin_pass_hash: str | None = None # PKIXWA_BOOTSTRAP_ADMIN_PASS_HASH
     dev_mode: bool = True  # PKIXWA_DEV_MODE
     database_url: str = "sqlite:///var/data/app.db"  # PKIXWA_DATABASE_URL
+    host: str = "localhost"  # PKIXWA_HOST
     pass_rounds: int = 12  # PKIXWA_PASS_ROUNDS
-    auth_method: Literal["native", "oidc"] = "native"  # PKIXWA_AUTH_METHOD
+    port: int = 8080  # PKIXWA_PORT
     secret_key: str | None = None  # PKIXWA_SECRET_KEY
     session_cookie_name: str = "PKIXWA_SESSION"  # PKIXWA_SESSION_COOKIE_NAME
     session_ttl_seconds: int = 86400  # PKIXWA_SESSION_TTL_SECONDS

@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 from typing import Sequence
 
+from slideshow_server import DEFAULT_FILE_ENCODING
+
 """Utilities for locating media assets and preparing static resources."""
 
 IMAGE_EXT = (".bmp", ".gif", ".gifv", ".jpe", ".jpeg", ".jpg", ".png", ".webp")
@@ -81,7 +83,7 @@ def load_assets(css_path: Path, html_path: Path, js_path: Path) -> tuple[str, st
     Returns:
         A tuple of ``(css, html, js)`` strings, each decoded as UTF-8.
     """
-    css = css_path.read_text(encoding="utf-8")
-    html = html_path.read_text(encoding="utf-8")
-    js = js_path.read_text(encoding="utf-8")
+    css = css_path.read_text(encoding=DEFAULT_FILE_ENCODING)
+    html = html_path.read_text(encoding=DEFAULT_FILE_ENCODING)
+    js = js_path.read_text(encoding=DEFAULT_FILE_ENCODING)
     return css, html, js
