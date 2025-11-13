@@ -3,7 +3,7 @@
 Developer notes for `slideshow-server`, the Python HTTP slideshow generator. This documents the build/test plan, design decisions, and future enhancements.
 
 ## Current stage
-- Feature-complete for demos: FastAPI backend, CLI, Docker packaging, and pytest suites are live.
+- Feature-complete for demos: the `http.server` handler, CLI wrapper, Docker packaging, and pytest suites are live.
 - Current focus is UI polish, caching options, and broader test coverage while keeping deployment guides current.
 
 ## Current File Layout
@@ -22,7 +22,7 @@ slideshow-server/
 ├─ slideshow_server/             # Python package
 │  ├─ __init__.py
 │  ├─ __main__.py
-│  ├─ server.py                  # FastAPI app and routes
+│  ├─ server.py                  # http.server handler + ffmpeg streaming
 │  ├─ media.py                   # Slideshow domain logic
 │  ├─ cli.py                     # CLI helpers
 │  └─ README.md
@@ -50,7 +50,7 @@ slideshow-server/
 
 ## Implementation Plan
 1. **Core server polish**  
-   - Keep the single-file entry point (`slideshow-server.py`) lean; extract reusable pieces into `slideshow_server/` without breaking CLI simplicity.  
+   - Keep the single-file entry point (`slideshow-server.py`) lean; central logic already lives in `slideshow_server/server.py` and stays glued together via the CLI helpers.  
    - Add graceful shutdown handling and better logging (structured messages, request summary).  
    - Support additional media metadata (captions, EXIF-based ordering) while keeping the default random shuffle.
 2. **UI/UX enhancements**  

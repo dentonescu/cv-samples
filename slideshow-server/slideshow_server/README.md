@@ -2,22 +2,34 @@
 
 Core library backing the `slideshow-server` CLI. It exposes reusable helpers and the `main` entry point used by `python -m slideshow_server`.
 
-## Contents
+## Modules
 
-- `__init__.py` – implements CLI argument parsing, media discovery, HTML rendering, and the HTTP handler that streams videos via `ffmpeg`.
-- `__main__.py` – thin shim so the package can be launched with `python -m slideshow_server`.
+| File | Purpose |
+| --- | --- |
+| `__init__.py` | Loads version metadata, re-exports the public API, and keeps imports centralised so downstream callers can rely on `import slideshow_server`. |
+| `__main__.py` | Allows `python -m slideshow_server` to call the CLI entry point. |
+| `cli.py` | Argument parser plus the bootstrap routine that wires media discovery, HTML rendering, and the `http.server` handler together. |
+| `media.py` | Discovers playable files, loads static assets, and builds the on-demand `ffmpeg` command for video streaming. |
+| `server.py` | Custom `SimpleHTTPRequestHandler` subclass that serves the rendered HTML and streams video chunks through `ffmpeg`. |
 
-Key entry points exported via `__all__`:
-- `main(argv=None)` – command-line entry point.
-- `create_handler(...)` – factory for a configured `SimpleHTTPRequestHandler` subclass.
+## Public API
+
+The module re-exports the pieces most callers care about:
+- `main(argv=None)` – user-facing CLI entry point.
 - `discover_media_files(...)` – recursive media discovery with extension filtering and symlink safeguards.
 - `render_index(...)` – injects configuration constants and static assets into the HTML template.
+- `create_handler(...)` / `SlideshowHandler` – HTTP handler factories for custom deployments.
+- `build_ffmpeg_command(...)` – helper used by the video streaming path.
 
-Refer to the inline docstrings for parameter details; every function includes a concise description to keep the module self-documenting.
+Every function carries its own docstring, so refer to the source when you need parameter details.
 
 ## Tests
 
-Unit tests exercise the package through `tests/test_slideshow_server.py`. Run them with:
+The package is covered by:
+- `tests/test_media.py` – media discovery rules, ffmpeg command builder, and asset loading.
+- `tests/test_server.py` – handler configuration, index rendering, and streaming edge cases.
+
+Run the suite with:
 
 ```bash
 make test          # from project root

@@ -2,6 +2,10 @@
 
 Developer notes for the Windows service (`WiFiEquD`). These outline how the service should converge with the Linux daemon while respecting Windows-specific constraints.
 
+## Current stage
+- Service code has not landed yet; the README/notes document the intended parity plan while the Linux daemon drives behaviour.
+- Next milestone is the .NET worker scaffold plus installer scripts so HTTP and WLAN plumbing can take shape.
+
 ## Current File Layout
 ```
 windows/

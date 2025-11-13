@@ -2,6 +2,10 @@
 
 Developer notes for the Angular client. These outline the milestones for bringing the browser UI in line with the daemon’s capabilities.
 
+## Current stage
+- Workspace scaffold exists with lint/test plumbing pending.
+- Roadmap is tracking data-layer contracts and SSE integration once the API fixtures solidify; UI work starts right after the shared DTOs are generated.
+
 ## Current File Layout
 ```
 web-angular/

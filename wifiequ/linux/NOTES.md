@@ -2,6 +2,10 @@
 
 Developer notes for the Linux reference implementation (`wifiequd` + CLI demos). Use this file to track the feature roadmap, runtime considerations, and wireless tooling cheatsheets gathered while building the daemon.
 
+## Current stage
+- Daemon, HTTP façade, and CLI demos are portfolio-ready: live/mock sources ship today, and installer/scripts are exercised in CI.
+- Ongoing work focuses on scanner resiliency, SSE polish, and packaging niceties so the Linux build can continue guiding the Windows/Angular parity efforts.
+
 ## Current File Layout
 ```
 linux/

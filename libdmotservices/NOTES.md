@@ -2,6 +2,10 @@
 
 Developer notes for **libdmotservices** — the umbrella project that houses the reusable C and Java utilities backing several samples (WiFiEqu, CLI demos, servlet helpers).
 
+## Current stage
+- Cross-language reboot is healthy: C and Java modules ship stable APIs, the Python helpers are live, and JavaScript utilities just landed for pkixwebadm.
+- Active work tracks language parity (Python + JS ergonomics) and shared tooling so version bumps, Make targets, and doc refreshes stay aligned across the tree.
+
 ## Current File Layout
 ```
 libdmotservices/

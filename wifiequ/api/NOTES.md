@@ -2,6 +2,10 @@
 
 Developer notes for the WiFiEqu API contract. Keep this file aligned with `openapi.yaml` so every module implements the same surface.
 
+## Current stage
+- v1 endpoints (`/channels`, `/stats`, `/channels/stream`) are implemented in the Linux daemon and captured in the spec + generated docs.
+- Contract stewardship now concentrates on linting, changelog hygiene, and codegen recipes so Windows/Angular clients can come online without schema surprises.
+
 ## Current File Layout
 ```
 api/

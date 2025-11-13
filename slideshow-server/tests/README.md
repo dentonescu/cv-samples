@@ -1,10 +1,13 @@
 # slideshow-server tests
 
-The `tests` directory houses the pytest suite that validates the slideshow server package.
+Pytest suite that exercises both the media helpers and the HTTP handler.
 
 ## Structure
 
-- `test_slideshow_server.py` — end-to-end coverage for media discovery, HTML rendering, handler configuration, ffmpeg streaming, and error handling.
+| File | Coverage |
+| --- | --- |
+| `test_media.py` | Media discovery edge cases, asset loading, and `ffmpeg` command generation. |
+| `test_server.py` | Handler factory behaviour, index rendering, and streaming fallbacks when files are missing. |
 
 ## Running the suite
 
