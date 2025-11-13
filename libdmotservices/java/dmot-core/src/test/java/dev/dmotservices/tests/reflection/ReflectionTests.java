@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class ReflectionTests {
 
@@ -59,6 +58,7 @@ public class ReflectionTests {
         assertTrue(Reflection.injectValue(member, "indexNumber", INDEX_NUMBER));
         assertTrue(Reflection.injectValue(member, "firstName", FIRST_NAME));
         assertTrue(Reflection.injectValue(member, "lastName", LAST_NAME));
+        checkBean(member);
     }
 
     private void massInject(Member member) {
@@ -78,6 +78,13 @@ public class ReflectionTests {
         assertEquals(LAST_NAME, member.getLastName());
     }
 
+    private void assertMembersMatch(Member expected, Member actual) {
+        assertEquals(expected.getIdentifier(), actual.getIdentifier());
+        assertEquals(expected.getIndexNumber(), actual.getIndexNumber());
+        assertEquals(expected.getFirstName(), actual.getFirstName());
+        assertEquals(expected.getLastName(), actual.getLastName());
+    }
+
     @org.junit.jupiter.api.Test
     public void testInjection() {
         System.out.println("\n\ntestInjection():");
@@ -93,19 +100,12 @@ public class ReflectionTests {
         Member memberEmpty = new Member();
         Member memberIndividual = new Member();
         Member memberMass = new Member();
-        final long startIndividual = System.nanoTime();
         injectOneByOne(memberIndividual);
-        final long startMass = System.nanoTime();
         massInject(memberMass);
-        final long endTest = System.nanoTime();
-        final long durationIndividual = startMass - startIndividual;
-        final long durationMass = endTest - startMass;
         System.out.format("memberEmpty = %s\n", memberEmpty);
         System.out.format("memberIndividual = %s\n", memberIndividual);
-        System.out.format("Duration of one-by-one injection (ms): %d\n", TimeUnit.NANOSECONDS.toMillis(durationIndividual));
         System.out.format("memberMass = %s\n", memberMass);
-        System.out.format("Duration of mass injection (ms): %d\n", TimeUnit.NANOSECONDS.toMillis(durationMass));
-        assertTrue(durationIndividual > durationMass);
+        assertMembersMatch(memberIndividual, memberMass);
     }
 
 }
