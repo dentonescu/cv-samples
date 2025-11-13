@@ -1,12 +1,12 @@
 import logging
 from copy import deepcopy
 from logging.config import dictConfig
-
-from . import PROJECT_NAME
+from pkixwebadm import PROJECT_NAME
 
 DEFAULT_LOG_LEVEL_NAME = "INFO"
 CONSOLE_ERROR = "stderr"
 CONSOLE_NORMAL = "stdout"
+
 
 class _MaxLevelFilter(logging.Filter):
     """Filter that lets records through up to and including ``max_level``."""
@@ -17,6 +17,7 @@ class _MaxLevelFilter(logging.Filter):
 
     def filter(self, record: logging.LogRecord) -> bool:
         return record.levelno <= self.max_level
+
 
 LOGGING_CONFIG = {
     "version": 1,
@@ -46,7 +47,10 @@ LOGGING_CONFIG = {
         },
     },
     "loggers": {
-        PROJECT_NAME: {"handlers": [CONSOLE_NORMAL, CONSOLE_ERROR], "level": DEFAULT_LOG_LEVEL_NAME},
+        PROJECT_NAME: {
+            "handlers": [CONSOLE_NORMAL, CONSOLE_ERROR],
+            "level": DEFAULT_LOG_LEVEL_NAME,
+        },
         "uvicorn.error": {
             "handlers": [CONSOLE_NORMAL, CONSOLE_ERROR],
             "level": DEFAULT_LOG_LEVEL_NAME,
@@ -60,6 +64,7 @@ LOGGING_CONFIG = {
     },
     "root": {"handlers": [CONSOLE_NORMAL, CONSOLE_ERROR], "level": "WARNING"},
 }
+
 
 def configure_logging(level: int | None = None) -> None:
     config = deepcopy(LOGGING_CONFIG)

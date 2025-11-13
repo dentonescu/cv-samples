@@ -8,7 +8,7 @@ Small self-contained certificate inventory web app that will track X.509 expirat
 - Jinja templates render project metadata and surface the certificate-ingestion widget powered by the vendored libdmotservices JS helpers; when the template loader fails the app falls back to a static error page.
 - `pkixwebadm.security` now exposes immutable credential/identity models plus the native authentication manager (cookie sessions). The placeholder OIDC backend lives in the same tree so future slices can fill it in without refactoring imports.
 - Utility scripts (see [`scripts/`](scripts/README.md)) help bootstrap admin accounts by producing throwaway passwords + bcrypt hashes.
-- Docker image layout, background schedulers, and notification channels are still being designed.
+- Docker image layout, background schedulers, and notification channels are still being designed and will land after the MVP feature set is complete.
 
 ## Getting started (developer preview)
 - Dependencies are tracked in `pyproject.toml`; install them into your virtual environment with `python -m pip install -e .` from this directory.
@@ -37,21 +37,29 @@ Small self-contained certificate inventory web app that will track X.509 expirat
 ## Why build it
 Keeping TLS certificates fresh across hobby projects is still a manual, spreadsheet-driven process. pkixwebadm will ingest PEM/DER files or reach out to endpoints via `openssl s_client`, capture the full chain, and surface the data in a concise dashboard with calendar exports and reminder hooks.
 
+## Minimum Viable Product (MVP) scope
+The first shippable version focuses on core workflows; once these are done we can revisit containerisation and automation:
+- Bootstrap admin user login with session management and hashed credentials.
+- Ingestion of uploaded certificates and remote endpoints (URLs), including drag/drop + URL widgets.
+- Persistence of certificates and their metadata to the database (SQLite + SQLAlchemy models/migrations).
+- List view that surfaces certificate expiries with filtering/sorting.
+- Calendar view that visualises upcoming expiries.
+
 ## Planned milestones
  1. **HTTP app foundation** ✅ _in progress_
    - [x] FastAPI app factory mounting static files.
    - [x] Root view renders `ROOT.html` with project metadata.
    - [x] CLI `serve` command and `--help-all` helper (powered by `libdmotservices`).
-   - [ ] Docker image baseline.
-2. **Ingestion & storage foundation**
-   - Accept drag-and-drop uploads and local path imports for PEM/DER material.
-   - Normalise certificate metadata (issuer, subject, SANs, key usage, chain depth) into SQLite via SQLAlchemy models.
-   - Introduce FastAPI endpoints and server-rendered pages for viewing stored certificates.
-3. **Expiry visibility**
-   - Build calendar and list summaries of upcoming expirations, including filters/tags for ownership notes.
-   - Generate an ICS feed (daily cron) that external calendar clients can subscribe to.
+   - [ ] Docker image baseline (post-MVP).
+2. **MVP feature slices**
+   - Bootstrap admin login/session flows plus CLI helpers for seed credentials.
+   - Accept drag-and-drop uploads and remote URL imports for PEM/DER material.
+   - Normalise certificate metadata (issuer, subject, SANs, key usage, chain depth) into SQLite via SQLAlchemy models and persist it through FastAPI ingestion endpoints.
+   - Surface list and calendar views of upcoming expirations, including basic filters or tags for ownership notes.
+3. **Post-MVP visibility & polish**
+   - Generate an optional ICS feed (daily cron) that external calendar clients can subscribe to.
    - Add lightweight trust diagnostics (basic chain validation, OCSP probe placeholders).
-4. **Automation and packaging**
+4. **Post-MVP automation and packaging**
    - Schedule re-checks with APScheduler to refresh endpoint certificates on a configurable cadence.
    - Publish a non-root Docker image with health checks and a bind-mounted SQLite database directory.
    - Explore optional e-mail/webhook notifications for last-mile reminders.

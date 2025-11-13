@@ -2,6 +2,10 @@
 
 Developer notes for the Null Cipher single-page app. Captures the roadmap, crypto references, and UI considerations used while iterating on the demo.
 
+## Current stage
+- Core cipher implementation and UI shell are stable and published in the portfolio.
+- Work-in-progress items focus on improved documentation, optional explain mode, and UX polish before introducing automated tests.
+
 ## Current File Layout
 ```
 null-cipher/

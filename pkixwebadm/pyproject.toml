@@ -5,6 +5,7 @@ dependencies = [
     "bcrypt",
     "fastapi",
     "jinja2",
+    "pydantic",
     "pydantic-settings",
     "uvicorn[standard]",
 ]

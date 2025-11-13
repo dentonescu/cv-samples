@@ -2,6 +2,10 @@
 
 Developer notes for `slideshow-server`, the Python HTTP slideshow generator. This documents the build/test plan, design decisions, and future enhancements.
 
+## Current stage
+- Feature-complete for demos: FastAPI backend, CLI, Docker packaging, and pytest suites are live.
+- Current focus is UI polish, caching options, and broader test coverage while keeping deployment guides current.
+
 ## Current File Layout
 ```
 slideshow-server/

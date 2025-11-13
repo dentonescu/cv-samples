@@ -9,8 +9,7 @@ import argparse
 import uvicorn
 import sys
 
-from . import VERSION
-from .config import get_settings
+from pkixwebadm import get_settings
 from libdmotservices import print_help_all
 from typing import Sequence
 
@@ -24,8 +23,12 @@ def build_arg_parser() -> tuple[argparse.ArgumentParser, argparse._SubParsersAct
         A tuple containing the configured ``ArgumentParser`` and the associated
         ``_SubParsersAction`` so callers can interact with the registered commands.
     """
-    parser = argparse.ArgumentParser(description="pkixwebadm X.509 web administration tool")
-    parser.add_argument("--help-all", action="store_true", help="Full help for all commands")
+    parser = argparse.ArgumentParser(
+        description="pkixwebadm X.509 web administration tool"
+    )
+    parser.add_argument(
+        "--help-all", action="store_true", help="Full help for all commands"
+    )
     subparsers = parser.add_subparsers(dest="command", required=False)
 
     serve = subparsers.add_parser(CMD_SERVE, help="Run the pkixwebadm web server")
@@ -43,9 +46,11 @@ def build_arg_parser() -> tuple[argparse.ArgumentParser, argparse._SubParsersAct
     )
     return parser, subparsers
 
+
 #
 # pkixwebadm entry point
 #
+
 
 def main(argv: Sequence[str] | None = None) -> None:
     """Parse CLI arguments and start the pkixwebadm web application.

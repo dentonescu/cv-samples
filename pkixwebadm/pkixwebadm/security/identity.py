@@ -27,4 +27,3 @@ class Identity(BaseModel):
     def has_role(self, role: str) -> bool:
         """Return True when the identity advertises the requested role."""
         return role in self.roles
-

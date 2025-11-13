@@ -22,4 +22,6 @@ def password_verify(password: str | None, hashed: str | None) -> bool:
 
     if not password or not hashed:
         return False
-    return bcrypt.checkpw(password.encode(DEFAULT_FILE_ENCODING), hashed.encode(DEFAULT_FILE_ENCODING))
+    return bcrypt.checkpw(
+        password.encode(DEFAULT_FILE_ENCODING), hashed.encode(DEFAULT_FILE_ENCODING)
+    )

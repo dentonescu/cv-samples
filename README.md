@@ -69,6 +69,7 @@ Skips demos requiring live hardware by setting mock mode. Handy for CI or headle
 
 ## How to use this repository
 - Every project folder has its own `README.md` with quick build or run instructions.
+- The shared documentation hub in [`docs/`](docs/README.md) links to deeper design notes (future work, Terraglean concept, prng-tools lab) so you can navigate without hunting through folders.
 - Prefer the Docker Compose workflow when you want to try the demos without installing runtimes directly. Install Docker (snap instructions included in [docker/README.md](docker/README.md)), run `docker compose up --build`, then visit `http://localhost:8081` (slideshow) and `http://localhost:8082` (WiFiEqu API). Use `docker compose down` when you're done.
 - Prefer `./dev.sh --install-deps --install-prj --build --run-tests --run-examples` for the full local check, or run the corresponding CI workflow manually from the Actions tab if you want to watch the hosted logs.
 - Code is intentionally small and instructional—suited for reading and discussion.

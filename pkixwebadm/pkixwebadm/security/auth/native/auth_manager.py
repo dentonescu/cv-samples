@@ -3,7 +3,13 @@ from __future__ import annotations
 import secrets
 from typing import Any, Mapping
 
-from pkixwebadm import AuthManager, Credentials, Identity
+from pkixwebadm import (
+    SESSION_ID_LEN,
+    AuthenticationError,
+    AuthManager,
+    Credentials,
+    Identity,
+)
 
 from .context import NativeAuthContext
 
@@ -16,9 +22,6 @@ COOKIE_ATTR_SAMESITE = "lax"
 FASTAPI_ATTR_COOKIES = "cookies"
 FASTAPI_ATTR_SET_COOKIE = "set_cookie"
 FASTAPI_ATTR_DELETE_COOKIE = "delete_cookie"
-
-class AuthenticationError(RuntimeError):
-    """Raised when native credential verification fails."""
 
 
 class NativeAuthManager(AuthManager):
@@ -33,7 +36,7 @@ class NativeAuthManager(AuthManager):
 
     @property
     def _cookie_name(self) -> str:
-        return self._ctx.settings.session_cookie_name
+        return self._ctx.settings.session_cookie_name  # env(PKIXWA_SESSION_COOKIE_NAME)
 
     def _extract_session_id(self, request: Any) -> str | None:
         """Return the session cookie value if it exists on the request."""
@@ -53,7 +56,7 @@ class NativeAuthManager(AuthManager):
             setter(
                 key=self._cookie_name,
                 value=session_id,
-                httponly=True,
+                httponly=True,  # disallow document.cookie access
                 secure=not self._ctx.settings.dev_mode,
                 samesite=COOKIE_ATTR_SAMESITE,
                 max_age=self._ctx.settings.session_ttl_seconds,
@@ -90,14 +93,14 @@ class NativeAuthManager(AuthManager):
         record = self._ctx.users.get_by_username(username)
         if record is None:
             raise AuthenticationError(ERR_INVALID_CREDENTIALS)
-        if not self._ctx.verify_password(password, record.password_hash):
+        if not self._ctx.verify_password(password, record.verification_token):
             raise AuthenticationError(ERR_INVALID_CREDENTIALS)
         return record.identity
 
     def issue_session(self, identity: Identity, response: Any) -> str:
         """Create a new session id, persist it, and set the cookie."""
 
-        session_id = secrets.token_urlsafe(32)
+        session_id = secrets.token_urlsafe(SESSION_ID_LEN)
         self._ctx.sessions.set(
             session_id,
             identity,
@@ -126,5 +129,3 @@ class NativeAuthManager(AuthManager):
         if session_id:
             self._ctx.sessions.delete(session_id)
         self._clear_cookie(response)
-
-    

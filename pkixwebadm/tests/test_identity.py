@@ -1,7 +1,6 @@
 import pytest
-from pydantic import ValidationError
-
 from pkixwebadm import Identity
+from pydantic import ValidationError
 
 
 def test_identity_is_immutable():

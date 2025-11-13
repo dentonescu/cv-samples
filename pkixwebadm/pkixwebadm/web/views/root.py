@@ -9,7 +9,7 @@ from pkixwebadm import (
     VERSION,
     Settings,
     get_error_page,
-    get_settings
+    get_settings,
 )
 
 try:
@@ -18,6 +18,7 @@ except AssertionError:
     templates = None
 
 router = APIRouter()
+
 
 @router.get("/", name="ROOT")
 async def view_root(

@@ -55,6 +55,7 @@ build/
 **/access.token
 **/connection.properties
 **/connection*.properties
+**/package-lock.json
 **/Thumbs.db*
 python/vendor
 js/dist/

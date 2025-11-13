@@ -5,14 +5,12 @@ import logging
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from libdmotservices import get_resource_base_name
-
-from .logging import configure_logging
-from . import (
+from pkixwebadm import (
     PATH_WEB_STATIC,
     PROJECT_NAME,
     URL_STATIC,
     VERSION,
-    Settings,
+    configure_logging,
     get_settings,
 )
 from .web.views import root

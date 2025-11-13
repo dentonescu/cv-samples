@@ -5,6 +5,12 @@ from typing import Any
 
 from pkixwebadm import Credentials, Identity
 
+SESSION_ID_LEN = 32
+
+
+class AuthenticationError(RuntimeError):
+    """Raised when authentication fails."""
+
 
 class AuthManager(ABC):
     """Minimal API each authentication backend must implement."""

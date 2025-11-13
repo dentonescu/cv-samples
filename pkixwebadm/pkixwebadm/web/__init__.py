@@ -24,9 +24,14 @@ URL_STATIC = "/static"
 
 # Functions
 
-def get_error_page(msg: str, status_code: int | HTTPStatus = HTTPStatus.BAD_REQUEST) -> HTMLResponse:
+
+def get_error_page(
+    msg: str, status_code: int | HTTPStatus = HTTPStatus.BAD_REQUEST
+) -> HTMLResponse:
     error_msg = msg if msg is not None else ""
-    with open(PATH_WEB_STATIC_HTML_ERROR_PAGE, "r", encoding=DEFAULT_FILE_ENCODING) as fh:
+    with open(
+        PATH_WEB_STATIC_HTML_ERROR_PAGE, "r", encoding=DEFAULT_FILE_ENCODING
+    ) as fh:
         error_page = fh.read()
     html = dedent(error_page)
     html = html.replace("{PROJECT_NAME}", PROJECT_NAME)

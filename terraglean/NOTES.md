@@ -2,6 +2,10 @@
 
 Developer notes for Terraglean — the planned map analytics service. These notes articulate the intended architecture, research tasks, and development plan before implementation begins.
 
+## Current stage
+- Still in concept validation; no source files exist beyond documentation.
+- Architecture, domain modelling, and technology choices are being refined ahead of the initial scaffold.
+
 ## Implementation Plan
 1. **Architecture validation**  
    - Finalise the technology choice (Spring Boot vs. Micronaut) by prototyping REST + persistence scaffolds.  

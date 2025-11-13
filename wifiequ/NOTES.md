@@ -2,6 +2,10 @@
 
 Developer notes for WiFiEqu. This project stitches together a family of small components (Linux daemon, Windows service, Angular client, and shared API contracts) that all speak the same JSON dialect for channel-strength data.
 
+## Current stage
+- Linux daemon, contract, and mock/live demos are production-ready for portfolio purposes.
+- Active work targets Windows-service parity, Angular visualisations, and Docker orchestration so every client consumes the shared API consistently.
+
 ## Current File Layout
 ```
 wifiequ/
