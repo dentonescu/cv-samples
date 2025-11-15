@@ -12,7 +12,7 @@ Developer notes for pkixwebadm. The aim is to keep the implementation plan visib
 
 ## Minimum Viable Product (MVP) definition
 Containerisation and automation resume once these capabilities are in place:
-- Bootstrap admin login with session cookies, hashed credentials, and seed-user helpers.
+- Authenticate a single bootstrap admin via session cookies, hashed credentials, and seed-user helpers (broader user management is explicitly post-MVP).
 - Certificate/URL ingestion endpoints that drive the drag-and-drop + remote fetch UI.
 - Persistence of certificate metadata (issuer, subject, SANs, validity window, chain ordering) into SQLite, backed by SQLAlchemy models and migrations.
 - List view and calendar view that surface upcoming expirations with lightweight filtering/tagging.
@@ -80,10 +80,10 @@ pkixwebadm/
    - Manage dependencies exclusively through `pyproject.toml`; local installs use `python -m pip install -e .`. ✅
 2. **HTTP + security foundation** – app factory, settings loader, static file serving, landing page widget, native auth contracts, and bootstrap script. ⏳ (MVP slices in progress; container baseline resumes afterwards).
 3. **Templating layer** – extend Jinja beyond the base/landing templates; add Bootstrap-powered cards, tables, and status badges.
-4. **Authentication slice**  
-   - Finalise user/session tables and Pydantic schemas.  
-   - Implement login/logout views, password hashing, session cookie handling, and `current_user` dependency.  
-   - Provide CLI utilities for user creation, password updates, and deactivation.
+4. **Authentication slice (MVP)**  
+   - Wire FastAPI login/logout views around the bootstrap admin credentials sourced from environment variables.  
+   - Issue/validate cookie-backed sessions plus a minimal `current_user` dependency.  
+   - Provide CLI utilities for regenerating the bootstrap admin password/hash.
 5. **Certificate ingestion slice**  
    - Back the drag-and-drop + URL widgets with FastAPI endpoints.  
    - Parse certificates (subject, issuer, SANs, validity window, fingerprint, chain order).  
@@ -92,13 +92,14 @@ pkixwebadm/
 7. **Calendar view & ICS** – render calendar with expiry highlights; expose optional `.ics` feed.
 8. **Background refresh (optional)** – wire APScheduler to poll endpoints and update stored metadata.
 9. **Containerisation (post-MVP)** – Dockerfile, compose setup, volume-mounted SQLite path, non-root runtime user, health check.
+10. **User management hardening (post-MVP)** – introduce DB-backed user/session stores, CRUD flows, and password rotation helpers beyond the bootstrap admin.
 
 Iterate as needed, but aim to finish each slice as a demonstrable feature before moving on.
 
 ## Implementation Timeline
 - **Bootstrap phase (complete):** repository created, planning notes captured, CI plumbing validated.
 - **HTTP foundation (active):** settings loader, FastAPI app factory, CLI `serve` command (`--help-all`), landing page templates, and error-page fallback landed; MVP feature slices in progress and container polish resumes post-MVP.
-- **Security scaffolding (active):** credential + identity models, bcrypt helpers, native `AuthManager`, and bootstrap password script delivered; backing stores + UI wiring next.
+- **Security scaffolding (active):** credential + identity models, bcrypt helpers, native `AuthManager`, and bootstrap password script delivered; bootstrap-admin wiring lands for MVP while multi-user persistence is queued post-MVP.
 
 ## Testing & QA
 - Introduce pytest early (during scaffold) with a TestClient fixture for FastAPI integration tests.

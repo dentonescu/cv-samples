@@ -1,6 +1,11 @@
 from __future__ import annotations
 
-from pydantic import BaseModel
+try:  # pragma: no cover - compat shim for pydantic v1/v2
+    from pydantic import BaseModel, ConfigDict
+except ImportError:  # pragma: no cover - pydantic v1 lacks ConfigDict
+    from pydantic import BaseModel
+
+    ConfigDict = None
 
 
 class Credentials(BaseModel):
@@ -11,5 +16,8 @@ class Credentials(BaseModel):
     token: str | None = None
     key_file: str | None = None
 
-    class Config:
-        frozen = True
+    if ConfigDict:
+        model_config = ConfigDict(frozen=True)
+    else:  # pragma: no cover - exercised only under pydantic v1
+        class Config:
+            frozen = True

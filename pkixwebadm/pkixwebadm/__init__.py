@@ -18,6 +18,7 @@ from .security.auth.auth_manager import SESSION_ID_LEN, AuthenticationError, Aut
 from .security.auth.user import UserRecord, UserRepository
 from .security.auth.session import SessionStore
 from .security.auth.native.context import NativeAuthContext
+from .security.auth.constants import REQUEST_ATTR_USERNAME, REQUEST_ATTR_PASSWORD
 from .security.auth.native.auth_manager import NativeAuthManager
 from .security.auth.native.crypto import password_hash, password_verify
 from .security.auth.native.user import (
@@ -49,6 +50,8 @@ __all__ = [
     "PATH_WEB_STATIC_HTML",
     "PATH_WEB_STATIC_HTML_ERROR_PAGE",
     "PROJECT_NAME",
+    "REQUEST_ATTR_USERNAME",
+    "REQUEST_ATTR_PASSWORD",
     "SESSION_ID_LEN",
     "URL_STATIC",
     "VERSION",

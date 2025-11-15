@@ -3,7 +3,12 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Tuple
 
-from pydantic import BaseModel, Field
+try:  # pragma: no cover - compat shim for pydantic v1/v2
+    from pydantic import BaseModel, ConfigDict, Field
+except ImportError:  # pragma: no cover - pydantic v1 lacks ConfigDict
+    from pydantic import BaseModel, Field
+
+    ConfigDict = None
 
 
 def _utcnow() -> datetime:
@@ -21,8 +26,11 @@ class Identity(BaseModel):
     display_name: str | None = None
     token: str | None = None
 
-    class Config:
-        frozen = True
+    if ConfigDict:
+        model_config = ConfigDict(frozen=True)
+    else:  # pragma: no cover - exercised only under pydantic v1
+        class Config:
+            frozen = True
 
     def has_role(self, role: str) -> bool:
         """Return True when the identity advertises the requested role."""

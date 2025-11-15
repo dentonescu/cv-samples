@@ -38,8 +38,8 @@ Small self-contained certificate inventory web app that will track X.509 expirat
 Keeping TLS certificates fresh across hobby projects is still a manual, spreadsheet-driven process. pkixwebadm will ingest PEM/DER files or reach out to endpoints via `openssl s_client`, capture the full chain, and surface the data in a concise dashboard with calendar exports and reminder hooks.
 
 ## Minimum Viable Product (MVP) scope
-The first shippable version focuses on core workflows; once these are done we can revisit containerisation and automation:
-- Bootstrap admin user login with session management and hashed credentials.
+The first shippable version focuses on core workflows; once these are done we can revisit containerisation, richer user management, and automation:
+- Authenticate a single bootstrap admin user with session management and hashed credentials (multi-user UX lands post-MVP).
 - Ingestion of uploaded certificates and remote endpoints (URLs), including drag/drop + URL widgets.
 - Persistence of certificates and their metadata to the database (SQLite + SQLAlchemy models/migrations).
 - List view that surfaces certificate expiries with filtering/sorting.
@@ -52,11 +52,12 @@ The first shippable version focuses on core workflows; once these are done we ca
    - [x] CLI `serve` command and `--help-all` helper (powered by `libdmotservices`).
    - [ ] Docker image baseline (post-MVP).
 2. **MVP feature slices**
-   - Bootstrap admin login/session flows plus CLI helpers for seed credentials.
+   - Bootstrap admin login/session flows plus CLI helpers for seed credentials (single master user only; richer user CRUD is deferred).
    - Accept drag-and-drop uploads and remote URL imports for PEM/DER material.
    - Normalise certificate metadata (issuer, subject, SANs, key usage, chain depth) into SQLite via SQLAlchemy models and persist it through FastAPI ingestion endpoints.
    - Surface list and calendar views of upcoming expirations, including basic filters or tags for ownership notes.
 3. **Post-MVP visibility & polish**
+   - Expand user management beyond the bootstrap admin (DB-backed users, CRUD UI, password rotation helpers).
    - Generate an optional ICS feed (daily cron) that external calendar clients can subscribe to.
    - Add lightweight trust diagnostics (basic chain validation, OCSP probe placeholders).
 4. **Post-MVP automation and packaging**

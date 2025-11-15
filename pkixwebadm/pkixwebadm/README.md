@@ -17,5 +17,6 @@ Generated artifacts (`__pycache__`, compiled bytecode) are cleaned by `make clea
 ## Next steps
 - Flesh out the database layer (SQLAlchemy models + migrations) ahead of ingestion.
 - Add the certificate ingestion APIs plus UI feedback loops described in [NOTES.md](../NOTES.md).
+- Keep authentication limited to the bootstrap admin for MVP; schedule broader user-management flows for post-MVP work.
 
 Return to the [project README](../README.md) for a broader overview.
