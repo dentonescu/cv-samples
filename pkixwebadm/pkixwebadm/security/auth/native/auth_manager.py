@@ -3,21 +3,27 @@ from __future__ import annotations
 import json
 import logging
 import secrets
+from fastapi import Depends
 from typing import Any, Mapping
 from urllib.parse import parse_qs
 
+from ..auth_manager import AuthenticationError, AuthManager, set_auth_manager
+from .context import NativeAuthContext
+from .crypto import password_verify
+from .user import NativeUserRepository
+from .session import get_session_store
+
 from pkixwebadm import (
+    AUTH_METHOD_NATIVE,
     DEFAULT_FILE_ENCODING,
     REQUEST_ATTR_PASSWORD,
     REQUEST_ATTR_USERNAME,
     SESSION_ID_LEN,
-    AuthenticationError,
-    AuthManager,
     Credentials,
     Identity,
+    Settings,
+    get_settings,
 )
-
-from .context import NativeAuthContext
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +40,21 @@ FASTAPI_ATTR_DELETE_COOKIE = "delete_cookie"
 TTL_SECONDS_DEFAULT = 86400  # one day
 
 
+# functions
+def get_native_auth_manager(
+    settings: Settings = Depends(get_settings),
+) -> NativeAuthManager:
+    """Provide a NativeAuthManager wired with the shared session store."""
+    context = NativeAuthContext(
+        settings=settings,
+        users=NativeUserRepository(),
+        sessions=get_session_store(),
+        verify_password=password_verify,
+    )
+    return NativeAuthManager(context)
+
+
+# classes
 class NativeAuthManager(AuthManager):
     """Credential validator + session helper for the native auth backend."""
 
@@ -82,12 +103,12 @@ class NativeAuthManager(AuthManager):
             deleter(self._cookie_name)
         else:
             raise RuntimeError("Response object does not support delete_cookie.")
-        
+
     async def _extract_credentials_from_request(
         self, request: Any
     ) -> Credentials | None:
         """Best-effort extraction of username/password pairs from the request body."""
-        
+
         # Developer's note
         # ================
         # Potential problems with this function:
@@ -106,9 +127,13 @@ class NativeAuthManager(AuthManager):
                 payload = json.loads(raw_body.decode(DEFAULT_FILE_ENCODING))
             except (ValueError, UnicodeDecodeError):
                 # could be application/x-www-form-urlencoded. e.g. in the POST body, username=someguy&password=somepassword
-                parsed = parse_qs(raw_body.decode(DEFAULT_FILE_ENCODING, errors="ignore"))
+                parsed = parse_qs(
+                    raw_body.decode(DEFAULT_FILE_ENCODING, errors="ignore")
+                )
                 if parsed:
-                    payload = {key: values[0] for key, values in parsed.items() if values}
+                    payload = {
+                        key: values[0] for key, values in parsed.items() if values
+                    }
         if not payload:
             return None
         username = payload.get(REQUEST_ATTR_USERNAME)
@@ -193,7 +218,7 @@ class NativeAuthManager(AuthManager):
         self, request: Any, response: Any, ttl_seconds: int | None = None
     ) -> bool:
         """Best-effort FastAPI helper that parses credentials, authenticates, and issues a session."""
-        
+
         # Developer's note
         # ================
         # Potential problems with this function:
@@ -209,7 +234,8 @@ class NativeAuthManager(AuthManager):
             identity = self.authenticate(credentials)
         except AuthenticationError:
             logger.debug(
-                "Authentication failed for user %s.", credentials.username or "<unknown>"
+                "Authentication failed for user %s.",
+                credentials.username or "<unknown>",
             )
             return False
         session_id = self.issue_session(
@@ -219,8 +245,13 @@ class NativeAuthManager(AuthManager):
         )
         if not session_id:
             logger.debug(
-                "Failed to issue a session for user %s.", credentials.username or "<unknown>"
+                "Failed to issue a session for user %s.",
+                credentials.username or "<unknown>",
             )
             return False
         logger.debug("Session %s issued for user %s.", session_id, credentials.username)
         return True
+
+
+# register this auth manager
+set_auth_manager(AUTH_METHOD_NATIVE, get_native_auth_manager)

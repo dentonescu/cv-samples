@@ -10,16 +10,24 @@ VERSION: str = (
     .strip()
 )
 
-from .config import Settings, get_settings
+from .config import AUTH_METHOD_NATIVE, AUTH_METHOD_OIDC, Settings, get_settings
 from .logging import configure_logging
-from .security.credentials import Credentials
-from .security.identity import Identity
-from .security.auth.auth_manager import SESSION_ID_LEN, AuthenticationError, AuthManager
+from .security.auth.credentials import Credentials
+from .security.auth.identity import Identity
+from .security.auth.constants import (
+    REQUEST_ATTR_USERNAME,
+    REQUEST_ATTR_PASSWORD,
+    SESSION_ID_LEN,
+)
+from .security.auth.auth_manager import (
+    AuthenticationError,
+    AuthManager,
+    get_auth_manager
+)
 from .security.auth.user import UserRecord, UserRepository
-from .security.auth.session import SessionStore
 from .security.auth.native.context import NativeAuthContext
-from .security.auth.constants import REQUEST_ATTR_USERNAME, REQUEST_ATTR_PASSWORD
-from .security.auth.native.auth_manager import NativeAuthManager
+from .security.auth.native.session import SessionStore, get_session_store
+from .security.auth.native.auth_manager import NativeAuthManager, get_native_auth_manager
 from .security.auth.native.crypto import password_hash, password_verify
 from .security.auth.native.user import (
     NativeUserRepository,
@@ -27,22 +35,35 @@ from .security.auth.native.user import (
 )
 
 from .web import (
+    ENDPOINT_LOGIN,
+    ENDPOINT_LOGOUT,
     PAGE_WEB_ERROR,
+    PAGE_WEB_LOGIN,
     PAGE_WEB_ROOT,
     PATH_WEB_ROOT,
     PATH_WEB_TEMPLATES,
     PATH_WEB_STATIC,
     PATH_WEB_STATIC_HTML,
     PATH_WEB_STATIC_HTML_ERROR_PAGE,
+    QUERY_PARAM_NEXT,
+    URL_AUTH,
+    URL_LOGIN,
+    URL_ROOT,
     URL_STATIC,
     get_error_page,
+    require_current_user,
 )
 
 from .app import create_app
 from .cli import main  # noqa: E402
 
 __all__ = [
+    "AUTH_METHOD_NATIVE",
+    "AUTH_METHOD_OIDC",
+    "ENDPOINT_LOGIN",
+    "ENDPOINT_LOGOUT",
     "PAGE_WEB_ERROR",
+    "PAGE_WEB_LOGIN",
     "PAGE_WEB_ROOT",
     "PATH_WEB_ROOT",
     "PATH_WEB_TEMPLATES",
@@ -50,9 +71,14 @@ __all__ = [
     "PATH_WEB_STATIC_HTML",
     "PATH_WEB_STATIC_HTML_ERROR_PAGE",
     "PROJECT_NAME",
+    "QUERY_PARAM_NEXT",
     "REQUEST_ATTR_USERNAME",
     "REQUEST_ATTR_PASSWORD",
     "SESSION_ID_LEN",
+    "SESSION_STORE",
+    "URL_AUTH",
+    "URL_LOGIN",
+    "URL_ROOT",
     "URL_STATIC",
     "VERSION",
     "AuthenticationError",
@@ -69,9 +95,14 @@ __all__ = [
     "build_bootstrap_admin_record",
     "configure_logging",
     "create_app",
+    "get_auth_manager",
     "get_error_page",
+    "get_native_auth_manager",
+    "get_session_store",
     "get_settings",
     "main",
     "password_hash",
     "password_verify",
+    "require_current_user",
+    "set_auth_manager",
 ]

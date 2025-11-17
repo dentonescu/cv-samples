@@ -13,7 +13,7 @@ from pkixwebadm import (
     configure_logging,
     get_settings,
 )
-from .web.views import root
+from .web.views import auth, root
 
 
 def create_app() -> FastAPI:
@@ -31,5 +31,6 @@ def create_app() -> FastAPI:
         StaticFiles(directory=str(PATH_WEB_STATIC)),
         name=get_resource_base_name(str(PATH_WEB_STATIC)),
     )
+    app.include_router(auth.router)
     app.include_router(root.router)
     return app

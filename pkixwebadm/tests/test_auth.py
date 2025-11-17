@@ -10,6 +10,8 @@ from pkixwebadm import (
     NativeAuthManager,
     NativeAuthContext,
     NativeUserRepository,
+    SessionStore,
+    get_auth_manager,
     get_settings,
 )
 
@@ -30,9 +32,10 @@ SIMULATED_PASSWORD = "THIS_IS_A_SIMULATED_PASSWORD__DEFINITElY_NOT_A_REAL_LIFE_P
 BOOTSTRAP_ADMIN_USER_ID = "u007"
 BOOTSTRAP_ADMIN_USER_NAME = "admin"
 PKIXWA_SETTINGS = get_settings()
-SESSION_IDENTIFIER_BOOTSTRAP_ADMIN = (
+SESSION_ID_BOOTSTRAP_ADMIN = (
     "some-identification-string-which-corresponds-to-the-session-of-the-logged-in-user"
 )
+SESSION_ID_TEST = "some-session-id"
 
 #
 # Helpers
@@ -99,7 +102,7 @@ def _generate_context_with_logged_in_admin_session():
     ctx = NativeAuthContext(
         settings=PKIXWA_SETTINGS,
         users=NativeUserRepository(),
-        sessions=_MockSessions({SESSION_IDENTIFIER_BOOTSTRAP_ADMIN: identity}),
+        sessions=_MockSessions({SESSION_ID_BOOTSTRAP_ADMIN: identity}),
         verify_password=lambda *args, **kwargs: True,  # on-the-fly method which signals the password's always correct
     )
     return ctx
@@ -162,7 +165,7 @@ def test_authenticate_bootstrap_admin_raises_authentication_error():
 def test_is_logged_in_returns_true():
     ctx = _generate_context_with_logged_in_admin_session()
     manager = NativeAuthManager(ctx)
-    req = _generate_request(SESSION_IDENTIFIER_BOOTSTRAP_ADMIN)
+    req = _generate_request(SESSION_ID_BOOTSTRAP_ADMIN)
     assert manager.is_logged_in(req) is True
 
 
@@ -176,7 +179,7 @@ def test_is_logged_in_returns_false():
 def test_gets_current_user():
     ctx = _generate_context_with_logged_in_admin_session()
     manager = NativeAuthManager(ctx)
-    req = _generate_request(SESSION_IDENTIFIER_BOOTSTRAP_ADMIN)
+    req = _generate_request(SESSION_ID_BOOTSTRAP_ADMIN)
     identity = manager.get_current_user(req)
     assert identity.user_id == BOOTSTRAP_ADMIN_USER_ID
 
@@ -203,8 +206,32 @@ async def test_login_fails_when_bad_credentials_supplied(monkeypatch):
 def test_logs_user_out_correctly():
     ctx = _generate_context_with_logged_in_admin_session()
     manager = NativeAuthManager(ctx)
-    req = _generate_request(SESSION_IDENTIFIER_BOOTSTRAP_ADMIN)
+    req = _generate_request(SESSION_ID_BOOTSTRAP_ADMIN)
     assert manager.is_logged_in(req) is True
     resp = Response()
     manager.log_out(req, resp)
     assert manager.is_logged_in(req) is False
+
+
+def test_session_store_honours_set_and_delete():
+    store = SessionStore()
+    identity = Identity(user_id="2512", username="santa_claus")
+    store.set(SESSION_ID_TEST, identity)
+    assert store.get(SESSION_ID_TEST) == identity
+    store.delete(SESSION_ID_TEST)
+    assert store.get(SESSION_ID_TEST) is None
+
+
+def test_session_store_honours_ttl():
+    store = SessionStore()
+    identity = Identity(user_id="001", username="hokage")
+    store.set(SESSION_ID_TEST, identity, ttl_seconds=0)
+    assert store.get(SESSION_ID_TEST) is None
+
+
+def test_get_auth_manager():
+    auth_manager = get_auth_manager(PKIXWA_SETTINGS)
+    assert auth_manager is not None
+    kind = type(auth_manager).__name__
+    logger.debug("auth_manager kind = %s", kind)
+    assert kind in ("NativeAuthManager")  # expand this list when more are added

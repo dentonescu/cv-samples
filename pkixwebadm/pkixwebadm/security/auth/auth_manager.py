@@ -1,13 +1,16 @@
 """Contracts shared by all authentication managers."""
 
 from abc import ABC, abstractmethod
+from fastapi import Depends
 from typing import Any
 
-from pkixwebadm import Credentials, Identity
+from pkixwebadm import AUTH_METHOD_NATIVE, Credentials, Identity, Settings, get_settings
 
-SESSION_ID_LEN = 32
+# internals
+_AUTH_MANAGER_REGISTRY = {AUTH_METHOD_NATIVE: None}
 
 
+# classes
 class AuthenticationError(RuntimeError):
     """Raised when authentication fails."""
 
@@ -30,3 +33,21 @@ class AuthManager(ABC):
     @abstractmethod
     def log_out(self, request: Any, response: Any) -> None:
         """Tear down the active session and clear cookies/headers."""
+
+
+# functions
+def get_auth_manager(
+    settings: Settings = Depends(get_settings),
+) -> AuthManager:
+    """Provide an AuthManager based on the configuration."""
+    if settings.auth_method == AUTH_METHOD_NATIVE:
+        factory = _AUTH_MANAGER_REGISTRY.get(AUTH_METHOD_NATIVE)
+        if not callable(factory):
+            raise RuntimeError("No auth manager configured.")
+        return factory(settings)
+
+    return None
+
+
+def set_auth_manager(name, factory):
+    _AUTH_MANAGER_REGISTRY[name] = factory

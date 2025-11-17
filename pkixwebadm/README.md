@@ -6,6 +6,7 @@ Small self-contained certificate inventory web app that will track X.509 expirat
 - HTTP foundation milestone is underway: the FastAPI app factory mounts static assets, renders the root template, and exposes a CLI `serve` command.
 - Configuration lives in `config.Settings`; unit tests assert default/env overrides.
 - Jinja templates render project metadata and surface the certificate-ingestion widget powered by the vendored libdmotservices JS helpers; when the template loader fails the app falls back to a static error page.
+- Login experience now gates the root view: `/auth/login` renders a basic form, POSTs to the native auth manager, and establishes cookie-backed sessions before redirecting to the dashboard. For the MVP this relies on an in-memory session store; durable session persistence lands once multi-user support becomes a priority.
 - `pkixwebadm.security` now exposes immutable credential/identity models plus the native authentication manager (cookie sessions). The placeholder OIDC backend lives in the same tree so future slices can fill it in without refactoring imports.
 - Utility scripts (see [`scripts/`](scripts/README.md)) help bootstrap admin accounts by producing throwaway passwords + bcrypt hashes.
 - Docker image layout, background schedulers, and notification channels are still being designed and will land after the MVP feature set is complete.
@@ -71,6 +72,7 @@ The first shippable version focuses on core workflows; once these are done we ca
 - Define the minimal RBAC/auth approach for an admin-only deployment (session cookie vs. token).
 - Add UI validation/feedback on the landing page (toasts/snackbars for drag-and-drop errors, success states, etc.).
 - Plan CSRF protections and server-side MIME-type validation ahead of wiring the ingestion endpoints.
+- Regenerate the OpenAPI YAML (`api/openapi.yaml`) so the docs include the new `/auth/*` routes before the next coding session.
 
 ## Navigation
 - Package internals: [`pkixwebadm/README.md`](pkixwebadm/README.md)

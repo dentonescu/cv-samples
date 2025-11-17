@@ -100,6 +100,7 @@ Iterate as needed, but aim to finish each slice as a demonstrable feature before
 - **Bootstrap phase (complete):** repository created, planning notes captured, CI plumbing validated.
 - **HTTP foundation (active):** settings loader, FastAPI app factory, CLI `serve` command (`--help-all`), landing page templates, and error-page fallback landed; MVP feature slices in progress and container polish resumes post-MVP.
 - **Security scaffolding (active):** credential + identity models, bcrypt helpers, native `AuthManager`, and bootstrap password script delivered; bootstrap-admin wiring lands for MVP while multi-user persistence is queued post-MVP.
+- **Login enforcement (new):** `/auth/login` renders a basic form, POSTs to the native backend, and protects the root view via dependency guards; logout tears down sessions ahead of future multi-user work. Sessions are stored in-memory for the bootstrap admin during the MVP and will move to durable persistence once multi-user flows are planned.
 
 ## Testing & QA
 - Introduce pytest early (during scaffold) with a TestClient fixture for FastAPI integration tests.
@@ -120,3 +121,4 @@ Iterate as needed, but aim to finish each slice as a demonstrable feature before
 - Scheduler- and notification-related features remain intentionally deferred until the core ingestion and expiry views stabilise.
 - Ingestion UI should surface validation feedback (toasts, inline errors) so drag/drop failures are obvious.
 - Backend ingestion endpoints must enforce CSRF protection and server-side MIME validation before accepting uploads or remote fetches.
+- Documentation stays in lock-step with the code: regenerate `api/openapi.yaml` after each routing change so the public spec stays accurate (next run due immediately after this doc update).

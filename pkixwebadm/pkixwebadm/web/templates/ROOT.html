@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 
 {% block body %}
-  <main class="container">
-    <header class="py-5">
-      <h1 class="display-4">{{ project_name }}</h1>
-      <p class="lead">Version {{ project_version }}</p>
-    </header>
-    {% include "widgets/certificate_ingest.html" %}
-    <section>
-      <p>
-        Under construction! More to come.
-      </p>
-    </section>
-  </main>
+<main class="container">
+  <header class="py-5">
+    <h1 class="display-4">{{ project_name }}</h1>
+    <p class="lead">Version {{ project_version }}</p>
+  </header>
+  {% include "widgets/certificate_ingest.html" %}
+  <section>
+    <p>
+      Under construction! More to come.
+    </p>
+  </section>
+</main>
 {% endblock %}

@@ -1,7 +1,11 @@
 from __future__ import annotations
 
-from pkixwebadm import Identity, UserRecord, UserRepository, get_settings
 from types import SimpleNamespace
+
+from ..identity import Identity
+from ..user import UserRecord, UserRepository
+from pkixwebadm import get_settings
+
 
 BOOTSTRAP_ADMIN_ID = "bootstrap-admin"
 BOOTSTRAP_ADMIN_DISPLAY_NAME = "Administrator"

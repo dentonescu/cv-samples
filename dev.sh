@@ -59,8 +59,8 @@ ensure_dependencies() {
     sudo apt-get update
     for pkg in build-essential pkg-config libcmocka-dev libmicrohttpd-dev \
         libnl-3-dev libnl-genl-3-dev openjdk-17-jdk nodejs python3-bcrypt python3-fastapi \
-        python3-jinja2 python3-pip python3-pydantic python3-pydantic-settings python3-pytest \
-        python3-sqlalchemy python3-uvicorn
+        python3-jinja2 python3-multipart python3-pip python3-pydantic python3-pydantic-settings \
+        python3-pytest python3-sqlalchemy python3-uvicorn
     do
         if dpkg-query -W -f='${Status}' "$pkg" >/dev/null 2>&1; then
             printf "${ANSI_RESET}${ANSI_GREEN}Package %s already installed; skipping reinstall.${ANSI_RESET}\n" "$pkg"
@@ -222,6 +222,7 @@ else
     echo "Warning: JAVA_HOME ($JAVA_HOME) not found; skipping export." >&2
 fi
 echo "JAVA_HOME=$JAVA_HOME"
+echo "PYTHONPATH=$PYTHONPATH"
 
 ## git operations
 [ ! "$do_git_diff" -eq 1 ] || git_op diff

@@ -5,6 +5,7 @@ This directory contains the growing pytest suite for pkixwebadm.
 ## Structure
 - `test_config.py` – ensures the `Settings` loader pulls defaults and honours environment overrides.
 - `test_http.py` – exercises the HTML error-page helper until the TestClient smoke tests are re-enabled.
+- `test_auth.py` – covers the native auth manager (bootstrap admin workflow, session helpers, in-memory store).
 - `test_credentials.py` / `test_identity.py` – cover the Pydantic security primitives.
 - `test_crypto.py` – verifies bcrypt helpers respect the configured round count and fail fast on missing inputs.
 - `test_libdmotservices.py` – captures integration behaviour when the project consumes helpers from the sibling `libdmotservices` library.
