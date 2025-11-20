@@ -35,6 +35,7 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 - `.github/workflows/cv-samples-ci.yml` mirrors the `dev.sh` flow on GitHub Actions: dependencies → build → tests → example runs. The pipeline ensures every project stays buildable on a clean Ubuntu runner (the Wi-Fi scan demo skips gracefully when no wireless interface is available).
 - `docker-compose.yml` spins up containerised demos (`slideshow-server` on host port `8081`, `wifiequ` on host port `8082`) using the project-specific Dockerfiles. Great for a one-command tour: `docker compose up --build`. See [Docker stack notes](docker/README.md) for the full command list, group permissions, and snap service tips.
 - `.gitattributes` files have been introduced across the projects to normalise line endings and enforce consistent attributes, making diffs reliable across platforms.
+- All major projects now ship CMakeLists alongside their original Make/Ant flows. A typical configure/build is `cmake -S <project> -B <project>/build -G Ninja && cmake --build <project>/build` with target names that mirror the Makefile habits (`*_dist`, `*_test`, example/demo helpers).
 
 ### `dev.sh` quick recipes
 ```bash

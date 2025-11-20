@@ -21,15 +21,17 @@ ARFLAGS 		:= rcs
 LDLIBS 			:= -lcmocka -lm		# link with cmocka, math
 
 ## outputs
-BIN_DIR			:= $(CURDIR)/bin
-LOG_DIR			:= $(CURDIR)/logs
-LIB_DIR			:= $(CURDIR)/lib
+BUILD_DIR		:= $(CURDIR)/build
+BIN_DIR			:= $(BUILD_DIR)/bin
+LOG_DIR			:= $(BUILD_DIR)/logs
+LIB_DIR			:= $(BUILD_DIR)/lib
+OBJ_DIR			:= $(BUILD_DIR)/obj
 LIB 			:= $(LIB_DIR)/libdmotservices_c-$(VERSION).a
 TESTS_FAILED	:= $(LOG_DIR)/tests.failed
 
 ## sources
 SRC				:= $(shell find src -type f -name '*.c')
-OBJ 			:= $(SRC:.c=.o)
+OBJ 			:= $(patsubst src/%.c,$(OBJ_DIR)/%.o,$(SRC))
 DEPS			:= $(OBJ:.o=.d)
 
 ## ANSI
@@ -40,6 +42,7 @@ prebuild:
 	@mkdir -p "$(BIN_DIR)"
 	@mkdir -p "$(LIB_DIR)"
 	@mkdir -p "$(LOG_DIR)"
+	@mkdir -p "$(OBJ_DIR)"
                                                                                                                                           
 
 #####################################################################################
@@ -47,11 +50,11 @@ prebuild:
 #####################################################################################
 all: prebuild lib
 
-lib: $(OBJ)
+lib: prebuild $(OBJ)
 	@echo "AR $(LIB)"
 	$(AR) $(ARFLAGS) $(LIB) $(OBJ)
 
-%.o: %.c
+$(OBJ_DIR)/%.o: src/%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 
@@ -62,19 +65,19 @@ lib: $(OBJ)
 ## builds the test cases
 #####################################################################################
 TEST_SRCS := $(wildcard tests/*.c)
-TEST_BINS := $(TEST_SRCS:.c=)
+TEST_BINS := $(patsubst tests/%.c,$(BIN_DIR)/tests/%,$(TEST_SRCS))
 
-$(TEST_BINS): %: %.c lib
+$(BIN_DIR)/tests/%: tests/%.c lib
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ $< $(LIB) $(LDLIBS)
 	@chmod +x "$@";
-	@[ ! "$@" ] || mv -vf "$@" "$(BIN_DIR)";
 
-tests: $(TEST_BINS)
+tests: prebuild $(TEST_BINS)
 
 ## executes each test case after building
 test: tests
 	@[ ! -f "$(TESTS_FAILED)" ] || rm "$(TESTS_FAILED)"
-	@find "$(BIN_DIR)" -name "test_*" -exec sh -c 'chmod +x "$$1" && "$$1" || touch "$(TESTS_FAILED)"' _ {} \;;
+	@find "$(BIN_DIR)" -name "test_*" -not -name "*.d" -exec sh -c 'chmod +x "$$1" && "$$1" || touch "$(TESTS_FAILED)"' _ {} \;;
 	@if [ -f "$(TESTS_FAILED)" ]; then \
 		rm "$(TESTS_FAILED)"; \
 		echo "$(ANSI_RESET)$(ANSI_RED)ERROR: At least one unit test failed.$(ANSI_RESET)"; \
@@ -87,31 +90,25 @@ test: tests
 ## builds the examples
 #####################################################################################
 EX_SRCS := $(wildcard examples/*.c)
-EX_BINS := $(EX_SRCS:.c=)
+EX_BINS := $(patsubst examples/%.c,$(BIN_DIR)/examples/%,$(EX_SRCS))
 
-$(EX_BINS): %: %.c lib
+$(BIN_DIR)/examples/%: examples/%.c lib
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ $< $(LIB) $(LDLIBS)
 	@if [ -f "$@" ]; then \
 		chmod +x "$@"; \
-		mv -vf "$@" "$(BIN_DIR)"; \
 	fi
 
-examples: $(EX_BINS)
+examples: prebuild $(EX_BINS)
 
 ## demonstrates the examples
 example-demo: examples
 	@set -e; \
-	find "$(BIN_DIR)" -name "ex_*" -exec sh -c 'chmod +x "$$1" && "$$1"' _ {} \;;
+	find "$(BIN_DIR)" -name "ex_*" -not -name "*.d" -exec sh -c 'chmod +x "$$1" && "$$1"' _ {} \;;
 	@find -name "*.log" -not -path "**/logs/*" -exec mv -vf "{}" "$(LOG_DIR)" \;
 
 #####################################################################################
 ## Housekeeping
 #####################################################################################
 clean:
-	@$(RM) $(BIN_DIR)/* $(LOG_DIR)/* $(OBJ) $(LIB) $(DEPS) $(TEST_BINS) $(EX_BINS)
-	@find examples -name "*.d" -exec $(RM) {} \;
-	@find tests -name "*.d" -exec $(RM) {} \;
-	@rm -Rf "$(BIN_DIR)"
-	@rm -Rf "$(LIB_DIR)"
-	@rm -Rf "$(LOG_DIR)"
-
+	@rm -rf "$(BUILD_DIR)"

@@ -1,0 +1,103 @@
+openapi: 3.0.3
+info:
+  title: pkixwebadm
+  version: 0.1.0
+  description: >
+    Minimal FastAPI surface for pkixwebadm's developer-preview build.
+servers:
+  - url: http://localhost:8080
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: PKIXWA_SESSION
+paths:
+  /auth/login:
+    get:
+      summary: Show the login form
+      responses:
+        "200":
+          description: Login form HTML.
+          content:
+            text/html:
+              schema:
+                type: string
+    post:
+      summary: Authenticate a user with the native backend
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required: [username, password]
+      responses:
+        "303":
+          description: >
+            Successful login. Response redirects either to `/` or to the path
+            supplied via the `next` query parameter.
+        "401":
+          description: Invalid credentials; login form re-rendered with an error message.
+  /auth/logout:
+    post:
+      summary: Destroy the current session
+      description: >
+        Removes the session cookie and redirects back to `/auth/login`.
+      responses:
+        "303":
+          description: Logout completed; browser redirected to `/auth/login`.
+  /api/v1/certificates/file:
+    post:
+      summary: (planned) Upload certificates via multipart/form-data
+      description: >
+        Planned ingestion endpoint backing the drag-and-drop UI. Accepts one or more
+        PEM/DER/PFX files, normalises their metadata, and enqueues persistence.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                certificates:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        "202":
+          description: Upload accepted; parsing/persistence occurs asynchronously.
+        "400":
+          description: Validation error (unsupported file, empty payload, etc.).
+      security:
+        - sessionCookie: []
+  /api/v1/certificates/url:
+    post:
+      summary: (planned) Fetch certificate metadata from a remote endpoint
+      description: >
+        Planned endpoint backing the "Fetch from URL" widget. Schedules an outbound
+        probe (e.g., via `openssl s_client`) and returns status information.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  format: uri
+              required: [url]
+      responses:
+        "202":
+          description: Fetch job accepted; caller can poll future status endpoints.
+        "400":
+          description: Malformed URL or unsupported scheme.
+      security:
+        - sessionCookie: []

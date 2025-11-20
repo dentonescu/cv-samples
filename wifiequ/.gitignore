@@ -59,6 +59,7 @@ dkms.conf
 **/.vscode
 **/.idea
 **/.sync*
+**/build**
 **/bin
 **/dist
 **/log/

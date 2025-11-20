@@ -38,6 +38,14 @@ Videos are streamed through `ffmpeg`. Ensure it is installed when serving format
 
 Run `make dist` before packaging or publishing artifacts. The root `Makefile` gathers the resulting tarball automatically.
 
+Prefer CMake? You can configure and build with:
+
+```bash
+cmake -S . -B build -G Ninja
+cmake --build build --target slideshow_test
+cmake --build build --target slideshow_dist
+```
+
 ## Docker & Compose
 
 Build and run the containerised version (ffmpeg + bundled sample media) directly from the project root:

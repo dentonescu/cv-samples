@@ -82,6 +82,10 @@ The first shippable version focuses on core workflows; once these are done we ca
 - Scripts: [`scripts/README.md`](scripts/README.md)
 - Developer notes & implementation plan: [NOTES.md](NOTES.md)
 
+## Build/test options
+- Makefile (default): `make build`, `make test`, `make dist`, `make clean`
+- CMake alternative: `cmake -S . -B build -G Ninja && cmake --build build --target pkixwebadm_test` (or `pkixwebadm_dist`)
+
 ## Related
 - Package layout: [pkixwebadm/README.md](pkixwebadm/README.md)
 - Test suite guide: [tests/README.md](tests/README.md)

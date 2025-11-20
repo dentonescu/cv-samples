@@ -25,6 +25,7 @@ static enum MHD_Result cb_req(void *cls,
 {
     (void)cls;
     (void)version;
+    (void)con_cls;
 
     /*
      * NOTE (libmicrohttpd call sequence):

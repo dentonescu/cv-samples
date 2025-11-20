@@ -25,3 +25,4 @@ Thumbs.db
 
 # Custom
 **/_pycache__/**
+**/build**

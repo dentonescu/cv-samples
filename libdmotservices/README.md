@@ -37,6 +37,11 @@ make clean all
 # Run tests and examples
 make test
 make example-demo
+
+# Alternative: CMake (per language)
+cmake -S c/linux -B c/linux/build -G Ninja && cmake --build c/linux/build --target libdmotservices_examples
+cmake -S java -B java/build -G Ninja && cmake --build java/build --target libdmotservices_java_dist
+cmake -S python -B python/build -G Ninja && cmake --build python/build --target libdmotservices_py_test
 ```
 
 Each subproject ships with its own README and can be built independently.

@@ -5,7 +5,7 @@
     <!-- default values; can be overridden with -D on the command line -->
     <property name="libdmotservices.version" value="SNAPSHOT"/>
     <property name="project.java.home" location="/usr/lib/jvm/java-17-openjdk-amd64"/>
-    <property name="build" location="build"/>
+    <property name="build" location="build-ant"/>
     <property name="dep" location="dep"/>
     <property name="mvn" location="mvn"/>
     <target name="init">

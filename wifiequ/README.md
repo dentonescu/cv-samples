@@ -51,6 +51,9 @@ flowchart TB
 ```sh
 make clean all              # or simply: make
 make docs                   # regenerate API docs when needed
+
+# Alternative: CMake (Linux daemon)
+cmake -S linux -B linux/build -G Ninja && cmake --build linux/build --target wifiequd
 ```
 
 > Note: Documentation is no longer generated as part of `make`/`make all`; run `make docs` explicitly whenever the HTML needs to be refreshed.
@@ -67,6 +70,9 @@ make tests                  # builds the tests
 make examples               # builds the examples
 make test                   # runs the unit tests
 make example-demo           # runs the demos
+
+# CMake equivalents (Linux daemon)
+cmake --build linux/build --target wifiequ_tests    # after configuring above
 ```
 
 > Notes: Linux build depends on the local `libdmotservices` C artifacts. See that project’s README for building the library first.
