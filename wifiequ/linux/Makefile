@@ -8,8 +8,8 @@
 # locations
 ROOT 			:= $(strip $(shell pwd))
 LIB_DIR			:= ../../libdmotservices/c/linux
-ARCHIVE_DIR  	:= $(LIB_DIR)/lib
-ARCHIVE			:= $(ARCHIVE_DIR)/libdmotservices_c-0.3.0.a
+ARCHIVE_DIR  	:= $(shell find "$(LIB_DIR)" -type d -name 'lib')
+ARCHIVE			:= $(shell find "$(LIB_DIR)" -type f -name '*.a')
 CONFIG_DIR		:= $(ROOT)/etc
 CONFIG_FILE		:= wifiequd.conf
 CONFIG			:= $(CONFIG_DIR)/$(CONFIG_FILE)
