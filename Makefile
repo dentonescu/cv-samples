@@ -14,6 +14,7 @@ ROOT := $(strip $(shell pwd))
 MILESTONE := echo === 
 GATHER := 	find "${ROOT}" -name "*.a" -not -path "*/node_modules*" -type f -exec cp -v "{}" "${DIST}" \; ; \
 			find "${ROOT}" -name "build" -not -path "*/node_modules*" -type d -exec cp -vR "{}/." "${DIST}" \; ; \
+			find "${ROOT}" -path "*/build/linux" -not -path "*/node_modules*" -type d -exec cp -vR "{}/." "${DIST}" \; ; \
 			find "${ROOT}" -name "bin" -not -path "*/node_modules*" -type d -exec cp -vR "{}/." "${DIST}" \; ; \
 			find "${ROOT}" -name "*.tar.gz" -not -path "*/node_modules*" -type f -exec cp -v "{}" "${DIST}" \;
 

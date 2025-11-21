@@ -2,7 +2,7 @@
 # Usage:
 #   cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 #   cmake --build build --target txrxcli
-#   ctest --test-dir build/linux
+#   ctest --test-dir build
 
 cmake_minimum_required(VERSION 3.15)
 project(txrxcli-linux LANGUAGES CXX)
@@ -15,6 +15,7 @@ add_executable(txrxcli
     src/main.cpp
     src/protocol.cpp
     src/server/server.cpp
+    src/client/client.cpp
 )
 
 target_include_directories(txrxcli PRIVATE

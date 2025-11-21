@@ -20,4 +20,13 @@ I am building a compact, raw-TCP demo to showcase cross-platform socket programm
 - Collect simple usage examples for both platforms.
 
 ## Screenshots
-- `img/telnet-test-01.png`: manual telnet session hitting the server with API key and command framing, showing the demo-only warning and captured response. Useful as a quick visual proof the raw TCP server loop is working.
+
+Client access:
+
+![txrxcli server being accessed via its client](img/client-test-01.png)
+
+Telnet access:
+
+![txrxcli server being accessed via Telnet](img/telnet-test-01.png)
+
+Manual telnet session hitting the server with API key and command framing, showing the demo-only warning and captured response. Useful as a quick visual proof the raw TCP server loop is working.

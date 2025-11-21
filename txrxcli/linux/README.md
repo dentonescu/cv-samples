@@ -28,6 +28,7 @@ Note: protocol tests use `socketpair` and may not run in restricted sandboxes.
 ## Run
 ```
 ./txrxcli --mode server --port 9000 --key SECRET
-./txrxcli --mode client ...   # client mode pending implementation
+./txrxcli --mode client --host 127.0.0.1 --port 9000 --key SECRET --cmd "ls -l"
+./txrxcli --mode client --host example.com --port 9000 --key SECRET --cmd "uname -a"
 ```
-Server mode prints the demo-only warning and executes framed requests; client mode still needs to be implemented.
+Server mode prints the demo-only warning and executes framed requests. Client mode connects, sends the framed request, and prints exit code/stdout/stderr.

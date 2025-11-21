@@ -5,7 +5,7 @@
 CXX ?= g++
 CXXFLAGS ?= -std=c++17 -Wall -Wextra -pedantic
 INCLUDES := -Iinclude
-SRCS := $(wildcard src/*.cpp) $(wildcard src/server/*.cpp)
+SRCS := $(wildcard src/*.cpp) $(wildcard src/server/*.cpp) $(wildcard src/client/*.cpp)
 TEST_SRCS := $(wildcard tests/*.cpp) src/protocol.cpp
 BUILD_DIR ?= build
 TARGET := $(BUILD_DIR)/txrxcli

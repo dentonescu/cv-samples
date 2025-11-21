@@ -43,9 +43,15 @@ namespace txrx
     inline constexpr std::string_view kErrExpectedBlankLine = "expected blank line";
     inline constexpr std::string_view kErrInvalidApiKey = "invalid API key";
     inline constexpr std::string_view kErrInvalidCmdLen = "invalid command length";
+    inline constexpr std::string_view kErrInvalidRespLen = "invalid response length(s)";
     inline constexpr std::string_view kErrMissingApiKey = "missing API key";
     inline constexpr std::string_view kErrMissingCmdLen = "missing command length";
+    inline constexpr std::string_view kErrMissingExitCode = "missing exit code";
+    inline constexpr std::string_view kErrMissingStdoutLen = "missing stdout length";
+    inline constexpr std::string_view kErrMissingStderrLen = "missing stderr length";
     inline constexpr std::string_view kErrTruncatedCmd = "truncated command";
+    inline constexpr std::string_view kErrTruncatedStderr = "truncated stderr";
+    inline constexpr std::string_view kErrTruncatedStdout = "truncated stdout";
 
     // frame fields
     inline constexpr std::string_view kFieldApiKey = "APIKEY:";
@@ -54,11 +60,16 @@ namespace txrx
     inline constexpr std::string_view kFieldStderrLen = "STDERR-LEN:";
     inline constexpr std::string_view kFieldStdoutLen = "STDOUT-LEN:";
 
-    // Protocol helpers (blocking, simple)
+    // frame structure
+    inline constexpr size_t kFrameHeaderBytesMin = 64;
+
+    // protocol helpers (blocking, simple)
     std::string recv_n_bytes_from_sock(int fd, size_t n);
     std::optional<std::string> recv_line_from_sock(int fd);
     std::variant<Request, FrameError> decode_request_frame(int fd);
+    std::variant<Response, FrameError> decode_response_frame(int fd);
     std::string encode_response_frame(const Response &r);
+    std::string encode_request_frame(const Request &req);
     bool send_buf_to_sock(int fd, const std::string &buf);
 
 } // namespace txrx
