@@ -36,3 +36,8 @@ COMMAND-LEN:4\n
 \n
 ls -l
 ```
+
+## Navigation
+- [Docs home](README.md)
+- [Security notes](security.md)
+- [Project README](../README.md)

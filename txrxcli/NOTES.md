@@ -1,5 +1,7 @@
 # Developer Notes
 
+**Navigation:** [Project README](README.md) · [Docs](docs/README.md) · [Linux notes](linux/NOTES.md) · [Windows notes](windows/NOTES.md)
+
 ## Intent
 I am building a compact, raw-TCP demo to showcase cross-platform socket programming. The goal is to pair a Linux C++ client/server with a Windows C# client/server, all gated by a simple API key and carrying a conspicuous demo-only warning.
 

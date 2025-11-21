@@ -8,6 +8,12 @@ An intentionally small, raw-TCP demo that lets a Linux box and a Windows box sen
 - `docs/`: protocol notes, security caveats, and usage examples.
 - `NOTES.md`: personal plan/status for this portfolio project.
 
+## Navigation
+- [Linux README](linux/README.md)
+- [Windows README](windows/README.md)
+- [Docs](docs/README.md)
+- [Developer notes](NOTES.md)
+
 ## Safety first
 This project executes arbitrary commands. Use throwaway machines or VMs on a closed network. Do **not** expose it to the internet or rely on it for remote administration. It exists solely to show cross-platform socket programming and simple authentication.
 

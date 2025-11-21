@@ -1,5 +1,7 @@
 # Shared Headers
 
+**Navigation:** [Linux README](../README.md) · [Linux notes](../NOTES.md)
+
 Headers shared between the Linux client and server:
 - `protocol.hpp`: framing constants, request/response structs, and helpers to decode/encode frames and send/recv.
 - `txrxcli.hpp`: lightweight logging helpers with ANSI coloring for console output.

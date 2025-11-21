@@ -5,3 +5,8 @@
 - The server executes arbitrary commands. Use disposable VMs or lab machines.
 - Prefer running as a non-privileged user in a sandboxed environment.
 - Rotate or randomize API keys for each demo session; do not reuse secrets.
+
+## Navigation
+- [Docs home](README.md)
+- [Protocol](protocol.md)
+- [Project README](../README.md)

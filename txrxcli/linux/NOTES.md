@@ -1,5 +1,7 @@
 # Linux Development Notes
 
+**Navigation:** [Linux README](README.md) · [Project README](../README.md) · [Docs](../docs/README.md) · [Windows notes](../windows/NOTES.md)
+
 ## Stage
 - Server mode is implemented: binds/listens, decodes framed requests, enforces API key, executes commands, and returns exit code/stdout/stderr.
 - Client mode is implemented: resolves hostnames or numeric addresses, frames requests, and prints exit code/stdout/stderr.

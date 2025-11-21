@@ -1,5 +1,7 @@
 # Linux C++ Targets
 
+**Navigation:** [Project README](../README.md) · [Docs](../docs/README.md) · [Linux notes](NOTES.md)
+
 CMake-built dual-mode binary that can run as either server or client over a simple raw-TCP protocol with API-key validation. This directory stays focused on the Linux implementation; Windows/.NET lives under `windows/`.
 
 ## Components

@@ -1,5 +1,7 @@
 # Windows Development Notes
 
+**Navigation:** [Windows README](README.md) · [Project README](../README.md)
+
 ## Stage
 Not started. The focus is currently on the Linux C++ implementation.
 
