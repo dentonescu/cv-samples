@@ -18,6 +18,7 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 | **[null-cipher](https://github.com/dentonescu/cv-samples/tree/main/null-cipher)** | Single‑page visual demo of a simple cipher (encrypt/decrypt) in the browser. | JavaScript, HTML, CSS |
 | **[slideshow-server](https://github.com/dentonescu/cv-samples/tree/main/slideshow-server)** | Tiny Python web server that generates responsive media slideshows. | Python, HTML, JS |
 | **[WiFiEqu](https://github.com/dentonescu/cv-samples/tree/main/wifiequ)** (in progress) | Terminal Wi‑Fi channel “equalizer” visualizer with a C JSON daemon, Windows service, and Angular web UI. The Linux daemon streams live/mock readings over SSE, honours configurable refresh cadences, and secures `/api/v1/stats` with an API key. | C, ANSI/terminal, JSON APIs, C#, Angular |
+| **[txrxcli](https://github.com/dentonescu/cv-samples/tree/main/txrxcli)** (in progress) | Educational raw‑TCP remote execution demo with a C++ Linux server and planned C# Windows peer; API‑key gated, warning‑heavy, not for production. | C++17 sockets, process exec/capture, C# (planned) |
 | **[pkixwebadm](https://github.com/dentonescu/cv-samples/tree/main/pkixwebadm)** (HTTP foundation in progress) | Certificate inventory web app pairing FastAPI with SQLite; configuration and scaffold are in place while the app factory and landing page are being implemented. | Python, FastAPI, Bootstrap UI, vendored JS tooling |
 
 ## Gallery
@@ -26,9 +27,9 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 |---|---|---|
 | [![libdmotservices thumbnail](thumbnails/th-libdmotservices-01.png)](libdmotservices/README.md) | [![null-cipher thumbnail](thumbnails/th-null-cipher-01.png)](null-cipher/README.md) | [![slideshow-server thumbnail](thumbnails/th-slideshow-server-01.png)](slideshow-server/README.md) |
 
-| WiFiEqu | pkixwebadm | Terraglean |
+| WiFiEqu | pkixwebadm | txrxcli |
 |---|---|---|
-| [![WiFiEqu thumbnail](thumbnails/th-wifiequ-01.png)](wifiequ/README.md) | [![pkixwebadm thumbnail](thumbnails/th-pkixwebadm-01.png)](pkixwebadm/README.md) | [![Terraglean placeholder thumbnail](thumbnails/th--coming_soon.png)](docs/terraglean.md) |
+| [![WiFiEqu thumbnail](thumbnails/th-wifiequ-01.png)](wifiequ/README.md) | [![pkixwebadm thumbnail](thumbnails/th-pkixwebadm-01.png)](pkixwebadm/README.md) | [![txrxcli thumbnail](thumbnails/th-txrxcli-01.png)](txrxcli/README.md) |
 
 ## Tooling & automation
 - `dev.sh` in the repository root orchestrates dependency setup, builds, tests, installs, and demo runs from a single entrypoint. It now recognises mock vs. hardware example runs, optional interface overrides, and selective subcommands so you can rehearse exactly what the CI job performs. See the usage recipes below for common scenarios. The `--install-deps` slice now installs Node.js so libdmotservices’ JavaScript helpers and tests run consistently in CI and locally.
@@ -56,7 +57,7 @@ Compiles and executes the unit-test suites without touching system directories.
 ```bash
 sudo ./dev.sh --install-deps --install-prj --build --run-tests --run-examples
 ```
-“Full treatment” run that matches the CI workflow: apt dependencies, rebuild, install, unit tests, and demos.
+“Full treatment” run that matches the CI workflow: apt dependencies (includes gtest/spdlog/fmt for txrxcli tests), rebuild, install, unit tests, and demos.
 
 ```bash
 sudo ./dev.sh --iface wlp2s0 --install-deps --install-prj --build --run-tests --run-examples

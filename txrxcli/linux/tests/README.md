@@ -1,0 +1,3 @@
+# Tests
+
+GoogleTest-based unit tests for the protocol helpers. They currently rely on `socketpair` for in-memory framing tests and require `gtest`, `spdlog`, and `fmt` development packages.

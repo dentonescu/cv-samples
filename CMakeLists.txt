@@ -14,6 +14,7 @@ add_subdirectory(libdmotservices)
 add_subdirectory(slideshow-server)
 add_subdirectory(wifiequ)
 add_subdirectory(pkixwebadm)
+add_subdirectory(txrxcli)
 
 set(CV_DIST_DIR "${CMAKE_CURRENT_LIST_DIR}/dist")
 
@@ -88,6 +89,9 @@ endif()
 if(TARGET pkixwa_all)
     add_dependencies(cv_samples_all pkixwa_all)
 endif()
+if(TARGET txrxcli)
+    add_dependencies(cv_samples_all txrxcli)
+endif()
 
 add_custom_target(cv_samples_tests)
 if(TARGET libdmotservices_tests)
@@ -101,6 +105,9 @@ if(TARGET slideshow_test)
 endif()
 if(TARGET pkixwa_test)
     add_dependencies(cv_samples_tests pkixwa_test)
+endif()
+if(TARGET txrxcli_tests)
+    add_dependencies(cv_samples_tests txrxcli_tests)
 endif()
 
 add_custom_target(cv_samples_test

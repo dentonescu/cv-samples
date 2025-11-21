@@ -29,6 +29,7 @@ build-all:
 	@$(MAKE) -C libdmotservices clean all
 	@$(MAKE) -C slideshow-server dist
 	@$(MAKE) -C wifiequ clean all
+	@$(MAKE) -C txrxcli clean all
 
 dist:
 	@$(MILESTONE) "Populating the distribution directory..."
@@ -59,6 +60,7 @@ tests:
 	@$(MILESTONE) "Compiling all tests..."
 	@$(MAKE) -C libdmotservices tests
 	@$(MAKE) -C wifiequ tests
+	@$(MAKE) -C txrxcli tests
 	@$(GATHER)
 
 test: tests
@@ -66,6 +68,7 @@ test: tests
 	@$(MAKE) -C libdmotservices test
 	@$(MAKE) -C slideshow-server test
 	@$(MAKE) -C wifiequ test
+	@$(MAKE) -C txrxcli test
 
 
 #####################################################################################
@@ -75,12 +78,14 @@ examples:
 	@$(MILESTONE) "Compiling all examples..."
 	@$(MAKE) -C libdmotservices examples
 	@$(MAKE) -C wifiequ examples
+	@$(MAKE) -C txrxcli examples
 	@$(GATHER)
 
 example-demo: examples
 	@$(MILESTONE) "Executing all examples and demos..."
 	@$(MAKE) -C libdmotservices example-demo
 	@$(MAKE) -C wifiequ example-demo
+	@$(MAKE) -C txrxcli example-demo
 
 
 #####################################################################################
@@ -91,4 +96,5 @@ clean:
 	@$(MAKE) -C libdmotservices clean || true
 	@$(MAKE) -C slideshow-server clean || true
 	@$(MAKE) -C wifiequ clean || true
+	@$(MAKE) -C txrxcli clean || true
 	@rm -Rf "${DIST}"
