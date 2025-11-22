@@ -7,17 +7,16 @@ I am building a compact, raw-TCP demo to showcase cross-platform socket programm
 
 ## Current stage
 - Linux server and protocol helpers are in place; server runs and executes commands with API-key gate and captured stdout/stderr.
-- Dual-mode binary scaffolding is live; client mode is still a placeholder.
-- Tests exist for protocol helpers (need gtest/spdlog/fmt and a permissive sandbox for `socketpair`).
+- Linux client is implemented: resolves hostnames or numeric addresses, frames requests, and prints exit code/stdout/stderr.
+- Windows/.NET dual-mode app builds/publishes; server/client modes mirror the framing. Unit tests cover framing and ProcessRunner; integration coverage is still TODO.
 - Protocol: raw TCP with a lightweight text framing. HTTP is intentionally out of scope for this build.
 
 ## Near-term plan
-- Implement the Linux client: CLI args for host/port/key/command; connect, send framed request, read response/output.
 - Improve protocol helper tests so they can run in restricted environments (e.g., buffer-based decode path instead of relying on `socketpair`).
+- Add integration tests for the .NET client/server (loopback listener) and consider timeouts to avoid hangs.
 - Document the protocol and security caveats in `docs/` and subproject READMEs.
 
 ## Future work
-- Add the Windows C# client/server with the same framing and banner behavior.
 - Harden parsing and error handling just enough for demos (still not production-ready).
 - Collect simple usage examples for both platforms.
 

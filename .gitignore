@@ -63,3 +63,7 @@ build.cmd
 build.ps1
 build.sh
 libdmotservices/python/vendor/
+
+# Visual Studio / .NET solution artifacts
+*.sln
+.vs/

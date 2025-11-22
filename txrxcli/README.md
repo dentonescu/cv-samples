@@ -23,12 +23,18 @@ This project executes arbitrary commands. Use throwaway machines or VMs on a clo
 - Tests (require `libgtest-dev`, `libspdlog-dev`, `libfmt-dev`): `make -C linux test`  
   Tests use `socketpair` and may be blocked in restricted sandboxes.
 
+## Build and test (Windows/.NET)
+- Make: `make -C windows` to publish a win-x64 self-contained `.exe` into `build/windows/`.
+- CMake: `cmake -S windows -B windows/build -G Ninja && cmake --build windows/build` (targets `txrxcli_dotnet_publish` by default).
+- Run via dotnet (e.g., on Linux): `make -C windows run DOTNET_ARGS="--mode server --port 9000 --key SECRET"`.
+- Tests (xUnit): `make -C windows test` (builds then runs) or `dotnet test windows/txrxcli-dotnet/tests/txrxcli-dotnet.Tests.csproj` (requires NuGet access to restore test packages).
+
 ## Screenshots
 
-Server:
+Server running in a Windows VM:
 
-![screenshot of txrxcli's server mode](img/server-01.png)
+![screenshot of txrxcli's server mode in Windows](img/win-powershell-server-01.png)
 
-Remote execution:
+Remote execution using a Linux client:
 
-![screenshot of remote execution using txrxcli](img/netstat-01.png)
+![screenshot of remote execution using txrxcli client in Linux](img/linux-client-01.png)

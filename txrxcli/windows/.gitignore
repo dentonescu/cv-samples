@@ -1,0 +1,15 @@
+# IDE/project artifacts
+**/.dotnet
+.vs/
+*.user
+*.suo
+*.userprefs
+*.vscode/
+.idea/
+
+# Build outputs
+**/bin/
+**/obj/
+
+# NuGet caches
+**/.nuget/

@@ -46,3 +46,14 @@ dist/
 build/
 linux/build/
 windows/build/
+
+# .NET build outputs
+**/.dotnet
+**/bin/
+**/obj/
+.vs/
+.idea/
+.vscode/
+
+# NuGet caches (use a shared cache outside the repo)
+**/.nuget/

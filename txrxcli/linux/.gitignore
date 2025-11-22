@@ -1,0 +1,10 @@
+# Build outputs (covered by root ignore, duplicated here for clarity)
+build/
+**/build/
+
+# Editor/IDE
+.vscode/
+.idea/
+
+# Tests/tools
+*.log

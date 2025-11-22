@@ -8,7 +8,7 @@ A compact portfolio of small, self‑contained code projects that complement my 
 ![License](https://img.shields.io/github/license/dentonescu/cv-samples)
 
 ## About me
-I’m a software engineer who enjoys building neat, well‑scoped utilities and visual demos across languages (C, Java, Python, TypeScript/JavaScript, and Angular). I care about readable code, reproducible builds, and pragmatic architecture.
+I’m a software engineer who enjoys building neat, well‑scoped utilities and visual demos across languages (C/C++, C#, Java, Python, TypeScript/JavaScript, and Angular). I care about readable code, reproducible builds, and pragmatic architecture.
 
 ## Projects
 

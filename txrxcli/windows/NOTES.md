@@ -3,12 +3,14 @@
 **Navigation:** [Windows README](README.md) · [Project README](../README.md)
 
 ## Stage
-Not started. The focus is currently on the Linux C++ implementation.
+- Dual-mode .NET app is implemented: server/client mirror the framing, API-key gate, and warning banner.
+- Protocol and ProcessRunner have unit tests; integration coverage is still TODO.
 
 ## Plan
-- Implement C# server using raw TCP with the same framing as the Linux version.
-- Implement C# client that speaks the same protocol.
-- Maintain the same demo-only safety banner and API-key gate.
+- Add integration tests for the Windows/.NET client/server (loopback).
+- Keep tests green; consider timeouts and clearer error handling for demos.
+- Update protocol docs once integration tests land.
+- Make sure future screenshots/examples reflect both platforms.
 
 ## Future work
-Add simple usage examples and update the protocol docs once the C++ side stabilizes.
+Add simple usage examples for Windows/.NET and ensure protocol docs reflect both implementations.

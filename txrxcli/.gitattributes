@@ -1,0 +1,15 @@
+* text=auto
+
+# Shell scripts and makefiles should stay LF
+*.sh text eol=lf
+Makefile text eol=lf
+
+# C/C++ headers and sources
+*.h text
+*.hpp text
+*.c text
+*.cpp text
+*.cs text
+
+# Markdown and docs
+*.md text

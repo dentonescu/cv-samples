@@ -7,12 +7,16 @@
 
 namespace txrx
 {
+    /// TCP client that frames requests, validates API key, and prints server responses.
     class Client
     {
     public:
+        /// Construct a client targeting host/port with API key and command.
         Client(std::string addr, uint16_t port, std::string api_key, std::string cmd);
         ~Client();
 
+        /// Connect to the server, send framed request, and print response.
+        /// @return void
         void run();
 
     private:
