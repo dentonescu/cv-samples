@@ -6,4 +6,4 @@
 
 ## Usage (current)
 - Server: `./txrxcli --mode server --port 9000 --key SECRET`
-- Client: TODO (stub prints a placeholder message)
+- Client: `./txrxcli --mode client --host 127.0.0.1 --port 9000 --key SECRET --cmd "ls -l"`

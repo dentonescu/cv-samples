@@ -4,7 +4,7 @@ An intentionally small, raw-TCP demo that lets a Linux box and a Windows box sen
 
 ## What lives here
 - `linux/`: C++ dual-mode client/server binary (raw TCP, API-key gated). Server and client modes are working.
-- `windows/`: future C# client/server mirror.
+- `windows/`: C#/.NET dual-mode client/server mirror.
 - `docs/`: protocol notes, security caveats, and usage examples.
 - `NOTES.md`: personal plan/status for this portfolio project.
 
