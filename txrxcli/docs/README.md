@@ -1,8 +1,8 @@
 # Documentation
 
 ## Navigation
-- `protocol.md`: raw TCP framing, request/response examples.
-- `security.md`: demo-only caveats and safe-use guidance.
+- [`protocol.md`](protocol.md): raw TCP framing, request/response examples.
+- [`security.md`](security.md): demo-only caveats and safe-use guidance.
 - Project overview: see top-level [`README.md`](../README.md) and [`NOTES.md`](../NOTES.md).
 
 ## Status
