@@ -2,7 +2,7 @@
 ## libdmotservices/java/Makefile
 #################################################
 
-.PHONY: all clean dist example-demo test tests
+.PHONY: all clean dist example-demo test tests version
 
 VERSION          := $(strip $(shell cat ../VERSION))
 ANT              ?= ant
@@ -14,22 +14,26 @@ ANT_ARGS = -f build.xml \
 		-Dlibdmotservices.version="$(VERSION)" \
 		-Dproject.java.home="$(JAVA_HOME)" \
 		-Dmvn="$(MVN)" \
-		-Dbuild="$(ANT_BUILD_DIR)"
+		-Dbuild="$(ANT_BUILD_DIR)" \
+		-Dmvn.skip.tests="-DskipTests"
 
 all: dist
 
-dist:
+version:
+	@cd tools && $(JAVA_HOME)/bin/java VersionManager.java ../..
+
+dist: version
 	$(ANT) $(ANT_ARGS) dist
 
 tests: test-compile
 
-test-compile:
+test-compile: version
 	$(ANT) $(ANT_ARGS) test-compile
 
-test:
+test: version
 	$(ANT) $(ANT_ARGS) test
 
-example-demo:
+example-demo: version
 	$(ANT) $(ANT_ARGS) example-demo
 
 clean:

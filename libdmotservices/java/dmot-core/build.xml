@@ -3,11 +3,12 @@
         Builds dmot-core.
     </description>
     <!-- default values; can be overridden with -D on the command line -->
-    <property name="libdmotservices.version" value="SNAPSHOT"/>
+    <loadfile property="libdmotservices.version" srcFile="../../VERSION" />
     <property name="project.java.home" location="/usr/lib/jvm/java-17-openjdk-amd64"/>
     <property name="build" location="build-ant"/>
     <property name="dep" location="dep"/>
     <property name="mvn" location="mvn"/>
+    <property name="mvn.skip.tests" value="-DskipTests"/>
     <target name="init">
         <tstamp/>
     </target>
@@ -24,7 +25,7 @@
             <arg value="clean"/>
             <arg value="install"/>
             <arg value="-U"/>
-            <arg value="-DskipTests"/>
+            <arg value="${mvn.skip.tests}"/>
             <arg value="-Drevision=${libdmotservices.version}"/>
         </exec>
     </target>

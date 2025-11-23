@@ -28,9 +28,13 @@ all: prebuild build-all dist
 build-all:
 	@$(MILESTONE) "Building all projects with build files..."
 	@$(MAKE) -C libdmotservices clean all
+	@$(MILESTONE) "Installing libdmotservices jars into local Maven repo..."
+	@cd libdmotservices/java && mvn -DskipTests install
 	@$(MAKE) -C slideshow-server dist
 	@$(MAKE) -C wifiequ clean all
 	@$(MAKE) -C txrxcli clean all
+	@$(MILESTONE) "Building heapmonj (Gradle)..."
+	@cd heapmonj/backend/heapmonj && ./gradlew clean build
 
 dist:
 	@$(MILESTONE) "Populating the distribution directory..."
@@ -62,6 +66,8 @@ tests:
 	@$(MAKE) -C libdmotservices tests
 	@$(MAKE) -C wifiequ tests
 	@$(MAKE) -C txrxcli tests
+	@$(MILESTONE) "Running heapmonj tests (Gradle)..."
+	@cd heapmonj/backend/heapmonj && ./gradlew test
 	@$(GATHER)
 
 test: tests
@@ -98,4 +104,5 @@ clean:
 	@$(MAKE) -C slideshow-server clean || true
 	@$(MAKE) -C wifiequ clean || true
 	@$(MAKE) -C txrxcli clean || true
+	@cd heapmonj/backend/heapmonj && ./gradlew clean || true
 	@rm -Rf "${DIST}"

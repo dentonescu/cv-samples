@@ -24,7 +24,13 @@ Alternatively, use the top-level `Makefile` to build all components.
 
 **Java baseline:** 17 (compiled with `--release 17`)
 
-Small, reusable Java utilities I’ve built and refined over time. The repository is organized as Maven modules but orchestrated by Ant for convenience (artifact collection, filesystem moves, and centralized `${revision}` propagation).
+### Version source of truth
+- The version lives in `../VERSION` (one level above this directory).
+- `tools/VersionManager.java` stamps `pom.xml` files from their `.tpl` templates before builds.
+- Ant (`build.xml`), Make (`Makefile`), and the CMake targets all invoke `VersionManager` in a pre-build step so the POMs are fresh without carrying stale literals in source control.
+- Run manually if needed: `cd tools && java VersionManager.java`
+
+Small, reusable Java utilities I’ve built and refined over time. The repository is organized as Maven modules but orchestrated by Ant for convenience (artifact collection, filesystem moves, and centralized version propagation).
 
 ## What this demonstrates
 - API-oriented design and modular Java development.
@@ -38,4 +44,5 @@ Small, reusable Java utilities I’ve built and refined over time. The repositor
 
 - Developer notes: [NOTES.md](NOTES.md)
 - Explore [dmot-core](dmot-core/README.md) and [dmot-servlet-javax](dmot-servlet-javax/README.md)
+- Version tooling: [tools/README.md](tools/README.md)
 - Back to [libdmotservices overview](../README.md)

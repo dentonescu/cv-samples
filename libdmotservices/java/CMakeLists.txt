@@ -35,12 +35,25 @@ endif()
 
 set(LDS_JAVA_HOME "${LDS_JAVA_HOME_DEFAULT}"
     CACHE PATH "JAVA_HOME to use for libdmotservices Java/Ant builds.")
+set(LDS_JAVA_EXECUTABLE "${LDS_JAVA_HOME}/bin/java")
+
+if(NOT EXISTS "${LDS_JAVA_EXECUTABLE}")
+    message(FATAL_ERROR "Java executable not found at ${LDS_JAVA_EXECUTABLE}. Set LDS_JAVA_HOME.")
+endif()
 
 set(LDS_ANT_BUILD_FILE "${CMAKE_CURRENT_LIST_DIR}/build.xml")
 set(LDS_ANT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/build-ant")
+set(LDS_VERSION_TOOL_DIR "${CMAKE_CURRENT_LIST_DIR}/tools")
+
+add_custom_target(libdmotservices_java_version
+    WORKING_DIRECTORY "${LDS_VERSION_TOOL_DIR}"
+    COMMAND "${LDS_JAVA_EXECUTABLE}" VersionManager.java ../..
+    COMMENT "Stamping POMs with VERSION (VersionManager.java)"
+    VERBATIM)
 
 function(_libdmotservices_java_target target ant_goal comment)
     add_custom_target(${target}
+        DEPENDS libdmotservices_java_version
         WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}"
         COMMAND "${LDS_ANT_EXECUTABLE}"
                 -f "${LDS_ANT_BUILD_FILE}"
@@ -48,6 +61,7 @@ function(_libdmotservices_java_target target ant_goal comment)
                 "-Dproject.java.home=${LDS_JAVA_HOME}"
                 "-Dmvn=${LDS_MVN_EXECUTABLE}"
                 "-Dbuild=${LDS_ANT_BUILD_DIR}"
+                "-Dmvn.skip.tests=-DskipTests"
                 ${ant_goal}
         COMMENT "${comment}"
         VERBATIM)

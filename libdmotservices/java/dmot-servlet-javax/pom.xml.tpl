@@ -5,15 +5,15 @@
     <parent>
         <groupId>dev.dmotservices</groupId>
         <artifactId>libdmotservices-parent</artifactId>
-        <version>0.3.0</version>
+        <version>@@VERSION@@</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>libdmotservices-core</artifactId>
+    <artifactId>libdmotservices-servlet-javax</artifactId>
     <packaging>jar</packaging>
     <version>${revision}</version>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>A library of simple reusable code.</description>
+    <description>A library of simple reusable code for javax.servlet.</description>
     <url>https://gitlab.com/dmotservices</url>
     <build>
         <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
@@ -46,7 +46,14 @@
             </plugin>
         </plugins>
     </build>
-        <dependencies>
+    <dependencies>
+        <!-- servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- test dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -60,27 +67,29 @@
             <version>5.10.2</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.2.0</version>
+            <scope>test</scope>
+        </dependency>
         <!-- external dependencies -->
         <dependency>
-            <groupId>io.github.classgraph</groupId>
-            <artifactId>classgraph</artifactId>
-            <version>4.8.183</version>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>33.2.0-jre</version> <!-- or latest stable -->
         </dependency>
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.24.3</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20231013</version>
+            <groupId>org.directwebremoting</groupId>
+            <artifactId>dwr</artifactId>
+            <version>3.0.2-RELEASE</version>
+            <scope>compile</scope>
         </dependency>
         <!-- local dependencies -->
+        <dependency>
+            <groupId>dev.dmotservices</groupId>
+            <artifactId>libdmotservices-core</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 </project>

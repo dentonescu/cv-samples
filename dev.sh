@@ -58,7 +58,7 @@ ensure_dependencies() {
 
     sudo apt-get update
     for pkg in build-essential pkg-config libcmocka-dev libmicrohttpd-dev \
-        libnl-3-dev libnl-genl-3-dev openjdk-17-jdk nodejs python3-bcrypt python3-fastapi \
+        libnl-3-dev libnl-genl-3-dev openjdk-17-jdk openjdk-21-jdk nodejs python3-bcrypt python3-fastapi \
         python3-jinja2 python3-multipart python3-pip python3-pydantic python3-pydantic-settings \
         python3-pytest python3-sqlalchemy python3-uvicorn libgtest-dev libspdlog-dev libfmt-dev
     do
@@ -215,7 +215,7 @@ fi
 ## Execution
 ##
 
-JAVA_HOME=${JAVA_HOME:-/usr/lib/jvm/java-17-openjdk-amd64}
+JAVA_HOME=${JAVA_HOME:-/usr/lib/jvm/java-21-openjdk-amd64}
 if [ -d "$JAVA_HOME" ]; then
     export JAVA_HOME
 else

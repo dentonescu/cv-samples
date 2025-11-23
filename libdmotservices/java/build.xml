@@ -5,21 +5,36 @@
     <!-- default values; can be overridden with -D on the command line -->
     <loadfile property="libdmotservices.version" srcFile="../VERSION" />
     <property name="project.java.home" location="/usr/lib/jvm/java-17-openjdk-amd64" />
+    <property name="java.executable" location="${project.java.home}/bin/java" />
     <property name="build" location="build-ant" />
     <property name="dep" location="dep" />
     <property name="mvn" location="mvn" />
+    <property name="mvn.skip.tests" value="-DskipTests" />
     <target name="init">
         <tstamp />
+    </target>
+    <target name="update-version" depends="init" description="Stamp POMs with VERSION">
+        <exec executable="${java.executable}" dir="tools" failonerror="true">
+            <arg value="VersionManager.java" />
+            <arg value="../.." />
+        </exec>
     </target>
     <target name="clean" depends="init">
         <delete dir="${build}" />
         <mkdir dir="${build}" />
     </target>
-    <target name="compile" depends="clean" description="compiles the projects">
-        <ant dir="dmot-core" antfile="build.xml" target="compile" inheritAll="true"
-            inheritRefs="true" />
-        <ant dir="dmot-servlet-javax" antfile="build.xml" target="compile" inheritAll="true"
-            inheritRefs="true" />
+    <target name="compile" depends="update-version,clean" description="compiles the projects">
+        <echo message="libdmotservices.version: ${libdmotservices.version}"/>
+        <echo message="mvn: ${mvn}"/>
+        <echo message="project.java.home: ${project.java.home}"/>
+        <exec executable="${mvn}" failonerror="true">
+            <env key="JAVA_HOME" value="${project.java.home}"/>
+            <arg value="clean"/>
+            <arg value="install"/>
+            <arg value="-U"/>
+            <arg value="${mvn.skip.tests}"/>
+            <arg value="-Drevision=${libdmotservices.version}"/>
+        </exec>
     </target>
     <target name="dist" depends="compile" description="generate the distribution">
         <!-- JARs -->
@@ -37,14 +52,23 @@
             message="No example demos exist for the Java library yet; use the test target if you want to exercise the code." />
     </target>
     <target name="test-compile" description="compile the unit tests">
-        <ant dir="dmot-core" antfile="build.xml" target="test-compile" inheritAll="true"
-            inheritRefs="true" />
-        <ant dir="dmot-servlet-javax" antfile="build.xml" target="test-compile" inheritAll="true"
-            inheritRefs="true" />
+        <echo message="mvn: ${mvn}"/>
+        <echo message="project.java.home: ${project.java.home}"/>
+        <exec executable="${mvn}" failonerror="true">
+            <env key="JAVA_HOME" value="${project.java.home}"/>
+            <arg value="test-compile"/>
+            <arg value="-Dmaven.main.skip=true"/>
+            <arg value="-Drevision=${libdmotservices.version}"/>
+        </exec>
     </target>
     <target name="test" description="run the unit tests">
-        <ant dir="dmot-servlet-javax" antfile="build.xml" target="test" inheritAll="true"
-            inheritRefs="true" />
-        <ant dir="dmot-core" antfile="build.xml" target="test" inheritAll="true" inheritRefs="true" />
+        <echo message="mvn: ${mvn}"/>
+        <echo message="project.java.home: ${project.java.home}"/>
+        <exec executable="${mvn}" failonerror="true">
+            <env key="JAVA_HOME" value="${project.java.home}"/>
+            <arg value="test"/>
+            <arg value="-Dmaven.main.skip=true"/>
+            <arg value="-Drevision=${libdmotservices.version}"/>
+        </exec>
     </target>
 </project>

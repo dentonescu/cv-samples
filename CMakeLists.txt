@@ -15,6 +15,12 @@ add_subdirectory(slideshow-server)
 add_subdirectory(wifiequ)
 add_subdirectory(pkixwebadm)
 add_subdirectory(txrxcli)
+# heapmonj is Gradle-based; no CMake target
+
+find_program(CV_MAVEN_EXECUTABLE mvn)
+if(NOT CV_MAVEN_EXECUTABLE)
+    message(WARNING "mvn not found; libdmotservices Maven install will be skipped in CMake.")
+endif()
 
 set(CV_DIST_DIR "${CMAKE_CURRENT_LIST_DIR}/dist")
 
@@ -76,6 +82,14 @@ foreach(_bindir IN LISTS CV_BIN_DIRS)
         VERBATIM)
 endforeach()
 
+if(CV_MAVEN_EXECUTABLE)
+    add_custom_target(libdmotservices_mvn_install
+        WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/libdmotservices/java"
+        COMMAND "${CV_MAVEN_EXECUTABLE}" -DskipTests install
+        COMMENT "Installing libdmotservices into local Maven repo"
+        VERBATIM)
+endif()
+
 add_custom_target(cv_samples_all)
 if(TARGET libdmotservices_all)
     add_dependencies(cv_samples_all libdmotservices_all)
@@ -91,6 +105,10 @@ if(TARGET pkixwa_all)
 endif()
 if(TARGET txrxcli)
     add_dependencies(cv_samples_all txrxcli)
+endif()
+# heapmonj build handled via Gradle outside CMake
+if(TARGET libdmotservices_mvn_install)
+    add_dependencies(cv_samples_all libdmotservices_mvn_install)
 endif()
 
 add_custom_target(cv_samples_tests)
@@ -109,6 +127,7 @@ endif()
 if(TARGET txrxcli_tests)
     add_dependencies(cv_samples_tests txrxcli_tests)
 endif()
+# heapmonj tests handled via Gradle outside CMake
 
 add_custom_target(cv_samples_test
     DEPENDS cv_samples_tests

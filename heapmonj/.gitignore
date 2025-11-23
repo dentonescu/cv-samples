@@ -1,0 +1,54 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+.mtj.tmp/
+
+# Logs / temp
+*.log
+logs/
+tmp/
+*.tmp
+hs_err_pid*
+replay_pid*
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+
+# Java / Gradle (backend)
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+/backend/heapmonj/.gradle/
+/backend/heapmonj/build/
+/backend/heapmonj/out/
+/backend/heapmonj/.classpath
+/backend/heapmonj/.project
+/backend/heapmonj/.settings/
+
+# Node / Angular (frontend)
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.angular/
+/frontend/.cache/
+/frontend/.npm/
+/frontend/coverage/
+/frontend/.env.local
+/frontend/.env
+
+# Package manager logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# H2 database files (backend)
+/backend/heapmonj/data/
+/backend/heapmonj/*.mv.db
+/backend/heapmonj/*.trace.db

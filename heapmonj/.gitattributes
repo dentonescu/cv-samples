@@ -1,0 +1,23 @@
+* text=auto eol=lf
+
+*.bat text eol=crlf
+*.sh text eol=lf
+
+*.java text diff=java
+*.kt text diff=java
+*.gradle text
+*.md text
+*.yml text
+*.yaml text
+*.json text
+*.ts text diff=javascript
+*.js text diff=javascript
+*.svg text
+Dockerfile text
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary

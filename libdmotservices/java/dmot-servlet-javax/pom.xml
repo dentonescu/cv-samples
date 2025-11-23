@@ -1,19 +1,20 @@
+<!-- WARNING: Do not manually edit this pom.xml. It will be overwritten by a preprocessed pom.xml.tpl.-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>dev.dmotservices</groupId>
+    <parent>
+        <groupId>dev.dmotservices</groupId>
+        <artifactId>libdmotservices-parent</artifactId>
+        <version>0.3.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
     <artifactId>libdmotservices-servlet-javax</artifactId>
     <packaging>jar</packaging>
     <version>${revision}</version>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A library of simple reusable code for javax.servlet.</description>
     <url>https://gitlab.com/dmotservices</url>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>17</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-    </properties>
     <build>
         <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
         <testResources>
@@ -57,7 +58,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>6.0.0</version>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.10.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -1,0 +1,21 @@
+* text=auto eol=lf
+
+/gradlew text eol=lf
+*.bat text eol=crlf
+
+*.java text diff=java
+*.kt text diff=java
+*.gradle text
+*.md text
+*.yml text
+*.yaml text
+*.json text
+*.properties text
+Dockerfile text
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.jar binary

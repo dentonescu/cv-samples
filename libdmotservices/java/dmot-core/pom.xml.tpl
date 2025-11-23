@@ -5,7 +5,7 @@
     <parent>
         <groupId>dev.dmotservices</groupId>
         <artifactId>libdmotservices-parent</artifactId>
-        <version>0.3.0</version>
+        <version>@@VERSION@@</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

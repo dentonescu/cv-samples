@@ -1,0 +1,101 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.0.0'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'dev.dmotservices'
+version = '0.0.1-SNAPSHOT'
+description = 'heapmonj Spring Boot demo project'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+	mavenLocal()
+}
+
+def libdmotservicesDir = rootProject.projectDir.toPath()
+		.resolve("../../../libdmotservices/java")
+		.normalize()
+		.toFile()
+def libdmotservicesToolsDir = libdmotservicesDir.toPath()
+		.resolve("tools")
+		.toFile()
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.h2database:h2'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.junit.jupiter:junit-jupiter'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation "dev.dmotservices:libdmotservices-core:0.3.0"
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+tasks.register('updateLibdmotservicesVersion', Exec) {
+	description = "Stamp libdmotservices POM templates with VERSION"
+	group = "build setup"
+	workingDir = libdmotservicesToolsDir
+	commandLine = ["java", "VersionManager.java", "../.."]
+	onlyIf {
+		def exists = workingDir.exists() && file("${workingDir}/VersionManager.java").exists()
+		if (!exists) {
+			println "Skipping updateLibdmotservicesVersion: ${workingDir} or VersionManager.java not found"
+		}
+		exists
+	}
+	outputs.upToDateWhen { false }
+	doFirst {
+		println "Running VersionManager in ${workingDir}"
+	}
+}
+
+tasks.register('installLibdmotservices', Exec) {
+	description = "Install libdmotservices to local Maven repo"
+	group = "build setup"
+	workingDir = libdmotservicesDir
+	commandLine = ["mvn", "-DskipTests", "install"]
+	onlyIf {
+		def exists = workingDir.exists() && file("${workingDir}/pom.xml").exists()
+		if (!exists) {
+			println "Skipping installLibdmotservices: ${workingDir} or pom.xml not found"
+		}
+		exists
+	}
+	// Always run so updated jars are published locally before building
+	outputs.upToDateWhen { false }
+	doFirst {
+		println "Running mvn -DskipTests install in ${workingDir}"
+	}
+}
+
+tasks.named('installLibdmotservices') {
+	dependsOn(tasks.named('updateLibdmotservicesVersion'))
+}
+
+tasks.named('compileJava') {
+	dependsOn(tasks.named('installLibdmotservices'))
+}
+
+tasks.named('build') {
+	dependsOn(tasks.named('installLibdmotservices'))
+}

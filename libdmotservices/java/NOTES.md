@@ -28,8 +28,8 @@ java/
 
 ## Implementation Plan
 1. **Build orchestration**  
-   - Keep Ant (`build.xml`) responsible for cross-module tasks (version stamping, artifact aggregation) while Maven handles per-module builds.  
-   - Ensure `gen-version.py` feeds `${revision}` into both Ant and Maven during CI.  
+   - Keep Ant (`build.xml`) responsible for cross-module tasks (version stamping via `tools/VersionManager.java`, artifact aggregation) while Maven handles per-module builds.  
+   - `VERSION` (one level above this folder) is the source of truth; `VersionManager` stamps POMs from `.tpl` files before Ant/Make/CMake builds run.  
    - Add Gradle build scripts once the modules stabilise so consumers can pick their preferred tooling.
 2. **Module evolution**  
    - `dmot-core`: continue curating general-purpose utilities; document API stability guarantees and deprecation policies.  
