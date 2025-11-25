@@ -10,3 +10,4 @@ Angular UI to poll the backend and chart JVM heap usage with Chart.js.
 - Add models/services for heap endpoints; poll every few seconds.
 - Build a Chart.js line chart for heap usage over time.
 - Configure proxy/CORS to reach the backend; add Dockerfile for static hosting.
+- Note: OpenAPI spec lives at `../api/openapi.yaml` with HTML docs generated via `make -C .. docs` (Redocly CLI required).

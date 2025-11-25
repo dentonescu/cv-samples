@@ -15,6 +15,8 @@ add_subdirectory(slideshow-server)
 add_subdirectory(wifiequ)
 add_subdirectory(pkixwebadm)
 add_subdirectory(txrxcli)
+# heapmonj docs (Gradle-based app; docs via CMake)
+add_subdirectory(heapmonj)
 # heapmonj is Gradle-based; no CMake target
 
 find_program(CV_MAVEN_EXECUTABLE mvn)
@@ -107,6 +109,9 @@ if(TARGET txrxcli)
     add_dependencies(cv_samples_all txrxcli)
 endif()
 # heapmonj build handled via Gradle outside CMake
+if(TARGET heapmonj_docs_openapi)
+    add_dependencies(cv_samples_all heapmonj_docs_openapi)
+endif()
 if(TARGET libdmotservices_mvn_install)
     add_dependencies(cv_samples_all libdmotservices_mvn_install)
 endif()

@@ -26,3 +26,6 @@ If you land here now, expect work in progress; the roadmap above outlines whatâ€
 - Backend: [backend/](backend/README.md)
 - Backend notes: [backend/NOTES.md](backend/NOTES.md)
 - Frontend: [frontend/](frontend/README.md)
+- API spec: [api/openapi.yaml](api/openapi.yaml)
+- API docs (generate): `make -C heapmonj docs` â†’ outputs to `heapmonj/docs/api/index.html`
+  - Requires Node/npx and `@redocly/cli` (installed on demand by the Makefile) for HTML generation.

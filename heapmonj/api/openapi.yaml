@@ -1,0 +1,95 @@
+openapi: 3.0.3
+info:
+  title: heapmonj API
+  version: 0.1.0
+  description: REST endpoints for heapmonj heap monitoring.
+servers:
+  - url: http://localhost:8080
+    description: Local backend
+paths:
+  /api/v1/heap/current:
+    get:
+      summary: Current heap snapshot
+      operationId: getCurrentHeap
+      tags: [heap]
+      responses:
+        "200":
+          description: Current JVM heap status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HeapStatus'
+  /api/v1/heap/history:
+    get:
+      summary: Heap history
+      operationId: getHeapHistory
+      tags: [heap]
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+          description: Maximum number of samples to return.
+        - in: query
+          name: since
+          schema:
+            type: integer
+            format: int64
+          description: Epoch millis; only samples at or after this timestamp are returned.
+      responses:
+        "200":
+          description: Historical heap samples
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HeapSample'
+components:
+  schemas:
+    HeapStatus:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+        heapSizeBytes:
+          type: integer
+          format: int64
+        heapMaxBytes:
+          type: integer
+          format: int64
+        heapFreeBytes:
+          type: integer
+          format: int64
+        heapSizeMB:
+          type: number
+          format: double
+        heapMaxMB:
+          type: number
+          format: double
+        heapFreeMB:
+          type: number
+          format: double
+        heapFreePercentage:
+          type: number
+          format: float
+      required:
+        - timestamp
+        - heapSizeBytes
+        - heapMaxBytes
+        - heapFreeBytes
+        - heapSizeMB
+        - heapMaxMB
+        - heapFreeMB
+        - heapFreePercentage
+    HeapSample:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+        - $ref: '#/components/schemas/HeapStatus'

@@ -16,8 +16,8 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 |---|---|---|
 | **[libdmotservices](https://github.com/dentonescu/cv-samples/tree/main/libdmotservices)** | Personal multi‑language utility library with unit tests and examples. | C, Java, Python, JavaScript, Cross-language build tooling |
 | **[null-cipher](https://github.com/dentonescu/cv-samples/tree/main/null-cipher)** | Single‑page visual demo of a simple cipher (encrypt/decrypt) in the browser. | JavaScript, HTML, CSS |
-| **[slideshow-server](https://github.com/dentonescu/cv-samples/tree/main/slideshow-server)** | Tiny Python web server that generates responsive media slideshows. | Python, HTML, JS |
-| **[WiFiEqu](https://github.com/dentonescu/cv-samples/tree/main/wifiequ)** (in progress) | Terminal Wi‑Fi channel “equalizer” visualizer with a C JSON daemon, Windows service, and Angular web UI. The Linux daemon streams live/mock readings over SSE, honours configurable refresh cadences, and secures `/api/v1/stats` with an API key. | C, ANSI/terminal, JSON APIs, C#, Angular |
+| **[slideshow-server](https://github.com/dentonescu/cv-samples/tree/main/slideshow-server)** | Tiny Python web server that generates responsive media slideshows. | Python, HTML, JS, Docker |
+| **[WiFiEqu](https://github.com/dentonescu/cv-samples/tree/main/wifiequ)** (in progress) | Terminal Wi‑Fi channel “equalizer” visualizer with a C JSON daemon, Windows service, and Angular web UI. The Linux daemon streams live/mock readings over SSE, honours configurable refresh cadences, and secures `/api/v1/stats` with an API key. | C, ANSI/terminal, JSON APIs, C#, Angular, Docker |
 | **[txrxcli](https://github.com/dentonescu/cv-samples/tree/main/txrxcli)** | Educational raw‑TCP remote execution demo with a C++ Linux client/server and a C#/.NET dual‑mode peer; API‑key gated, warning‑heavy, not for production. | C++17 sockets, process exec/capture, C#/.NET 8 |
 | **[pkixwebadm](https://github.com/dentonescu/cv-samples/tree/main/pkixwebadm)** (HTTP foundation in progress) | Certificate inventory web app pairing FastAPI with SQLite; configuration and scaffold are in place while the app factory and landing page are being implemented. | Python, FastAPI, Bootstrap UI, vendored JS tooling |
 | **[heapmonj](https://github.com/dentonescu/cv-samples/tree/main/heapmonj)** (in progress) | JVM heap monitor microservice (Spring Boot 4/Java 21) with scheduled sampling to H2 and an Angular + Chart.js frontend. | Java 21, Spring Boot, JPA/H2, Angular, Docker |
@@ -32,9 +32,6 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 |---|---|---|
 | [![WiFiEqu thumbnail](thumbnails/th-wifiequ-01.png)](wifiequ/README.md) | [![pkixwebadm thumbnail](thumbnails/th-pkixwebadm-01.png)](pkixwebadm/README.md) | [![txrxcli thumbnail](thumbnails/th-txrxcli-01.png)](txrxcli/README.md) |
 
-| heapmonj (coming soon) |  |  |
-|---|---|---|
-| [![heapmonj thumbnail](thumbnails/th--coming_soon.png)](heapmonj/README.md) |  |  |
 
 ## Tooling & automation
 - `dev.sh` in the repository root orchestrates dependency setup, builds, tests, installs, and demo runs from a single entrypoint. It now recognises mock vs. hardware example runs, optional interface overrides, and selective subcommands so you can rehearse exactly what the CI job performs. See the usage recipes below for common scenarios. The `--install-deps` slice now installs Node.js so libdmotservices’ JavaScript helpers and tests run consistently in CI and locally.

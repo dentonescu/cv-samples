@@ -50,6 +50,7 @@ prebuild:
 docs:
 	@$(MILESTONE) "Generating documentation..."
 	@$(MAKE) -C wifiequ docs
+	@$(MAKE) -C heapmonj docs
 
 #####################################################################################
 ## Installation and deployment

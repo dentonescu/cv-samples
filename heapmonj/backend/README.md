@@ -17,10 +17,9 @@ Notes:
 - JDK 21 required (toolchain + Spring Boot 4).
 - `./gradlew build` runs `tools/VersionManager.java` in `libdmotservices` and `mvn -DskipTests install` to publish local jars before compiling.
 - H2 stores data on disk at `backend/heapmonj/data/` (gitignored).
+- H2 console is disabled by default; connect via JDBC (`jdbc:h2:file:./data/heapdb...`) if you need to inspect locally.
 
 ## Roadmap (backend)
-- Implement `HeapSample` entity/repository and `HeapInfoService`.
-- Add `/api/v1/heap/current` and `/api/v1/heap/history` (with `limit`/`since`) controllers.
-- Add 10s scheduler to persist snapshots.
-- Wire H2 config (already present) into the Spring data stack.
-- Dockerfile and CI integration after endpoints stabilize.
+- Backend plumbing is in place (sampling, persistence, REST). Refine history paging/queries as needed.
+- Frontend: Angular app with a polling service and Chart.js line chart for heap usage.
+- Packaging: Dockerfiles for backend/frontend and docker-compose to wire them together; GitHub Actions to run Gradle tests/build, Angular build, and optionally Docker build.
