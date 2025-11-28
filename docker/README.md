@@ -1,8 +1,9 @@
 # Docker Stack
 
-This directory contains helper scripts for the containerised demos. The entry point currently ships just one script:
+This directory contains helper scripts for the containerised demos:
 
 - [`wifiequ-entrypoint.sh`](wifiequ-entrypoint.sh) — performs last-minute config tweaks for the WiFiEqu daemon (injects an API token when needed, then execs the daemon).
+- [`nginx.conf`](../heapmonj/frontend/nginx.conf) — used by the heapmonj frontend image.
 
 ## One-command tour with Docker Compose
 
@@ -12,12 +13,15 @@ From the repository root:
 docker compose up --build
 ```
 
-That builds both project images (`slideshow-server` and `wifiequ`), launches them on a shared network, and binds the services to the host:
+That builds the stack images and binds the services to the host:
 
 | Service | Host port | Container port | Notes |
 | --- | --- | --- | --- |
+| `stack-index` | `8080` | `80` | Static landing page linking to all running services. |
 | `slideshow-server` | `8081` | `8080` | Serves the bundled slideshow demo. |
 | `wifiequ` | `8082` | `8080` | Runs the mock-mode WiFiEqu JSON API. |
+| `heapmonj-backend` | `8083` | `8080` | Spring Boot heap monitor backend. |
+| `heapmonj-frontend` | `8084` | `80` | Angular heap monitor UI (nginx). |
 
 Useful follow-ups:
 
@@ -47,6 +51,8 @@ You can still build the images individually if you prefer:
 ```bash
 docker build -t slideshow-server -f slideshow-server/Dockerfile .
 docker build -t wifiequ -f wifiequ/Dockerfile .
+docker build -t heapmonj-backend -f heapmonj/backend/Dockerfile .
+docker build -t heapmonj-frontend -f heapmonj/frontend/Dockerfile .
 ```
 
 Those commands live in the project READMEs as well; Compose simply orchestrates both builds and runs with the correct volume mounts and environment.
