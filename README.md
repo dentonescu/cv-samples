@@ -32,9 +32,9 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 |---|---|---|
 | [![pkixwebadm thumbnail](thumbnails/th-pkixwebadm-01.png)](pkixwebadm/README.md) | [![slideshow-server thumbnail](thumbnails/th-slideshow-server-01.png)](slideshow-server/README.md) | [![txrxcli thumbnail](thumbnails/th-txrxcli-01.png)](txrxcli/README.md) |
 
-| WiFiEqu |  |  |
+| WiFiEqu | prng-tools | Terraglean |
 |---|---|---|
-| [![WiFiEqu thumbnail](thumbnails/th-wifiequ-01.png)](wifiequ/README.md) |  |  |
+| [![WiFiEqu thumbnail](thumbnails/th-wifiequ-01.png)](wifiequ/README.md) | [![Coming soon thumbnail](thumbnails/th-coming_soon.png)](docs/prng-tools.md) | [![Coming soon thumbnail](thumbnails/th-coming_soon.png)](docs/terraglean.md) |
 
 
 ## Tooling & automation
