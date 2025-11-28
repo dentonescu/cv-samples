@@ -56,5 +56,3 @@ pnpm-debug.log*
 /backend/heapmonj/*.mv.db
 /backend/heapmonj/*.trace.db
 **/node_modules
-**/package-lock.json
-
