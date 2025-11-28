@@ -14,7 +14,7 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 
 | Project | What it is | Primary skills |
 |---|---|---|
-| **[heapmonj](https://github.com/dentonescu/cv-samples/tree/main/heapmonj)** (in progress) | JVM heap monitor microservice (Spring Boot 4/Java 21) with scheduled sampling to H2 and an Angular + Chart.js frontend. | Java 21, Spring Boot, JPA/H2, Angular, Docker |
+| **[heapmonj](https://github.com/dentonescu/cv-samples/tree/main/heapmonj)** | JVM heap monitor microservice (Spring Boot 4/Java 21) with scheduled sampling to H2 and an Angular + Chart.js frontend. | Java 21, Spring Boot, JPA/H2, Angular, Docker |
 | **[libdmotservices](https://github.com/dentonescu/cv-samples/tree/main/libdmotservices)** | Personal multi‑language utility library with unit tests and examples. | C, Java, Python, JavaScript, Cross-language build tooling |
 | **[null-cipher](https://github.com/dentonescu/cv-samples/tree/main/null-cipher)** | Single‑page visual demo of a simple cipher (encrypt/decrypt) in the browser. | JavaScript, HTML, CSS |
 | **[pkixwebadm](https://github.com/dentonescu/cv-samples/tree/main/pkixwebadm)** (HTTP foundation in progress) | Certificate inventory web app pairing FastAPI with SQLite; configuration and scaffold are in place while the app factory and landing page are being implemented. | Python, FastAPI, Bootstrap UI, vendored JS tooling |
