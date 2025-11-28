@@ -16,8 +16,9 @@ A Java heap monitor demo (Spring Boot backend + Angular frontend) for CV samples
 
 ## Navigation
 - Backend: [backend/](backend/README.md)
-- Backend notes: [backend/NOTES.md](backend/NOTES.md)
+- Backend developer notes: [backend/NOTES.md](backend/NOTES.md)
 - Frontend: [frontend/](frontend/README.md)
+- Frontend developer notes: [frontend/NOTES.md](frontend/NOTES.md)
 - API spec: [api/openapi.yaml](api/openapi.yaml)
 - API docs (generate): `make -C heapmonj docs` → outputs to `heapmonj/docs/api/index.html`
   - Requires Node/npx and `@redocly/cli` (installed on demand by the Makefile) for HTML generation.
@@ -26,3 +27,7 @@ A Java heap monitor demo (Spring Boot backend + Angular frontend) for CV samples
 - Backend: `cd backend/heapmonj && ./gradlew bootRun` (Java 21, Maven available for the libdmotservices hook).
 - Frontend (dev): `cd frontend/heapmonj-frontend && npm install && ng serve --proxy-config proxy.conf.json` (serves on 4200, proxies `/api` to `http://localhost:8080`).
 - Docker Compose: `docker compose up --build` (landing page on 8080, slideshow 8081, WiFiEqu 8082, heapmonj backend 8083, frontend 8084).
+
+## Screenshot
+
+![heapmonj in browser](img/heapmon-frontend.png)
