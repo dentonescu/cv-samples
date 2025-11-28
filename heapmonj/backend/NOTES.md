@@ -28,8 +28,8 @@ backend/
 - **Service layer**: `HeapInfoService` maps libdmotservices `HeapInfo` to DTO/entity (done).
 - **REST API**: `/api/v1/heap/current` and `/api/v1/heap/history` with `limit`/`since` (done).
 - **Scheduling**: 10s sampler persisting to H2 (done; configurable via `heapmonj.sampling.interval-ms`).
-- **Packaging**: Dockerfile and docker-compose with frontend, CI workflow (pending).
-- **Frontend integration**: Angular polling/Chart.js UI once frontend is scaffolded (pending).
+- **Packaging**: Dockerfile + compose entry (done; mapped to host 8083 with on-disk H2 volume).
+- **Frontend integration**: Angular polling/Chart.js UI (done; see frontend notes).
 
 ## Build notes
 - Requires JDK 21. Gradle toolchain is set to 21; ensure your environment/daemon uses it.

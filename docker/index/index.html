@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>cv-samples stack</title>
+  <style>
+    :root {
+      --bg: #f7f7fb;
+      --panel: #ffffff;
+      --accent: #0ea5e9;
+      --text: #0f172a;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at 10% 20%, rgba(14,165,233,0.08), transparent 30%),
+                  radial-gradient(circle at 80% 0%, rgba(94,92,255,0.05), transparent 30%),
+                  var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem 1.25rem 3rem;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.2rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(1.6rem, 3vw, 2rem);
+      letter-spacing: 0.01em;
+    }
+    .muted { color: var(--muted); }
+    .grid {
+      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.2rem 1.3rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .eyebrow {
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      color: var(--accent);
+      margin: 0;
+    }
+    .links {
+      display: grid;
+      gap: 0.45rem;
+    }
+    a {
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.55rem 0.65rem;
+      border-radius: 10px;
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      word-break: break-all;
+    }
+    a:hover {
+      background: #e0f2fe;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(14,165,233,0.16);
+    }
+    footer {
+      margin-top: 1.5rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div>
+        <p class="muted" style="margin:0;">cv-samples docker stack</p>
+        <h1>Service index</h1>
+      </div>
+      <div><a href="https://github.com/dentonescu/cv-samples" target="_blank" rel="noreferrer noopener">github.com/dentonescu/cv-samples</a></div>
+    </header>
+
+    <div class="grid">
+      <article class="card">
+        <p class="eyebrow">Frontend</p>
+        <div class="links">
+          <a href="http://localhost:8084" target="_blank" rel="noreferrer noopener">Heapmonj UI (Angular)</a>
+          <a href="http://localhost:8081" target="_blank" rel="noreferrer noopener">Slideshow server</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <p class="eyebrow">Heapmonj backend</p>
+        <div class="links">
+          <a href="http://localhost:8083/api/v1/heap/current" target="_blank" rel="noreferrer noopener">/api/v1/heap/current</a>
+          <a href="http://localhost:8083/api/v1/heap/history" target="_blank" rel="noreferrer noopener">/api/v1/heap/history</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <p class="eyebrow">WiFiEqu backend</p>
+        <div class="links">
+          <a href="http://localhost:8082/api/v1/channels" target="_blank" rel="noreferrer noopener">/api/v1/channels</a>
+          <a href="http://localhost:8082/api/v1/stats" target="_blank" rel="noreferrer noopener">/api/v1/stats</a>
+          <a href="http://localhost:8082/api/v1/channel/stream" target="_blank" rel="noreferrer noopener">/api/v1/channel/stream</a>
+        </div>
+      </article>
+    </div>
+
+    <footer>Links assume the default Docker Compose port mappings on localhost.</footer>
+  </div>
+</body>
+</html>

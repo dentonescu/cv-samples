@@ -3,16 +3,8 @@
 A Java heap monitor demo (Spring Boot backend + Angular frontend) for CV samples.
 
 ## Status
-- Backend scaffolded (Gradle/Spring Boot) with a heap DTO (`HeapStatus`).
-- libdmotservices tooling/docs refreshed; dependency ready to consume.
-- MVP endpoints, persistence, scheduler, frontend, and Docker/CI wiring are still pending.
-
-## Near-term plan
-- Backend (Java 21, Spring Boot): add `HeapSample` JPA entity/repo, `HeapInfoService`, `/api/v1/heap/{current,history}` controller (with `limit`/`since`), scheduler sampling every 10s, and H2 on-disk storage under `backend/heapmonj/data/`.
-- Frontend: Angular app with a polling service and Chart.js line chart for heap usage.
-- Packaging: Dockerfiles for backend/frontend and docker-compose to wire them together; GitHub Actions to run Gradle tests/build, Angular build, and optionally Docker build.
-
-If you land here now, expect work in progress; the roadmap above outlines whatâ€™s coming next.***
+- Backend and frontend MVP are in place: scheduled heap sampling to on-disk H2, REST endpoints (`/api/v1/heap/current` and `/history`), Angular UI with polling + Chart.js, and Docker/compose wiring.
+- libdmotservices dependency is stamped/installed before builds (requires Maven + Java 21).
 
 ## Build notes
 - Requires JDK 21 for the backend (Gradle toolchain + Spring Boot 4).
@@ -20,7 +12,7 @@ If you land here now, expect work in progress; the roadmap above outlines whatâ€
   - Run the libdmotservices version stamper (`java tools/VersionManager.java ../..`).
   - Run `mvn -DskipTests install` in `libdmotservices/java` to publish local jars before compiling.
   - Use cached test results unless you run `./gradlew test --rerun-tasks` (tests may be skipped as UP-TO-DATE otherwise).
-- H2 writes to `backend/heapmonj/data/`; database files are gitignored.
+- H2 writes to `backend/heapmonj/data/`; database files are gitignored and removed by `make clean`.
 
 ## Navigation
 - Backend: [backend/](backend/README.md)
@@ -29,3 +21,8 @@ If you land here now, expect work in progress; the roadmap above outlines whatâ€
 - API spec: [api/openapi.yaml](api/openapi.yaml)
 - API docs (generate): `make -C heapmonj docs` â†’ outputs to `heapmonj/docs/api/index.html`
   - Requires Node/npx and `@redocly/cli` (installed on demand by the Makefile) for HTML generation.
+
+## Run locally
+- Backend: `cd backend/heapmonj && ./gradlew bootRun` (Java 21, Maven available for the libdmotservices hook).
+- Frontend (dev): `cd frontend/heapmonj-frontend && npm install && ng serve --proxy-config proxy.conf.json` (serves on 4200, proxies `/api` to `http://localhost:8080`).
+- Docker Compose: `docker compose up --build` (landing page on 8080, slideshow 8081, WiFiEqu 8082, heapmonj backend 8083, frontend 8084).

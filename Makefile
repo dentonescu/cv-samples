@@ -33,8 +33,8 @@ build-all:
 	@$(MAKE) -C slideshow-server dist
 	@$(MAKE) -C wifiequ clean all
 	@$(MAKE) -C txrxcli clean all
-	@$(MILESTONE) "Building heapmonj (Gradle)..."
-	@cd heapmonj/backend/heapmonj && ./gradlew clean build
+	@$(MILESTONE) "Building heapmonj (backend + frontend + docs)..."
+	@$(MAKE) -C heapmonj clean all
 
 dist:
 	@$(MILESTONE) "Populating the distribution directory..."
@@ -67,8 +67,8 @@ tests:
 	@$(MAKE) -C libdmotservices tests
 	@$(MAKE) -C wifiequ tests
 	@$(MAKE) -C txrxcli tests
-	@$(MILESTONE) "Running heapmonj tests (Gradle)..."
-	@cd heapmonj/backend/heapmonj && ./gradlew test
+	@$(MILESTONE) "Running heapmonj tests (backend + frontend)..."
+	@$(MAKE) -C heapmonj test
 	@$(GATHER)
 
 test: tests
@@ -87,6 +87,7 @@ examples:
 	@$(MAKE) -C libdmotservices examples
 	@$(MAKE) -C wifiequ examples
 	@$(MAKE) -C txrxcli examples
+	@$(MAKE) -C heapmonj examples || true
 	@$(GATHER)
 
 example-demo: examples
@@ -94,6 +95,7 @@ example-demo: examples
 	@$(MAKE) -C libdmotservices example-demo
 	@$(MAKE) -C wifiequ example-demo
 	@$(MAKE) -C txrxcli example-demo
+	@$(MAKE) -C heapmonj example-demo
 
 
 #####################################################################################
@@ -105,5 +107,5 @@ clean:
 	@$(MAKE) -C slideshow-server clean || true
 	@$(MAKE) -C wifiequ clean || true
 	@$(MAKE) -C txrxcli clean || true
-	@cd heapmonj/backend/heapmonj && ./gradlew clean || true
+	@$(MAKE) -C heapmonj clean || true
 	@rm -Rf "${DIST}"

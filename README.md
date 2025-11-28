@@ -14,29 +14,33 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 
 | Project | What it is | Primary skills |
 |---|---|---|
+| **[heapmonj](https://github.com/dentonescu/cv-samples/tree/main/heapmonj)** (in progress) | JVM heap monitor microservice (Spring Boot 4/Java 21) with scheduled sampling to H2 and an Angular + Chart.js frontend. | Java 21, Spring Boot, JPA/H2, Angular, Docker |
 | **[libdmotservices](https://github.com/dentonescu/cv-samples/tree/main/libdmotservices)** | Personal multi‑language utility library with unit tests and examples. | C, Java, Python, JavaScript, Cross-language build tooling |
 | **[null-cipher](https://github.com/dentonescu/cv-samples/tree/main/null-cipher)** | Single‑page visual demo of a simple cipher (encrypt/decrypt) in the browser. | JavaScript, HTML, CSS |
-| **[slideshow-server](https://github.com/dentonescu/cv-samples/tree/main/slideshow-server)** | Tiny Python web server that generates responsive media slideshows. | Python, HTML, JS, Docker |
-| **[WiFiEqu](https://github.com/dentonescu/cv-samples/tree/main/wifiequ)** (in progress) | Terminal Wi‑Fi channel “equalizer” visualizer with a C JSON daemon, Windows service, and Angular web UI. The Linux daemon streams live/mock readings over SSE, honours configurable refresh cadences, and secures `/api/v1/stats` with an API key. | C, ANSI/terminal, JSON APIs, C#, Angular, Docker |
-| **[txrxcli](https://github.com/dentonescu/cv-samples/tree/main/txrxcli)** | Educational raw‑TCP remote execution demo with a C++ Linux client/server and a C#/.NET dual‑mode peer; API‑key gated, warning‑heavy, not for production. | C++17 sockets, process exec/capture, C#/.NET 8 |
 | **[pkixwebadm](https://github.com/dentonescu/cv-samples/tree/main/pkixwebadm)** (HTTP foundation in progress) | Certificate inventory web app pairing FastAPI with SQLite; configuration and scaffold are in place while the app factory and landing page are being implemented. | Python, FastAPI, Bootstrap UI, vendored JS tooling |
-| **[heapmonj](https://github.com/dentonescu/cv-samples/tree/main/heapmonj)** (in progress) | JVM heap monitor microservice (Spring Boot 4/Java 21) with scheduled sampling to H2 and an Angular + Chart.js frontend. | Java 21, Spring Boot, JPA/H2, Angular, Docker |
+| **[slideshow-server](https://github.com/dentonescu/cv-samples/tree/main/slideshow-server)** | Tiny Python web server that generates responsive media slideshows. | Python, HTML, JS, Docker |
+| **[txrxcli](https://github.com/dentonescu/cv-samples/tree/main/txrxcli)** | Educational raw‑TCP remote execution demo with a C++ Linux client/server and a C#/.NET dual‑mode peer; API‑key gated, warning‑heavy, not for production. | C++17 sockets, process exec/capture, C#/.NET 8 |
+| **[WiFiEqu](https://github.com/dentonescu/cv-samples/tree/main/wifiequ)** (in progress) | Terminal Wi‑Fi channel “equalizer” visualizer with a C JSON daemon, Windows service, and Angular web UI. The Linux daemon streams live/mock readings over SSE, honours configurable refresh cadences, and secures `/api/v1/stats` with an API key. | C, ANSI/terminal, JSON APIs, C#, Angular, Docker |
 
 ## Gallery
 
-| libdmotservices | null-cipher | slideshow-server |
+| heapmonj | libdmotservices | null-cipher |
 |---|---|---|
-| [![libdmotservices thumbnail](thumbnails/th-libdmotservices-01.png)](libdmotservices/README.md) | [![null-cipher thumbnail](thumbnails/th-null-cipher-01.png)](null-cipher/README.md) | [![slideshow-server thumbnail](thumbnails/th-slideshow-server-01.png)](slideshow-server/README.md) |
+| [![heapmonj thumbnail](thumbnails/th-heapmonj-01.png)](heapmonj/README.md) | [![libdmotservices thumbnail](thumbnails/th-libdmotservices-01.png)](libdmotservices/README.md) | [![null-cipher thumbnail](thumbnails/th-null-cipher-01.png)](null-cipher/README.md) |
 
-| WiFiEqu | pkixwebadm | txrxcli |
+| pkixwebadm | slideshow-server | txrxcli |
 |---|---|---|
-| [![WiFiEqu thumbnail](thumbnails/th-wifiequ-01.png)](wifiequ/README.md) | [![pkixwebadm thumbnail](thumbnails/th-pkixwebadm-01.png)](pkixwebadm/README.md) | [![txrxcli thumbnail](thumbnails/th-txrxcli-01.png)](txrxcli/README.md) |
+| [![pkixwebadm thumbnail](thumbnails/th-pkixwebadm-01.png)](pkixwebadm/README.md) | [![slideshow-server thumbnail](thumbnails/th-slideshow-server-01.png)](slideshow-server/README.md) | [![txrxcli thumbnail](thumbnails/th-txrxcli-01.png)](txrxcli/README.md) |
+
+| WiFiEqu |  |  |
+|---|---|---|
+| [![WiFiEqu thumbnail](thumbnails/th-wifiequ-01.png)](wifiequ/README.md) |  |  |
 
 
 ## Tooling & automation
 - `dev.sh` in the repository root orchestrates dependency setup, builds, tests, installs, and demo runs from a single entrypoint. It now recognises mock vs. hardware example runs, optional interface overrides, and selective subcommands so you can rehearse exactly what the CI job performs. See the usage recipes below for common scenarios. The `--install-deps` slice now installs Node.js so libdmotservices’ JavaScript helpers and tests run consistently in CI and locally.
 - `.github/workflows/cv-samples-ci.yml` mirrors the `dev.sh` flow on GitHub Actions: dependencies → build → tests → example runs. The pipeline ensures every project stays buildable on a clean Ubuntu runner (the Wi-Fi scan demo skips gracefully when no wireless interface is available).
-- `docker-compose.yml` spins up containerised demos (`slideshow-server` on host port `8081`, `wifiequ` on host port `8082`) using the project-specific Dockerfiles. Great for a one-command tour: `docker compose up --build`. See [Docker stack notes](docker/README.md) for the full command list, group permissions, and snap service tips.
+- `docker-compose.yml` spins up containerised demos (`stack-index` on host port `8080`, `slideshow-server` on `8081`, `wifiequ` on `8082`, `heapmonj-backend` on `8083`, `heapmonj-frontend` on `8084`) using the project-specific Dockerfiles. Great for a one-command tour: `docker compose up --build`. See [Docker stack notes](docker/README.md) for the full command list, group permissions, and snap service tips.
 - `.gitattributes` files have been introduced across the projects to normalise line endings and enforce consistent attributes, making diffs reliable across platforms.
 - All major projects now ship CMakeLists alongside their original Make/Ant flows. A typical configure/build is `cmake -S <project> -B <project>/build -G Ninja && cmake --build <project>/build` with target names that mirror the Makefile habits (`*_dist`, `*_test`, example/demo helpers).
 

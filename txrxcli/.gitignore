@@ -57,3 +57,6 @@ windows/build/
 
 # NuGet caches (use a shared cache outside the repo)
 **/.nuget/
+
+# Local per-user caches
+**/.local/

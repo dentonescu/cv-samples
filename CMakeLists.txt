@@ -17,7 +17,6 @@ add_subdirectory(pkixwebadm)
 add_subdirectory(txrxcli)
 # heapmonj docs (Gradle-based app; docs via CMake)
 add_subdirectory(heapmonj)
-# heapmonj is Gradle-based; no CMake target
 
 find_program(CV_MAVEN_EXECUTABLE mvn)
 if(NOT CV_MAVEN_EXECUTABLE)
@@ -108,8 +107,9 @@ endif()
 if(TARGET txrxcli)
     add_dependencies(cv_samples_all txrxcli)
 endif()
-# heapmonj build handled via Gradle outside CMake
-if(TARGET heapmonj_docs_openapi)
+if(TARGET heapmonj_all)
+    add_dependencies(cv_samples_all heapmonj_all)
+elseif(TARGET heapmonj_docs_openapi)
     add_dependencies(cv_samples_all heapmonj_docs_openapi)
 endif()
 if(TARGET libdmotservices_mvn_install)
@@ -132,7 +132,9 @@ endif()
 if(TARGET txrxcli_tests)
     add_dependencies(cv_samples_tests txrxcli_tests)
 endif()
-# heapmonj tests handled via Gradle outside CMake
+if(TARGET heapmonj_test)
+    add_dependencies(cv_samples_tests heapmonj_test)
+endif()
 
 add_custom_target(cv_samples_test
     DEPENDS cv_samples_tests
@@ -158,6 +160,9 @@ if(TARGET slideshow_example_demo)
 endif()
 if(TARGET pkixwa_example_demo)
     add_dependencies(cv_samples_example_demo pkixwa_example_demo)
+endif()
+if(TARGET heapmonj_example_demo)
+    add_dependencies(cv_samples_example_demo heapmonj_example_demo)
 endif()
 
 add_custom_target(cv_samples_dist

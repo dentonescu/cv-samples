@@ -1,0 +1,14 @@
+.git
+**/.git
+**/.gitignore
+**/.gradle
+**/.idea
+**/.vscode
+**/node_modules
+**/dist
+**/build
+**/out-tsc
+**/.angular
+**/data
+Dockerfile
+docker-compose.yml

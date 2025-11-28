@@ -1,0 +1,55 @@
+<section class="hero">
+  <div>
+    <p class="eyebrow">Heap monitor</p>
+    <h1>JVM heap usage</h1>
+    <p class="muted">Live snapshots every {{ pollIntervalMs / 1000 }}s from the Spring Boot backend.</p>
+  </div>
+  <div class="status">
+    <p class="muted">Last updated</p>
+    <p class="stamp" *ngIf="lastUpdated; else pending">
+      {{ lastUpdated | date:'mediumTime' }}
+    </p>
+    <ng-template #pending><p class="stamp muted">waiting...</p></ng-template>
+    <p *ngIf="error" class="error">{{ error }}</p>
+  </div>
+</section>
+
+<section class="cards" *ngIf="current as snap">
+  <article class="card">
+    <p class="label">Used</p>
+    <p class="value">{{ (snap.heapSizeMB - snap.heapFreeMB) | number:'1.0-1' }} MB</p>
+    <p class="hint">{{ snap.heapFreePercentage | number:'1.0-1' }}% free</p>
+  </article>
+  <article class="card">
+    <p class="label">Free</p>
+    <p class="value">{{ snap.heapFreeMB | number:'1.0-1' }} MB</p>
+    <p class="hint">Free bytes: {{ snap.heapFreeBytes | number }}</p>
+  </article>
+  <article class="card">
+    <p class="label">Max</p>
+    <p class="value">{{ snap.heapMaxMB | number:'1.0-1' }} MB</p>
+    <p class="hint">Max bytes: {{ snap.heapMaxBytes | number }}</p>
+  </article>
+</section>
+
+<section class="chart-area">
+  <div class="chart-card">
+    <div class="chart-head">
+      <h2>Heap history</h2>
+      <p class="muted">Used vs free memory</p>
+    </div>
+    <div class="chart-body">
+      <ng-container *ngIf="chartData.labels?.length; else noData">
+        <canvas
+          baseChart
+          [data]="chartData"
+          [options]="chartOptions"
+          type="line">
+        </canvas>
+      </ng-container>
+      <ng-template #noData>
+        <p class="no-data muted">Waiting for samples…</p>
+      </ng-template>
+    </div>
+  </div>
+</section>

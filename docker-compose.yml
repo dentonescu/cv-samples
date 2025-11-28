@@ -22,3 +22,33 @@ services:
     ports:
       - "8082:8080"
     restart: unless-stopped
+  heapmonj-backend:
+    build:
+      context: .
+      dockerfile: heapmonj/backend/Dockerfile
+    ports:
+      - "8083:8080"
+    volumes:
+      - ./heapmonj/backend/heapmonj/data:/opt/heapmonj/data
+    restart: unless-stopped
+  heapmonj-frontend:
+    build:
+      context: .
+      dockerfile: heapmonj/frontend/Dockerfile
+    ports:
+      - "8084:80"
+    depends_on:
+      - heapmonj-backend
+    restart: unless-stopped
+  stack-index:
+    image: nginx:1.27-alpine
+    volumes:
+      - ./docker/index:/usr/share/nginx/html:ro
+    ports:
+      - "8080:80"
+    depends_on:
+      - slideshow-server
+      - wifiequ
+      - heapmonj-backend
+      - heapmonj-frontend
+    restart: unless-stopped

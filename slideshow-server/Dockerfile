@@ -8,8 +8,11 @@ ENV PYTHONUNBUFFERED=1
 RUN apt-get update && apt-get install -y --no-install-recommends make && \
     rm -rf /var/lib/apt/lists/*
 
+WORKDIR /app
+COPY libdmotservices/ ./libdmotservices/
+COPY slideshow-server/ ./slideshow-server/
+ENV LIBDMOTSERVICES_ROOT=/app/libdmotservices/python
 WORKDIR /app/slideshow-server
-COPY slideshow-server/ ./
 
 RUN pip install --no-cache-dir pytest && \
     make clean && \

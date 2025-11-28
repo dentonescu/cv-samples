@@ -1,0 +1,75 @@
+@use 'sass:color';
+
+$bg: #0f172a;
+$panel: #111827;
+$accent: #7c3aed;
+$text: #e5e7eb;
+$muted: #9ca3af;
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background: radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.15), transparent 35%),
+    radial-gradient(circle at 80% 10%, rgba(14, 165, 233, 0.12), transparent 30%), $bg;
+  color: $text;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.app-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 3rem;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: $panel;
+  border: 1px solid color.adjust($panel, $lightness: 8%);
+  border-radius: 18px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.brand-mark {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: $text;
+}
+
+.brand-subtitle {
+  color: $muted;
+  font-size: 0.85rem;
+}
+
+.app-meta {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+
+  a {
+    color: $text;
+    text-decoration: none;
+    padding: 0.45rem 0.8rem;
+    border-radius: 12px;
+    border: 1px solid color.adjust($panel, $lightness: 12%);
+    background: color.adjust($panel, $lightness: 5%);
+    transition: background 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+      background: color.adjust($panel, $lightness: 10%);
+      transform: translateY(-1px);
+    }
+  }
+}
+
+.app-content {
+  margin-top: 1.5rem;
+}

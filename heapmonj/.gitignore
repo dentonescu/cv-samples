@@ -6,6 +6,9 @@ Thumbs.db
 *.iml
 .mtj.tmp/
 
+# Build
+**/build/
+
 # Logs / temp
 *.log
 logs/
@@ -54,3 +57,4 @@ pnpm-debug.log*
 /backend/heapmonj/*.trace.db
 **/node_modules
 **/package-lock.json
+
