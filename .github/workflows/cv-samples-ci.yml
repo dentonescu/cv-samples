@@ -40,3 +40,6 @@ jobs:
             dist/**
           if-no-files-found: warn
           retention-days: 90
+      
+      - name: Verify Docker Compose starts cleanly
+        run: ./dev.sh --test-compose

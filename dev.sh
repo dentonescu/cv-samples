@@ -34,6 +34,7 @@ usage() {
         print_usage_block "--build" "Compile and link all sub-projects."
         print_usage_block "--run-tests" "Execute unit tests."
         print_usage_block "--run-examples" "Run available demo programs."
+        print_usage_block "--test-compose" "Test whether Docker Compose completes successfully."
         echo
         echo "Git operations:"
         print_usage_block "--git-diff" "Show Git differences for each sub-project."
@@ -132,6 +133,36 @@ git_op() {
     return 0
 }
 
+verify_docker_compose_works() {
+    yaml_file="$SCRIPT_DIR/docker-compose.yml"
+    if [ ! -f "$yaml_file" ]; then
+        printf "${ANSI_RESET}${ANSI_RED}Could not locate the Docker Compose build file: $yaml_file${ANSI_RESET}\n" >&2
+        exit 1
+    fi
+    pushd "$SCRIPT_DIR"
+    ports_to_check="$(cat "$yaml_file" | grep -Po "([0-9]+):" | cut -f1 -d ':' | xargs)"
+    docker compose up -d --build || true
+    ss -ltnp
+    did_all_succeed="true"
+    for port in $ports_to_check
+    do
+        printf "${ANSI_RESET}${ANSI_GREEN}Testing port $port${ANSI_RESET}: "
+        is_port_active="$(ss -ltn 2>/dev/null | grep ":$port\b")" || true
+        if [ -z "$is_port_active" ]; then
+            did_all_succeed="false"
+            printf "off\n"
+        else
+            printf "on\n"
+        fi
+    done
+    printf "Docker Compose startup status: $did_all_succeed\n\n"
+    docker compose down || true
+    popd
+    if [ "$did_all_succeed" = "false" ]; then
+     exit 1
+    fi
+}
+
 ##
 ## Arguments parsing
 ##
@@ -151,6 +182,7 @@ do_git_push=0
 do_git_status=0
 run_examples=0
 run_tests=0
+test_compose=0
 
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -193,6 +225,9 @@ while [ $# -gt 0 ]; do
             ;;
         --git-status)
             do_git_status=1
+            ;;
+        --test-compose)
+            test_compose=1
             ;;
         -h|--help)
             usage
@@ -237,3 +272,4 @@ echo "PYTHONPATH=$PYTHONPATH"
 [ ! "$install_prj" -eq 1 ] || make -C "$SCRIPT_DIR" install
 [ ! "$run_tests" -eq 1 ] || (ensure_vendoring && make -C "$SCRIPT_DIR" test)
 [ ! "$run_examples" -eq 1 ] || (ensure_vendoring && WFQ_IFACE="$iface" WFQ_MOCK="$mock" make -C "$SCRIPT_DIR" example-demo)
+[ ! "$test_compose" -eq 1 ] || (verify_docker_compose_works)
