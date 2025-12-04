@@ -76,4 +76,3 @@ build.bat
 build.cmd
 build.ps1
 build.sh
-package-lock.json
