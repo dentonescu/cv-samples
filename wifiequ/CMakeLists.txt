@@ -9,6 +9,7 @@ cmake_minimum_required(VERSION 3.16)
 project(wifiequ LANGUAGES C)
 
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
+find_program(WIFIEQU_NPM_EXECUTABLE npm)
 
 file(READ "${CMAKE_CURRENT_LIST_DIR}/VERSION" WIFIEQU_VERSION_RAW)
 string(STRIP "${WIFIEQU_VERSION_RAW}" WIFIEQU_VERSION)
@@ -21,6 +22,7 @@ add_custom_target(wifiequ_version
 
 set(WIFIEQU_DIST_DIR "${CMAKE_CURRENT_LIST_DIR}/dist")
 set(WIFIEQU_LINUX_ARTIFACTS "${CMAKE_CURRENT_BINARY_DIR}/linux/artifacts")
+set(WIFIEQU_FRONTEND_DIR "${CMAKE_CURRENT_LIST_DIR}/web-angular/wifiequ-frontend")
 
 add_custom_target(wifiequ_dist
     COMMAND "${CMAKE_COMMAND}" -E make_directory "${WIFIEQU_DIST_DIR}"
@@ -46,7 +48,30 @@ else()
         COMMAND "${CMAKE_COMMAND}" -E echo "npx not available; skipping OpenAPI docs.")
 endif()
 
+if(WIFIEQU_NPM_EXECUTABLE)
+    add_custom_target(wifiequ_frontend_build
+        COMMAND "${CMAKE_COMMAND}" -E echo "Building WiFiEqu frontend with npm"
+        COMMAND "${CMAKE_COMMAND}" -E chdir "${WIFIEQU_FRONTEND_DIR}" ${WIFIEQU_NPM_EXECUTABLE} ci
+        COMMAND "${CMAKE_COMMAND}" -E chdir "${WIFIEQU_FRONTEND_DIR}" ${WIFIEQU_NPM_EXECUTABLE} run build
+        COMMENT "Angular build for WiFiEqu frontend")
+
+    add_custom_target(wifiequ_frontend_test
+        COMMAND "${CMAKE_COMMAND}" -E echo "Running WiFiEqu frontend tests"
+        COMMAND "${CMAKE_COMMAND}" -E chdir "${WIFIEQU_FRONTEND_DIR}" ${WIFIEQU_NPM_EXECUTABLE} test -- --watch=false
+        COMMENT "Angular tests for WiFiEqu frontend")
+else()
+    add_custom_target(wifiequ_frontend_build
+        COMMAND "${CMAKE_COMMAND}" -E echo "npm not available; skipping WiFiEqu frontend build."
+        COMMENT "Skipping WiFiEqu frontend build (npm not found)"
+    )
+    add_custom_target(wifiequ_frontend_test
+        COMMAND "${CMAKE_COMMAND}" -E echo "npm not available; skipping WiFiEqu frontend tests."
+        COMMENT "Skipping WiFiEqu frontend tests (npm not found)"
+    )
+endif()
+
 add_custom_target(wifiequ_tests
+    DEPENDS wifiequ_frontend_test
     COMMAND "${CMAKE_CTEST_COMMAND}" --output-on-failure
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
     COMMENT "Executing WiFiEqu test suite"
@@ -60,4 +85,4 @@ else()
 endif()
 
 add_custom_target(wifiequ_all
-    DEPENDS wifiequ_version wifiequd)
+    DEPENDS wifiequ_version wifiequd wifiequ_frontend_build)

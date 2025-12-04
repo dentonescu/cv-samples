@@ -4,7 +4,8 @@ Developer notes for WiFiEqu. This project stitches together a family of small co
 
 ## Current stage
 - Linux daemon, contract, and mock/live demos are production-ready for portfolio purposes.
-- Active work targets Windows-service parity, Angular visualisations, and Docker orchestration so every client consumes the shared API consistently.
+- Angular UI now renders the live SSE stream with channel fill for missing bins and signal-strength colouring (served via nginx with server-side stats-key injection).
+- Active work targets Windows-service parity and Docker health/metrics so every client consumes the shared API consistently.
 
 ## Current File Layout
 ```
@@ -13,7 +14,7 @@ wifiequ/
 ├─ NOTES.md                      # Developer log and architecture decisions
 ├─ LICENSE
 ├─ VERSION                       # Release tag
-├─ Dockerfile                    # Container recipe for daemon + UI
+├─ Dockerfile                    # Container recipe for daemon
 ├─ Makefile                      # Build/test shortcuts
 ├─ gen-version.py                # Bumps VERSION file
 ├─ package.json / package-lock.json
@@ -30,6 +31,8 @@ wifiequ/
 │  ├─ README.md
 │  └─ api/index.html             # Generated HTML docs
 ├─ dist/                         # Built binaries (gitignored in tree)
+├─ docker/                       # Container entrypoints (backend)
+│  └─ entrypoint-backend.sh
 ├─ linux/                        # Native daemon implementation (C)
 │  ├─ README.md / NOTES.md / ARCHITECTURE.md
 │  ├─ Makefile
@@ -56,7 +59,9 @@ wifiequ/
 │  └─ img/                       # Architecture diagrams, screenshots
 ├─ web-angular/
 │  ├─ README.md
-│  └─ NOTES.md
+│  ├─ NOTES.md
+│  ├─ Dockerfile                 # Angular build + nginx proxy with key injection
+│  └─ docker/entrypoint-frontend.sh
 ├─ windows/
 │  ├─ README.md
 │  └─ NOTES.md
@@ -79,11 +84,11 @@ wifiequ/
    - Document tuning knobs (`refresh.millis`, `log.daemon.json`, interface overrides) in the config reference.
 3. **Client parity**  
    - Windows service: mirror the `/channels`, `/stats`, and `/channels/stream` endpoints; reuse DTOs generated from the OpenAPI schema.  
-   - Angular UI: wire the live SSE stream, add responsive channel visualisations, and surface daemon metadata.  
+   - Angular UI: already wired to the live SSE stream; next steps are health checks, metrics, and container polish.  
    - Provide integration tests (Linux daemon + clients) that assert payload compatibility.
 4. **Distribution + tooling**  
    - Extend `dev.sh` to orchestrate Windows packaging steps (via WSL or documented PowerShell).  
-   - Ship Docker images for the daemon + Angular UI with health checks and CI hooks.  
+   - Ship Docker images for the daemon + Angular UI with health checks and CI hooks (frontend container exists; add health checks next).  
    - Add metrics hooks (Prometheus-style endpoint or structured logs) once parity lands.
 5. **Observability & polish**  
    - Capture scan errors and interface state changes in structured logs.  
@@ -100,6 +105,8 @@ Iterate module by module, but keep the contract and sample payloads in sync as t
   Version metadata tooling paved the way for the first OpenAPI draft. The HTTP façade brought libmicrohttpd listeners and a ring buffer to life, culminating in live `/api/v1/channels` and `/api/v1/stats` endpoints. Extensive documentation updates kept the contract and generated docs in sync.
 - **2025-11-01 – 2025-11-02: Streaming, auth, and packaging**  
   Server-Sent Events completed the trio of endpoints, followed by API-key enforcement, installer helpers, CI wiring, and Docker packaging. Mock-mode safeguards ensured predictable behaviour for demos and automated runs.
+- **2025-12-03: Frontend stream wiring + container split**  
+  Angular UI now renders the SSE stream with channel fill and signal colouring. Added dedicated frontend nginx container with stats-key injection and adjusted compose ports (`8082` API, `8083` UI).
 
 ## Domain Notes
 - Linux networking: uses `nl80211` via `libnl` to enumerate BSS info; frequencies map to human-readable channels via configuration ranges.  

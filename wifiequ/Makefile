@@ -2,7 +2,7 @@
 ## WiFiEqu/Makefile
 #################################################
 
-.PHONY: all angular clean dist docs docs-openapi install example-demo examples linux prebuild setup-user test tests windows
+.PHONY: all frontend-build angular clean dist docs docs-openapi install example-demo examples linux prebuild setup-user test tests windows
 
 # build prerequisites
 VERSION := $(strip $(shell cat VERSION))
@@ -18,6 +18,9 @@ OPENAPI         := $(ROOT)/api/openapi.yaml
 DOC_DIR_API     := docs/api
 DOC_API_HTML    := $(DOC_DIR_API)/index.html
 
+# frontend
+FRONTEND_DIR    := $(ROOT)/web-angular/wifiequ-frontend
+
 # commands
 MILESTONE 		:= echo === 
 GATHER_BINS		:= for dir in "$(ROOT)/linux/bin" "$(ROOT)/linux/build"; do \
@@ -30,7 +33,7 @@ GATHER_BINS		:= for dir in "$(ROOT)/linux/bin" "$(ROOT)/linux/build"; do \
 #####################################################################################
 ## Default build
 #####################################################################################
-all: prebuild version linux dist
+all: prebuild version linux frontend-build dist
 
 dist:
 	@$(MILESTONE) "Populating the distribution directory..."
@@ -89,9 +92,11 @@ windows:
 #####################################################################################
 ## Angular build
 #####################################################################################
-angular:
+frontend-build:
 	@$(MILESTONE) "Building the Angular application..."
-	@$(MAKE) -C angular all
+	@cd "$(FRONTEND_DIR)" && npm ci && npm run build
+
+angular: frontend-build
 
 
 #####################################################################################
@@ -100,6 +105,8 @@ angular:
 tests:
 	@$(MILESTONE) "Compiling all tests..."
 	@$(MAKE) -C linux tests
+	@$(MILESTONE) "Running frontend tests..."
+	@cd "$(FRONTEND_DIR)" && npm test -- --watch=false
 	@$(GATHER_BINS)
 
 test: tests
@@ -125,6 +132,7 @@ example-demo: examples
 clean:
 	@$(MILESTONE) "Removing previous builds..."
 	@$(MAKE) -C linux clean || true
+	@cd "$(FRONTEND_DIR)" && rm -rf dist out-tsc || true
 	@rm -Rf "$(DIST)"
 
 #####################################################################################

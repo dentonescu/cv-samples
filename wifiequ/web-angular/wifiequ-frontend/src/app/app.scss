@@ -1,0 +1,69 @@
+@use 'sass:color';
+
+.app-shell {
+  width: 90vw;
+  max-width: none;
+  margin: 0 auto;
+  padding: 32px 28px 60px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  background: color.mix(#0b1724, #0e2035, 60%);
+  border-radius: 16px;
+  box-shadow: var(--glow);
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.brand-mark {
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+}
+
+.brand-subtitle {
+  color: var(--panel-muted);
+  font-size: 0.9rem;
+}
+
+.app-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.app-meta a {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.home-link {
+  color: #e5edf7;
+}
+
+.app-content {
+  margin-top: 22px;
+}
+
+@media (max-width: 720px) {
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .app-meta {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+}

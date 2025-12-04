@@ -6,6 +6,8 @@ FROM debian:bookworm-slim AS builder
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
         build-essential \
         pkg-config \
         libcmocka-dev \
@@ -15,6 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python3 \
         python3-pip \
         openssl \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /src
@@ -36,7 +40,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         openssl \
     && rm -rf /var/lib/apt/lists/*
 
-COPY docker/wifiequ-entrypoint.sh /usr/local/bin/wifiequ-entrypoint.sh
+COPY wifiequ/linux/docker/entrypoint-backend.sh /usr/local/bin/wifiequ-entrypoint.sh
 RUN chmod +x /usr/local/bin/wifiequ-entrypoint.sh
 
 COPY --from=builder /src/wifiequ/linux/bin/wifiequd /usr/local/bin/wifiequd

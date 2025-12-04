@@ -1,0 +1,52 @@
+<section class="chart-area">
+  <div class="chart-card">
+    <header class="chart-head">
+      <p class="eyebrow">WiFiEqu</p>
+      <div class="title-row">
+        <h2>Channel Equalizer</h2>
+        <div class="live-pill" [ngClass]="stats?.mode">
+          {{ stats?.mode || 'unknown' }}
+        </div>
+      </div>
+      <p class="lede">Per-channel RSSI from the daemon.</p>
+    </header>
+
+    <div class="status-grid">
+      <div class="stat">
+        <span class="stat-label">Interface</span>
+        <span class="stat-value">{{ stats?.interface || 'unknown' }}</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Refresh</span>
+        <span class="stat-value">{{ stats?.refresh_ms || '?' }} ms</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Endpoint</span>
+        <span class="stat-value">{{ endpoint || 'unknown' }}</span>
+      </div>
+    </div>
+
+    <div class="bars" aria-label="channel levels">
+      <ng-container *ngIf="readings.length; else noData">
+        <div
+          class="bar"
+          *ngFor="let r of readings; trackBy: trackByChan"
+          [attr.aria-label]="'Channel ' + r.chan + ' at ' + (r.dbm | number:'1.0-1') + ' dBm'">
+          <div class="bar-fill" [ngClass]="signalStrengthClass(r.dbm)" [style.height.%]="toPercent(r.dbm)"></div>
+          <span class="bar-chan">{{ r.chan }}</span>
+          <span class="bar-db">{{ r.dbm | number:'1.0-1' }} dBm</span>
+        </div>
+      </ng-container>
+      <ng-template #noData>
+        <div class="empty">Waiting for channel data...</div>
+      </ng-template>
+    </div>
+
+    <footer class="chart-foot">
+      <span class="foot-note">
+        {{ stats?.channels_defined || 0 }} channel{{ (stats?.channels_defined === 1) ? '' : 's' }} defined.
+      </span>
+
+    </footer>
+  </div>
+</section>

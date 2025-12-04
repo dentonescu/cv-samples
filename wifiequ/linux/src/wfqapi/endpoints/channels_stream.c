@@ -14,7 +14,20 @@
  * internals
  */
 
-// nothing yet
+static void compact_json_in_place(char *json)
+{
+    if (!json)
+        return;
+    char *r = json;
+    char *w = json;
+    while (*r)
+    {
+        if (*r != '\n' && *r != '\r' && *r != '\t')
+            *w++ = *r;
+        r++;
+    }
+    *w = '\0';
+}
 
 /*
  * callbacks
@@ -69,6 +82,7 @@ static ssize_t cb_sse(void *cls, uint64_t pos, char *buf, size_t max)
 
     char json[DEFAULT_JSON_BUFFER_SIZE];
     wfqapi_sample2json(&sample, json, sizeof json);
+    compact_json_in_place(json); // SSE data must be on a single line
     if (max == 0)
         return 0;
 

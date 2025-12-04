@@ -8,12 +8,16 @@ WiFiEqu demonstrates how system services on different operating systems can expo
 ## What it does (in plain terms)
 - Scans for nearby Wi‑Fi networks and groups them by channel.
 - Aggregates signal strength into a simple per‑channel bar view (“equalizer”).
-- Exposes a minimal JSON API so other clients (CLI, Windows desktop, Angular web) can display the same data.
+- Exposes a minimal JSON API so other clients (CLI, Windows desktop, Angular web) can display the same data.,
+
+## Example (mock mode)
+
+![WiFiEqu frontend in mock mode](web-angular/img/wifiequ-frontend.gif)
 
 ## Project overview
 - [Linux daemon](linux/README.md) — daemon and CLI (C, Makefiles, systemd unit install).
 - [Windows service](windows/README.md) — Windows service (C#) (stub).
-- [Angular frontend](web-angular/README.md) — Angular client (stub).
+- [Angular frontend](web-angular/README.md) — Angular client with live SSE stream rendering.
 - [API specification](api/README.md) — API schemas and examples.
 
 ## Architecture
@@ -44,8 +48,8 @@ flowchart TB
 ## Status
 - Linux daemon publishes live or mock readings, honours `refresh.millis` from `wifiequd.conf`, and offers snapshot, metadata, and streaming endpoints via HTTP.
 - HTTP router serves `GET /api/v1/channels`, `GET /api/v1/stats` (guarded by an API key), and the Server-Sent Events stream for live updates.
-- Web/Windows clients remain stubs and will evolve once the expanded JSON contract is ready.
-- Windows parity, shared .NET DTOs, and richer Docker orchestration are queued up next; these items are outlined below so the core daemon work can guide upcoming branches.
+- Angular frontend renders the live stream, fills gaps for missing bins, and colour-codes signal strength; it proxies through nginx to inject the stats API key.
+- Windows service remains a stub; shared .NET DTOs and parity are queued up next.
 
 ## Build
 ```sh
@@ -101,13 +105,15 @@ The image generates a stats token automatically when `WFQ_ACCESS_TOKEN` is omitt
 
 When building the container the Dockerfile compiles only the Linux C library (`make -C libdmotservices/c/linux ...`) before building WiFiEqu, avoiding the optional Java tooling from the host toolchain.
 
-Run WiFiEqu alongside `slideshow-server` via Docker Compose:
+Run WiFiEqu alongside the other samples via Docker Compose:
 
 ```sh
-docker compose up --build wifiequ
+docker compose up --build wifiequ-backend wifiequ-frontend
 ```
 
-The service binds to `http://localhost:8082` on the host. Compose makes it easy to start/stop just this service (`docker compose stop wifiequ`) or watch the logs (`docker compose logs -f wifiequ`). See the shared [Docker stack notes](../docker/README.md) for more examples and the Docker snap setup.
+The API binds to `http://localhost:8084` and the Angular UI to `http://localhost:8085`. Compose bakes in a demo token (`wfq-demo-token-please-change`) for the stats endpoint; override `WFQ_ACCESS_TOKEN`/`WFQ_STATS_KEY` in `docker-compose.yml` or via environment variables for anything beyond a local demo. You can start/stop just these services (`docker compose stop wifiequ-backend wifiequ-frontend`) or watch the logs (`docker compose logs -f wifiequ-backend`). See the shared [Docker stack notes](../docker/README.md) for more examples and the Docker snap setup.
+
+Angular build note: the frontend build expects Node.js 20+. The Dockerfile installs Node 20 in the builder stage; local builds should use the same or newer.
 
 Ring-buffer behaviour for the streaming endpoint is covered by `linux/tests/test_sample_stream.c`, including fast-producer/slow-consumer edge cases.
 
@@ -122,7 +128,7 @@ The OpenAPI contract lives in [`api/openapi.yaml`](api/openapi.yaml). The HTML v
 - [ ] Lock down the JSON schema and add contract tests (Linux + Windows).
 - [ ] Ship the first Windows worker: Minimal API, SSE endpoints, API-key auth, xUnit coverage.
 - [ ] Extract the shared `Dmot.Lib` C# package for DTOs, logging, and config.
-- [ ] Extend Docker Compose stack with the Angular UI, gallery landing page, and container health checks/metrics.
+- [ ] Extend Docker Compose stack with the Angular UI, gallery landing page, and container health checks/metrics. **(Angular UI added; health checks/metrics still pending.)**
 - [ ] Harden OpenAPI docs and CI build job to emit Linux/Windows artifacts.
 - [ ] Enhance Angular visualization with channel overlays and live stream handling.
 - [ ] Polish packaging/installer scripts once multi-platform parity is in place.

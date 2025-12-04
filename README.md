@@ -34,13 +34,13 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 
 | WiFiEqu | prng-tools | Terraglean |
 |---|---|---|
-| [![WiFiEqu thumbnail](thumbnails/th-wifiequ-01.png)](wifiequ/README.md) | [![Coming soon thumbnail](thumbnails/th-coming_soon.png)](docs/prng-tools.md) | [![Coming soon thumbnail](thumbnails/th-coming_soon.png)](docs/terraglean.md) |
+| [![WiFiEqu thumbnail](thumbnails/th-wifiequ-02.png)](wifiequ/README.md) | [![Coming soon thumbnail](thumbnails/th-coming_soon.png)](docs/prng-tools.md) | [![Coming soon thumbnail](thumbnails/th-coming_soon.png)](docs/terraglean.md) |
 
 
 ## Tooling & automation
 - `dev.sh` in the repository root orchestrates dependency setup, builds, tests, installs, and demo runs from a single entrypoint. It now recognises mock vs. hardware example runs, optional interface overrides, and selective subcommands so you can rehearse exactly what the CI job performs. See the usage recipes below for common scenarios. The `--install-deps` slice now installs Node.js so libdmotservices’ JavaScript helpers and tests run consistently in CI and locally.
 - `.github/workflows/cv-samples-ci.yml` mirrors the `dev.sh` flow on GitHub Actions: dependencies → build → tests → example runs. The pipeline ensures every project stays buildable on a clean Ubuntu runner (the Wi-Fi scan demo skips gracefully when no wireless interface is available).
-- `docker-compose.yml` spins up containerised demos (`stack-index` on host port `8080`, `slideshow-server` on `8081`, `wifiequ` on `8082`, `heapmonj-backend` on `8083`, `heapmonj-frontend` on `8084`) using the project-specific Dockerfiles. Great for a one-command tour: `docker compose up --build`. See [Docker stack notes](docker/README.md) for the full command list, group permissions, and snap service tips.
+- `docker-compose.yml` spins up containerised demos (`stack-index` on host port `8080`, `heapmonj-backend` on `8081`, `heapmonj-frontend` on `8082`, `slideshow-server` on `8083`, `wifiequ-backend` on `8084`, `wifiequ-frontend` on `8085`) using the project-specific Dockerfiles. Great for a one-command tour: `docker compose up --build`. See [Docker stack notes](docker/README.md) for the full command list, group permissions, and snap service tips.
 - `.gitattributes` files have been introduced across the projects to normalise line endings and enforce consistent attributes, making diffs reliable across platforms.
 - All major projects now ship CMakeLists alongside their original Make/Ant flows. A typical configure/build is `cmake -S <project> -B <project>/build -G Ninja && cmake --build <project>/build` with target names that mirror the Makefile habits (`*_dist`, `*_test`, example/demo helpers).
 
@@ -78,7 +78,7 @@ Skips demos requiring live hardware by setting mock mode. Handy for CI or headle
 ## How to use this repository
 - Every project folder has its own `README.md` with quick build or run instructions.
 - The shared documentation hub in [`docs/`](docs/README.md) links to deeper design notes (future work, Terraglean concept, prng-tools lab) so you can navigate without hunting through folders.
-- Prefer the Docker Compose workflow when you want to try the demos without installing runtimes directly. Install Docker (snap instructions included in [docker/README.md](docker/README.md)), run `docker compose up --build`, then visit `http://localhost:8081` (slideshow) and `http://localhost:8082` (WiFiEqu API). Use `docker compose down` when you're done.
+- Prefer the Docker Compose workflow when you want to try the demos without installing runtimes directly. Install Docker (snap instructions included in [docker/README.md](docker/README.md)), run `docker compose up --build`, then visit `http://localhost:8081` (heapmonj API), `http://localhost:8082` (heapmonj UI), `http://localhost:8083` (slideshow), `http://localhost:8084` (WiFiEqu API), and `http://localhost:8085` (WiFiEqu web UI). Use `docker compose down` when you're done. The default WiFiEqu stats token is baked into compose for convenience; change it in `docker-compose.yml` if desired.
 - Prefer `./dev.sh --install-deps --install-prj --build --run-tests --run-examples` for the full local check, or run the corresponding CI workflow manually from the Actions tab if you want to watch the hosted logs.
 - Code is intentionally small and instructional—suited for reading and discussion.
 - Nothing here is used in production customer systems.
