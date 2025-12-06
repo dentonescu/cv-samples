@@ -16,7 +16,7 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 |---|---|---|
 | **[heapmonj](https://github.com/dentonescu/cv-samples/tree/main/heapmonj)** | JVM heap monitor microservice (Spring Boot 4/Java 21) with scheduled sampling to H2 and an Angular + Chart.js frontend. | Java 21, Spring Boot, JPA/H2, Angular, Docker |
 | **[libdmotservices](https://github.com/dentonescu/cv-samples/tree/main/libdmotservices)** | Personal multi‑language utility library with unit tests and examples. | C, Java, Python, JavaScript, Cross-language build tooling |
-| **[null-cipher](https://github.com/dentonescu/cv-samples/tree/main/null-cipher)** | Single‑page visual demo of a simple cipher (encrypt/decrypt) in the browser. | JavaScript, HTML, CSS |
+| **[null-cipher](https://github.com/dentonescu/cv-samples/tree/main/null-cipher)** | Single‑page visual demo of a simple cipher (encrypt/decrypt) in the browser. | JavaScript, HTML, CSS, Bootstrap UI |
 | **[pkixwebadm](https://github.com/dentonescu/cv-samples/tree/main/pkixwebadm)** (HTTP foundation in progress) | Certificate inventory web app pairing FastAPI with SQLite; configuration and scaffold are in place while the app factory and landing page are being implemented. | Python, FastAPI, Bootstrap UI, vendored JS tooling |
 | **[slideshow-server](https://github.com/dentonescu/cv-samples/tree/main/slideshow-server)** | Tiny Python web server that generates responsive media slideshows. | Python, HTML, JS, Docker |
 | **[txrxcli](https://github.com/dentonescu/cv-samples/tree/main/txrxcli)** | Educational raw‑TCP remote execution demo with a C++ Linux client/server and a C#/.NET dual‑mode peer; API‑key gated, warning‑heavy, not for production. | C++17 sockets, process exec/capture, C#/.NET 8 |
@@ -32,9 +32,9 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 |---|---|---|
 | [![pkixwebadm thumbnail](thumbnails/th-pkixwebadm-01.png)](pkixwebadm/README.md) | [![slideshow-server thumbnail](thumbnails/th-slideshow-server-01.png)](slideshow-server/README.md) | [![txrxcli thumbnail](thumbnails/th-txrxcli-01.png)](txrxcli/README.md) |
 
-| WiFiEqu | prng-tools | Terraglean |
+| WiFiEqu | triangle-peg-game-react | Terraglean |
 |---|---|---|
-| [![WiFiEqu thumbnail](thumbnails/th-wifiequ-02.png)](wifiequ/README.md) | [![Coming soon thumbnail](thumbnails/th-coming_soon.png)](docs/prng-tools.md) | [![Coming soon thumbnail](thumbnails/th-coming_soon.png)](docs/terraglean.md) |
+| [![WiFiEqu thumbnail](thumbnails/th-wifiequ-02.png)](wifiequ/README.md) | [![Coming soon thumbnail](thumbnails/th-coming_soon.png)](docs/triangle-peg-game-react.md) | [![Coming soon thumbnail](thumbnails/th-coming_soon.png)](docs/terraglean.md) |
 
 
 ## Tooling & automation
@@ -94,6 +94,7 @@ Check back regularly — new samples will be added and existing ones improved as
 ## Upcoming work
 - **pkixwebadm**: extend the new security scaffolding with live ingestion APIs, add UI validation/feedback, and land CSRF + server-side MIME checks before circling back to container packaging.
 - **WiFiEqu**: prototype the Windows worker that mirrors the Linux API, factor shared DTO/config plumbing into a reusable C# library, and round out the Docker Compose story with health checks and metrics before pursuing CI/CD builds.
+- **triangle-peg-game-react**: ship the React peg solitaire SPA with pure game-logic helpers, legal-move highlighting, undo/reset, responsive layout, and Vercel-ready build scripts to demonstrate current React practice.
 - **Terraglean**: now tracked in [docs/terraglean.md](docs/terraglean.md); once WiFiEqu stabilises, kick off the Spring Boot/Micronaut service spike, persistence plan, and UI exploration documented there.
 - **Portfolio glue**: continue aligning DevOps expectations—multi-language builds, container images, and cross-project Compose entries—so each sample can graduate from `_private_staging` once the future work above solidifies.
 
