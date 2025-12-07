@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Triangle Peg Game UI prototype</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #222;
+    }
+
+    /* Triangular wooden board */
+    .board {
+      width: min(80vmin, 400px);
+      aspect-ratio: 1;
+      /* keep it square */
+      background: #b8860b;
+      border-radius: 1rem;
+      box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.6);
+
+      /* make it a triangle */
+      clip-path: polygon(50% 0%, 0% 92%, 100% 92%);
+
+      /* spread rows to fill the triangle */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 2% 8% 4%;
+    }
+
+    /* Each horizontal row of pegs */
+    .row {
+      width: 93%;
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+    }
+
+    /* Pegs as circular buttons */
+    .peg {
+      width: 18%;
+      flex: 0 0 18%;
+      aspect-ratio: 1;
+      /* keep peg circular on all screens */
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+
+      background:
+        radial-gradient(circle at 30% 30%, #fff, #ccc 40%, #888 70%, #444 100%);
+      box-shadow:
+        0 0.25rem 0.4rem rgba(0, 0, 0, 0.7),
+        inset 0 0.1rem 0.2rem rgba(255, 255, 255, 0.4);
+    }
+
+    .hole {
+      width: 18%;
+      flex: 0 0 18%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 50%, #8a6508 20%, #7a5807 60%, #624606 100%);
+      box-shadow:
+        inset 0 0.3rem 0.5rem rgba(0, 0, 0, 0.65),
+        0 0.2rem 0.4rem rgba(0, 0, 0, 0.3);
+    }
+
+    .peg:active {
+      transform: translateY(2px);
+      box-shadow:
+        0 0.1rem 0.2rem rgba(0, 0, 0, 0.6),
+        inset 0 0.15rem 0.25rem rgba(0, 0, 0, 0.4);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="board">
+    <div class="row">
+      <button class="peg"></button>
+    </div>
+    <div class="row">
+      <button class="peg"></button>
+      <button class="peg"></button>
+    </div>
+    <div class="row">
+      <button class="peg"></button>
+      <div class="hole"></div>
+      <button class="peg"></button>
+    </div>
+    <div class="row">
+      <button class="peg"></button>
+      <button class="peg"></button>
+      <button class="peg"></button>
+      <button class="peg"></button>
+    </div>
+    <div class="row">
+      <button class="peg"></button>
+      <button class="peg"></button>
+      <button class="peg"></button>
+      <button class="peg"></button>
+      <button class="peg"></button>
+    </div>
+  </div>
+
+</body>
+
+</html>

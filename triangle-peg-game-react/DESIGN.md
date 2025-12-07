@@ -1,31 +1,27 @@
-# triangle-peg-game-react – Coming Soon
-Part of the [`cv-samples`](../README.md) portfolio. This is my React learning project, captured here as a coming-soon dossier for the portfolio gallery.
+# triangle-peg-game-react – Design brief
 
-## Overview
-I am building a single-page React implementation of the classic triangular peg solitaire puzzle (15-hole Cracker Barrel board: start with 14 pegs, one empty). Players tap/click pegs, see legal move highlights, and jump over adjacent pegs into empty holes until only one peg remains or no moves are left.
+Single-page React implementation of the classic triangular peg solitaire puzzle (15-hole Cracker Barrel board: start with 14 pegs, one empty). Players tap/click pegs, see legal move highlights, and jump over adjacent pegs into empty holes until only one peg remains or no moves are left.
 
 ## Goals
-- Demonstrate core React skills: functional components, hooks-based state, controlled inputs, derived state, undo/redo history.
+- Demonstrate core React skills: functional components, hooks-based state, derived state, undo/redo history.
 - Keep game logic pure and isolated from the UI; components stay dumb while `logic/` handles moves and validation.
 - Deliver a polished, responsive UI that fits both desktop and mobile, with simple animations for peg moves and highlights.
-- Ship with a small README, build scripts, and Vercel-ready deploy instructions.
+- Ship with a concise README, build scripts, and Vercel-ready deploy instructions.
 
 ## Architecture
 ```
-triangle-peg-game-react/
-├─ src/
-│  ├─ components/
-│  │  ├─ Board.jsx        # renders triangular grid of holes
-│  │  ├─ Hole.jsx         # individual hole with peg/empty state
-│  │  ├─ Peg.jsx          # visual peg + selection/highlight
-│  │  ├─ Controls.jsx     # reset, undo, show moves toggle
-│  │  └─ StatusBar.jsx    # peg count, move availability, victory message
-│  ├─ logic/
-│  │  ├─ moves.js         # legal move list, generators, validators
-│  │  └─ boardUtils.js    # apply/undo moves, board factories, helpers
-│  ├─ App.jsx             # owns state, orchestrates events
-│  └─ index.jsx           # entrypoint
-└─ public/                # static assets, placeholder screenshot
+tpg-spa/src/
+├─ components/
+│  ├─ Board.jsx        # renders triangular grid of holes
+│  ├─ Hole.jsx         # individual hole with peg/empty state
+│  ├─ Peg.jsx          # visual peg + selection/highlight
+│  ├─ Controls.jsx     # reset, undo, show moves toggle
+│  └─ StatusBar.jsx    # peg count, move availability, victory message
+├─ logic/
+│  ├─ moves.js         # legal move list, generators, validators
+│  └─ boardUtils.js    # apply/undo moves, board factories, helpers
+├─ App.jsx             # owns state, orchestrates events
+└─ index.jsx           # entrypoint
 ```
 
 ## Data model
@@ -58,9 +54,9 @@ triangle-peg-game-react/
 - `npm test`/`npm run build` succeed; Vercel deploy instructions are documented.
 
 ## Deployment
-- Tooling: Vite or Create React App (leaning Vite) with npm scripts for dev/build/test.
+- Tooling: Vite with npm scripts for dev/build/test.
 - Hosting target: Vercel static build; include `npm run build` guidance and `vercel.json` notes if needed.
-- README will cover install, dev server, tests, and deployment steps.
+- README covers install, dev server, tests, and deployment steps.
 
 ## Backlog slices
 1) Static board rendering with mock data and styling.
@@ -68,7 +64,3 @@ triangle-peg-game-react/
 3) Move application, history/undo, and status messaging.
 4) Animations, accessibility polish, and responsive tuning.
 5) README, screenshot placeholder, and Vercel deploy check.
-
-## Related documents
-- [Documentation hub](README.md)
-- [Future work index](future_work.md)

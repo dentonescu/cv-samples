@@ -6,7 +6,6 @@ Navigation index for the supporting documents that accompany the `cv-samples` po
 | --- | --- |
 | [Future work index](future_work.md) | Master list of research tracks and incubating concepts; links to the longer design notes. |
 | [prng-tools dossier](prng-tools.md) | Detailed plan for the cross-language PRNG/CSRNG lab, including architecture sketches and milestones. |
-| [triangle-peg-game-react brief](triangle-peg-game-react.md) | Coming-soon React peg solitaire project plan with component structure, UX notes, and acceptance criteria. |
 | [Terraglean notes](terraglean.md) | Concept brief and backlog for the planned mapping/analytics service. |
 
 ## How this folder is organised
