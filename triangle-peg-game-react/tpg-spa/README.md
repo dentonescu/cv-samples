@@ -11,9 +11,11 @@ npm run build  # production build
 ## Tech stack
 - React with hooks and functional components
 - Vite tooling
-- CSS for layout/animation; Bootstrap utility classes may be pulled in for quick spacing if needed
-- Bitmask-based game logic; optional Python helper to precompute board states
+- CSS for layout/animation
+- Bitmask-based game logic; Python precompute helper emits `src/assets/states.json` for quick lookups
 
 ## Project status
 - UI prototype exists in [UI prototype](../prototype/triange_peg_game_ui_prototype.html).
-- React scaffold is live; next steps are wiring board rendering, move validation, and history/undo.
+- React scaffold is live with Board/Hole/Peg components and styling aligned to the prototype.
+- Precompute utility generated `src/assets/states.json` (full 15-bit state space).
+- Next steps: render from the bitmask, hook up selection/move application, undo/reset, status messaging, and Vercel build.

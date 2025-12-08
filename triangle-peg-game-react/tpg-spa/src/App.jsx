@@ -1,16 +1,14 @@
 import './App.css'
+import Board from './components/Board.jsx'
 
 function App() {
   return (
     <main className="app-shell">
-      <h1>Triangle Peg Solitaire (React)</h1>
-      <p>
-        React SPA coming soon: interactive triangular peg board with legal-move
-        highlights, undo, reset, and a responsive layout. Follow the{" "}
-        <code>NOTES.md</code> plan in the repo root for progress updates.
-      </p>
+      <h1>Triangle Peg Game (React)</h1>
+      <Board />
+      <p>Still under construction! Will be completed in the next few days!</p>
     </main>
-  )
+  );
 }
 
-export default App
+export default App;
