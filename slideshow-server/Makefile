@@ -68,7 +68,10 @@ install:
 ## Unit tests
 #####################################################################################
 
-test: prebuild
+tests: prebuild
+	@$(MILESTONE) "Compilation of unit tests not required."
+
+test: tests
 	@$(MILESTONE) "Running unit tests"
 	@$(TEST_CMD)
 
@@ -92,7 +95,10 @@ dist: clean build
 #####################################################################################
 ## Examples
 #####################################################################################
-example-demo: prebuild
+examples: prebuild
+	@$(MILESTONE) "No examples to compile."
+
+example-demo: examples
 	@$(MILESTONE) "No examples here yet."
 
 #####################################################################################

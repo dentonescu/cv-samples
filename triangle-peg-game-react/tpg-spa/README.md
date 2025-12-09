@@ -18,4 +18,5 @@ npm run build  # production build
 - UI prototype exists in [UI prototype](../prototype/triange_peg_game_ui_prototype.html).
 - React scaffold is live with Board/Hole/Peg components and styling aligned to the prototype.
 - Precompute utility generated `src/assets/states.json` (full 15-bit state space).
+- Tests: `npm test` runs a Node sanity check against the precomputed states.
 - Next steps: render from the bitmask, hook up selection/move application, undo/reset, status messaging, and Vercel build.

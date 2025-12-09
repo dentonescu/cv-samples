@@ -26,7 +26,7 @@ A Java heap monitor demo (Spring Boot backend + Angular frontend) for CV samples
 ## Run locally
 - Backend: `cd backend/heapmonj && ./gradlew bootRun` (Java 21, Maven available for the libdmotservices hook).
 - Frontend (dev): `cd frontend/heapmonj-frontend && npm install && ng serve --proxy-config proxy.conf.json` (serves on 4200, proxies `/api` to `http://localhost:8080`).
-- Docker Compose: `docker compose up --build` (landing page on 8080, slideshow 8081, WiFiEqu 8082, heapmonj backend 8083, frontend 8084).
+- Docker Compose: `docker compose up --build` (stack index on 8080, heapmonj backend 8081, frontend 8082, null-cipher 8083, pkixwebadm 8084, slideshow 8085, triangle peg game 8086, WiFiEqu backend 8087, WiFiEqu frontend 8088).
 
 ## Screenshot
 

@@ -19,11 +19,14 @@ That builds the stack images and binds the services to the host:
 | Service | Host port | Container port | Notes |
 | --- | --- | --- | --- |
 | `stack-index` | `8080` | `80` | Static landing page linking to all running services. |
-| `slideshow-server` | `8083` | `8080` | Serves the bundled slideshow demo. |
-| `wifiequ-backend` | `8084` | `8080` | Runs the mock-mode WiFiEqu JSON API (default token baked into compose). |
-| `wifiequ-frontend` | `8085` | `80` | Serves the Angular WiFiEqu UI via nginx with stats-key injection (shares the default token). |
 | `heapmonj-backend` | `8081` | `8080` | Spring Boot heap monitor backend. |
 | `heapmonj-frontend` | `8082` | `80` | Angular heap monitor UI (nginx). |
+| `null-cipher` | `8083` | `80` | Static HTML/JS cipher demo. |
+| `pkixwebadm` | `8084` | `8080` | FastAPI certificate inventory (dev preview). |
+| `slideshow-server` | `8085` | `8080` | Serves the bundled slideshow demo. |
+| `triangle-peg-game-react` | `8086` | `80` | React SPA for the peg game (static nginx serve). |
+| `wifiequ-backend` | `8087` | `8080` | Runs the mock-mode WiFiEqu JSON API (default token baked into compose). |
+| `wifiequ-frontend` | `8088` | `80` | Serves the Angular WiFiEqu UI via nginx with stats-key injection (shares the default token). |
 
 Useful follow-ups:
 

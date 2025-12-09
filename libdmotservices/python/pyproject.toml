@@ -9,3 +9,10 @@ description = "Multilingual utility helpers (Python slice)"
 authors = [{name = "dentonescu"}]
 dependencies = []
 requires-python = ">=3.11"
+
+[tool.setuptools.packages.find]
+include = ["libdmotservices*"]
+exclude = ["vendor*"]
+
+[tool.setuptools.package-data]
+libdmotservices = [".version"]

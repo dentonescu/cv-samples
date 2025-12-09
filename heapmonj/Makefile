@@ -39,11 +39,17 @@ clean:
 	@echo "=== Removing backend data directory ==="
 	@rm -rf "$(BACKEND_DIR)/data"
 
+tests:
+	@echo "(No explicit test compilation phase)"
+
 test:
 	@echo "=== Running backend tests ==="
 	@cd "$(BACKEND_DIR)" && ./gradlew test --rerun-tasks
 	@echo "=== Running frontend tests ==="
 	@cd "$(FRONTEND_DIR)" && npm test -- --watch=false
+
+examples:
+	@echo "(No examples to compile.)"
 
 example-demo:
 	@echo "No runnable examples/demos for heapmonj yet (API + UI only)."

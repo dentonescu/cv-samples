@@ -111,7 +111,7 @@ Run WiFiEqu alongside the other samples via Docker Compose:
 docker compose up --build wifiequ-backend wifiequ-frontend
 ```
 
-The API binds to `http://localhost:8084` and the Angular UI to `http://localhost:8085`. Compose bakes in a demo token (`wfq-demo-token-please-change`) for the stats endpoint; override `WFQ_ACCESS_TOKEN`/`WFQ_STATS_KEY` in `docker-compose.yml` or via environment variables for anything beyond a local demo. You can start/stop just these services (`docker compose stop wifiequ-backend wifiequ-frontend`) or watch the logs (`docker compose logs -f wifiequ-backend`). See the shared [Docker stack notes](../docker/README.md) for more examples and the Docker snap setup.
+The API binds to `http://localhost:8087` and the Angular UI to `http://localhost:8088`. Compose bakes in a demo token (`wfq-demo-token-please-change`) for the stats endpoint; override `WFQ_ACCESS_TOKEN`/`WFQ_STATS_KEY` in `docker-compose.yml` or via environment variables for anything beyond a local demo. You can start/stop just these services (`docker compose stop wifiequ-backend wifiequ-frontend`) or watch the logs (`docker compose logs -f wifiequ-backend`). See the shared [Docker stack notes](../docker/README.md) for more examples and the Docker snap setup.
 
 Angular build note: the frontend build expects Node.js 20+. The Dockerfile installs Node 20 in the builder stage; local builds should use the same or newer.
 

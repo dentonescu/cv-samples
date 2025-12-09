@@ -17,6 +17,7 @@ add_subdirectory(pkixwebadm)
 add_subdirectory(txrxcli)
 # heapmonj docs (Gradle-based app; docs via CMake)
 add_subdirectory(heapmonj)
+add_subdirectory(triangle-peg-game-react)
 
 find_program(CV_MAVEN_EXECUTABLE mvn)
 if(NOT CV_MAVEN_EXECUTABLE)
@@ -35,6 +36,7 @@ file(GLOB_RECURSE CV_DIR_CANDIDATES LIST_DIRECTORIES true
 
 set(CV_BUILD_DIRS "")
 set(CV_BIN_DIRS "")
+set(CV_DIST_DIRS "")
 foreach(path IN LISTS CV_DIR_CANDIDATES)
     if(path MATCHES "/node_modules/")
         continue()
@@ -45,6 +47,11 @@ foreach(path IN LISTS CV_DIR_CANDIDATES)
             list(APPEND CV_BUILD_DIRS "${path}")
         elseif(_name STREQUAL "bin")
             list(APPEND CV_BIN_DIRS "${path}")
+        elseif(_name STREQUAL "dist")
+            # avoid recursing into the root dist output directory
+            if(NOT path STREQUAL "${CV_DIST_DIR}")
+                list(APPEND CV_DIST_DIRS "${path}")
+            endif()
         endif()
     endif()
 endforeach()
@@ -83,6 +90,12 @@ foreach(_bindir IN LISTS CV_BIN_DIRS)
         VERBATIM)
 endforeach()
 
+foreach(_distdir IN LISTS CV_DIST_DIRS)
+    add_custom_command(TARGET cv_samples_gather
+        COMMAND "${CMAKE_COMMAND}" -E copy_directory "${_distdir}" "${CV_DIST_DIR}"
+        VERBATIM)
+endforeach()
+
 if(CV_MAVEN_EXECUTABLE)
     add_custom_target(libdmotservices_mvn_install
         WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/libdmotservices/java"
@@ -112,6 +125,9 @@ if(TARGET heapmonj_all)
 elseif(TARGET heapmonj_docs_openapi)
     add_dependencies(cv_samples_all heapmonj_docs_openapi)
 endif()
+if(TARGET build)
+    add_dependencies(cv_samples_all build)
+endif()
 if(TARGET libdmotservices_mvn_install)
     add_dependencies(cv_samples_all libdmotservices_mvn_install)
 endif()
@@ -134,6 +150,15 @@ if(TARGET txrxcli_tests)
 endif()
 if(TARGET heapmonj_test)
     add_dependencies(cv_samples_tests heapmonj_test)
+endif()
+add_custom_target(triangle-peg-game-react_tests
+    WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/triangle-peg-game-react/tpg-spa"
+    COMMAND npm test
+    COMMENT "Running triangle-peg-game-react sanity tests"
+)
+add_dependencies(cv_samples_tests triangle-peg-game-react_tests)
+if(TARGET triangle-peg-game-react_tests)
+    add_dependencies(cv_samples_tests triangle-peg-game-react_tests)
 endif()
 
 add_custom_target(cv_samples_test
@@ -163,6 +188,9 @@ if(TARGET pkixwa_example_demo)
 endif()
 if(TARGET heapmonj_example_demo)
     add_dependencies(cv_samples_example_demo heapmonj_example_demo)
+endif()
+if(TARGET example-demo)
+    add_dependencies(cv_samples_example_demo example-demo)
 endif()
 
 add_custom_target(cv_samples_dist

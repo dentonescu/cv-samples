@@ -16,6 +16,7 @@ GATHER := 	find "${ROOT}" -name "*.a" -not -path "*/node_modules*" -type f -exec
 			find "${ROOT}" -name "build" -not -path "*/node_modules*" -type d -exec cp -vR "{}/." "${DIST}" \; ; \
 			find "${ROOT}" -path "*/build/linux" -not -path "*/node_modules*" -type d -exec cp -vR "{}/." "${DIST}" \; ; \
 			find "${ROOT}" -name "bin" -not -path "*/node_modules*" -type d -exec cp -vR "{}/." "${DIST}" \; ; \
+			find "${ROOT}" -path "*/tpg-spa/dist" -not -path "*/node_modules*" -type d -exec cp -vR "{}/." "${DIST}" \; ; \
 			find "${ROOT}" -name "*.tar.gz" -not -path "*/node_modules*" -type f -exec cp -v "{}" "${DIST}" \;
 
 .PHONY: all build-all clean docs example-demo examples install test tests
@@ -30,11 +31,11 @@ build-all:
 	@$(MAKE) -C libdmotservices clean all
 	@$(MILESTONE) "Installing libdmotservices jars into local Maven repo..."
 	@cd libdmotservices/java && mvn -DskipTests install
-	@$(MAKE) -C slideshow-server dist
-	@$(MAKE) -C wifiequ clean all
-	@$(MAKE) -C txrxcli clean all
-	@$(MILESTONE) "Building heapmonj (backend + frontend + docs)..."
 	@$(MAKE) -C heapmonj clean all
+	@$(MAKE) -C slideshow-server dist
+	@$(MAKE) -C triangle-peg-game-react build
+	@$(MAKE) -C txrxcli clean all
+	@$(MAKE) -C wifiequ clean all
 
 dist:
 	@$(MILESTONE) "Populating the distribution directory..."
@@ -49,8 +50,8 @@ prebuild:
 #####################################################################################
 docs:
 	@$(MILESTONE) "Generating documentation..."
-	@$(MAKE) -C wifiequ docs
 	@$(MAKE) -C heapmonj docs
+	@$(MAKE) -C wifiequ docs
 
 #####################################################################################
 ## Installation and deployment
@@ -65,18 +66,23 @@ install:
 tests:
 	@$(MILESTONE) "Compiling all tests..."
 	@$(MAKE) -C libdmotservices tests
-	@$(MAKE) -C wifiequ tests
+	@$(MAKE) -C heapmonj tests
+	@$(MAKE) -C slideshow-server tests
+	@$(MAKE) -C triangle-peg-game-react tests
 	@$(MAKE) -C txrxcli tests
-	@$(MILESTONE) "Running heapmonj tests (backend + frontend)..."
-	@$(MAKE) -C heapmonj test
+	@$(MAKE) -C wifiequ tests
 	@$(GATHER)
 
 test: tests
 	@$(MILESTONE) "Executing all tests..."
 	@$(MAKE) -C libdmotservices test
+	@$(MAKE) -C heapmonj test
 	@$(MAKE) -C slideshow-server test
-	@$(MAKE) -C wifiequ test
+	@$(MAKE) -C triangle-peg-game-react test
 	@$(MAKE) -C txrxcli test
+	@$(MAKE) -C wifiequ test
+	@$(MILESTONE) "Running triangle-peg-game-react sanity tests..."
+	@cd triangle-peg-game-react/tpg-spa && npm test
 
 
 #####################################################################################
@@ -85,17 +91,21 @@ test: tests
 examples:
 	@$(MILESTONE) "Compiling all examples..."
 	@$(MAKE) -C libdmotservices examples
-	@$(MAKE) -C wifiequ examples
+	@$(MAKE) -C heapmonj examples
+	@$(MAKE) -C slideshow-server examples
+	@$(MAKE) -C triangle-peg-game-react examples
 	@$(MAKE) -C txrxcli examples
-	@$(MAKE) -C heapmonj examples || true
+	@$(MAKE) -C wifiequ examples
 	@$(GATHER)
 
 example-demo: examples
 	@$(MILESTONE) "Executing all examples and demos..."
 	@$(MAKE) -C libdmotservices example-demo
-	@$(MAKE) -C wifiequ example-demo
-	@$(MAKE) -C txrxcli example-demo
 	@$(MAKE) -C heapmonj example-demo
+	@$(MAKE) -C slideshow-server example-demo
+	@$(MAKE) -C triangle-peg-game-react example-demo
+	@$(MAKE) -C txrxcli example-demo
+	@$(MAKE) -C wifiequ example-demo
 
 
 #####################################################################################
@@ -104,8 +114,9 @@ example-demo: examples
 clean:
 	@$(MILESTONE) "Removing previous builds..."
 	@$(MAKE) -C libdmotservices clean || true
-	@$(MAKE) -C slideshow-server clean || true
-	@$(MAKE) -C wifiequ clean || true
-	@$(MAKE) -C txrxcli clean || true
 	@$(MAKE) -C heapmonj clean || true
+	@$(MAKE) -C slideshow-server clean || true
+	@$(MAKE) -C triangle-peg-game-react clean || true
+	@$(MAKE) -C txrxcli clean || true
+	@$(MAKE) -C wifiequ clean || true
 	@rm -Rf "${DIST}"
