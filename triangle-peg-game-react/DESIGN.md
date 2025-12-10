@@ -13,13 +13,14 @@ Single-page React implementation of the classic triangular peg solitaire puzzle 
 tpg-spa/src/
 ├─ components/
 │  ├─ Board.jsx        # renders triangular grid of holes
+│  ├─ Position.jsx     # selects Peg/Hole rendering per position
 │  ├─ Hole.jsx         # individual hole with peg/empty state
 │  ├─ Peg.jsx          # visual peg + selection/highlight
 │  ├─ Controls.jsx     # reset, undo, show moves toggle
 │  └─ StatusBar.jsx    # peg count, move availability, victory message
 ├─ logic/
-│  ├─ moves.js         # legal move list, generators, validators
-│  └─ boardUtils.js    # apply/undo moves, board factories, helpers
+│  ├─ game.js          # bitmask helpers, board math, basic messages
+│  └─ states.js        # lazy loader for precomputed states.json
 ├─ App.jsx             # owns state, orchestrates events
 └─ index.jsx           # entrypoint
 ```
@@ -59,7 +60,7 @@ tpg-spa/src/
 - README covers install, dev server, tests, and deployment steps.
 
 ## Backlog slices
-1) Static board rendering with mock data and styling.
+1) Static board rendering with mock data and styling. ✅
 2) Hooked-up game state with selection + legal move highlighting.
 3) Move application, history/undo, and status messaging.
 4) Animations, accessibility polish, and responsive tuning.

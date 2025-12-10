@@ -8,7 +8,7 @@ React single-page implementation of the triangle peg game (aka triangular peg so
 - Interactive triangular board with 15 holes: click/tap pegs to highlight legal jumps, animate moves, and remove jumped pegs.
 - Undo/reset controls, peg count, and status messaging (moves left / solved).
 - Responsive layout tuned via the static prototype in [UI prototype](prototype/triange_peg_game_ui_prototype.html).
-- Pure game logic helpers (bitmask-based) separated from UI components; Python precompute utility emits `states.json` for quick lookups.
+- Pure game logic helpers (bitmask-based) separated from UI components; Python precompute utility emits `public/states.json` for quick lookups.
 - Target hosting: Vercel static deploy of the Vite build (`tpg-spa`).
 
 ## Quick start
@@ -16,12 +16,14 @@ React single-page implementation of the triangle peg game (aka triangular peg so
 cd tpg-spa
 npm install
 npm run dev    # starts Vite dev server
+npm test       # sanity check the precomputed states
 ```
 
 ## Status snapshot
-- Precompute utility generates `tpg-spa/src/assets/states.json` (full 15-bit state space).
-- Board/Hole/Peg components are scaffolded in React; styling matches the HTML prototype.
-- Next steps: wire bitmask-driven rendering, selection + move application, undo/reset, and status messaging.
+- Precompute utility generates `tpg-spa/public/states.json` (full 15-bit state space).
+- Board/Hole/Peg/Position components are scaffolded in React; styling matches the HTML prototype with hover/selection polish.
+- Lazy loader fetches the precomputed states; status bar shows peg count; initial click removes the starting peg.
+- Next steps: wire bitmask-driven move validation/highlighting, undo/reset, status messaging, and Vercel build.
 
 ## References
 - Development plan: [Developer notes](NOTES.md)

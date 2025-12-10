@@ -12,7 +12,7 @@ cmake_minimum_required(VERSION 3.20)
 project(triangle-peg-game-react NONE)
 
 set(PRECOMPUTE_SCRIPT "${CMAKE_SOURCE_DIR}/precompute/precompute.py")
-set(PRECOMPUTE_OUT "${CMAKE_SOURCE_DIR}/tpg-spa/src/assets/states.json")
+set(PRECOMPUTE_OUT "${CMAKE_SOURCE_DIR}/tpg-spa/public/states.json")
 
 add_custom_target(precompute ALL
     COMMAND ${CMAKE_COMMAND} -E echo "Generating precomputed states..."

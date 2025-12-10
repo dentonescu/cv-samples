@@ -1,6 +1,6 @@
 # triangle-peg-game-react/Makefile
 
-PRECOMPUTE := python3 precompute/precompute.py --export-json tpg-spa/src/assets/states.json
+PRECOMPUTE := python3 precompute/precompute.py --export-json tpg-spa/public/states.json
 NPM := npm
 
 .PHONY: all prebuild build dist clean example-demo

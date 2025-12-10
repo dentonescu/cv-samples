@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const statesPath = path.resolve(__dirname, '../assets/states.json');
+const statesPath = path.resolve(__dirname, '../../public/states.json');
 const states = JSON.parse(fs.readFileSync(statesPath, 'utf-8'));
 
 assert.equal(states.length, 32768, 'expected 2^15 states');
