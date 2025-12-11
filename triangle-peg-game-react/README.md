@@ -5,11 +5,14 @@ React single-page implementation of the triangle peg game (aka triangular peg so
 ![Cracker Barrel Triangle Peg Game](img/cracker-barrel-triangle-peg-game--sm.png)
 
 ## What I’m building
-- Interactive triangular board with 15 holes: click/tap pegs to highlight legal jumps, animate moves, and remove jumped pegs.
-- Undo/reset controls, peg count, and status messaging (moves left / solved).
+- Interactive triangular board with 15 holes: click/tap pegs to highlight legal jumps, animate moves, and remove jumped pegs. The core play loop now works end-to-end with win/lose detection and highlights.
+- Undo/reset controls, peg count, and status messaging (moves left / solved). Undo/reset are queued for the next iteration.
 - Responsive layout tuned via the static prototype in [UI prototype](prototype/triange_peg_game_ui_prototype.html).
 - Pure game logic helpers (bitmask-based) separated from UI components; Python precompute utility emits `public/states.json` for quick lookups.
 - Target hosting: Vercel static deploy of the Vite build (`tpg-spa`).
+
+## Live preview
+- [triangle-peg-game-react.vercel.app](https://triangle-peg-game-react.vercel.app) (auto-deployed on push; still a work in progress)
 
 ## Quick start
 ```bash
@@ -21,9 +24,9 @@ npm test       # sanity check the precomputed states
 
 ## Status snapshot
 - Precompute utility generates `tpg-spa/public/states.json` (full 15-bit state space).
-- Board/Hole/Peg/Position components are scaffolded in React; styling matches the HTML prototype with hover/selection polish.
-- Lazy loader fetches the precomputed states; status bar shows peg count; initial click removes the starting peg.
-- Next steps: wire bitmask-driven move validation/highlighting, undo/reset, status messaging, and Vercel build.
+- Board/Hole/Peg/Position components are wired with the bitmask logic; styling matches the HTML prototype with hover/selection polish.
+- Lazy loader fetches the precomputed states; status bar shows peg count; initial click removes the starting peg; legal targets glow; game-over and win overlays display when appropriate.
+- Next steps: add undo/reset controls, tighten animations, and extend tests beyond the states sanity check.
 
 ## References
 - Development plan: [Developer notes](NOTES.md)

@@ -68,9 +68,8 @@ h1 {
 
 /* Triangular wooden board */
 .board {
-  width: min(90vmin, 520px);
+  width: min(92vmin, 540px);
   aspect-ratio: 1;
-  /* keep it square */
   background: #b8860b;
   border-radius: 1rem;
   box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.6);
@@ -83,22 +82,22 @@ h1 {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  gap: 1.35rem;
-  padding: 3% 8% 6%;
+  gap: clamp(0.65rem, 1.2vmin, 1.2rem);
+  padding: 8% 8% 7%;
 }
 
 /* Each horizontal row of pegs */
 .row {
-  width: 95%;
+  width: 100%;
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: clamp(0.55rem, 1.2vmin, 1rem);
 }
 
 /* Pegs as circular buttons */
 .peg {
-  width: 22%;
-  flex: 0 0 22%;
+  width: clamp(18%, 6vw, 24%);
+  flex: 0 0 clamp(18%, 6vw, 24%);
   aspect-ratio: 1;
   /* keep peg circular on all screens */
   border-radius: 50%;
@@ -114,8 +113,8 @@ h1 {
 }
 
 .hole {
-  width: 22%;
-  flex: 0 0 22%;
+  width: clamp(18%, 6vw, 24%);
+  flex: 0 0 clamp(18%, 6vw, 24%);
   aspect-ratio: 1;
   border-radius: 50%;
   background: radial-gradient(circle at 50% 50%, #8a6508 20%, #7a5807 60%, #624606 100%);
@@ -140,4 +139,69 @@ h1 {
   box-shadow:
     0 0.1rem 0.2rem rgba(0, 0, 0, 0.6),
     inset 0 0.15rem 0.25rem rgba(0, 0, 0, 0.4);
+}
+
+/* Highlight for possible moves */
+.possible-move {
+  box-shadow:
+    0 0.35rem 0.8rem rgba(0, 0, 0, 0.75),
+    0 0 0 7px rgba(80, 173, 255, 0.28),
+    0 0 18px rgba(80, 173, 255, 0.6),
+    inset 0 0.12rem 0.28rem rgba(255, 255, 255, 0.6);
+  filter: brightness(1.12);
+}
+
+/* Highlight for a selected peg */
+.peg-selected {
+  box-shadow:
+    0 0.35rem 0.8rem rgba(0, 0, 0, 0.75),
+    0 0 0 7px rgba(76, 189, 96, 0.3),
+    0 0 18px rgba(76, 189, 96, 0.68),
+    inset 0 0.12rem 0.28rem rgba(255, 255, 255, 0.6);
+  filter: brightness(1.12);
+}
+
+/* End-of-game overlay */
+.statusOverlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8) rotate(-540deg);
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  color: #e9f3ff;
+  font-size: clamp(2.4rem, 4vw, 4rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow:
+    0 0.4rem 1.2rem rgba(0, 0, 0, 0.6),
+    0 0 18px rgba(120, 186, 255, 0.95);
+  background: radial-gradient(circle at 30% 30%, rgba(140, 200, 255, 0.3), rgba(60, 140, 255, 0.18));
+  box-shadow:
+    0 0.8rem 1.6rem rgba(0, 0, 0, 0.55),
+    0 0 0 10px rgba(80, 140, 255, 0.14);
+  animation: statusOverlaySpinIn 1.1s ease-out forwards;
+  pointer-events: none;
+  z-index: 10;
+}
+
+@keyframes statusOverlaySpinIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2) rotate(-900deg);
+    filter: blur(2px);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08) rotate(20deg);
+  }
+  85% {
+    transform: translate(-50%, -50%) scale(0.96) rotate(-8deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    filter: blur(0);
+  }
 }

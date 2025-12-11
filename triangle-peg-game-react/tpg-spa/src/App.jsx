@@ -21,7 +21,7 @@ function App() {
   return (
     <main className="app-shell">
       <h1>Triangle Peg Game (React)</h1>
-      
+
       {/* Loading message */}
       {loading && <p>Loading game states ...</p>}
 
@@ -29,11 +29,9 @@ function App() {
       {!loading && error && <p className="error">{String(error)}</p>}
 
       {/* Game UI */}
-      {!loading && !error && <Board boardState={boardState} setBoardState={setBoardState} />}
-      {!loading && !error && <StatusBar boardState={boardState} />}
+      {!loading && !error && <Board boardState={boardState} states={states} setBoardState={setBoardState} />}
+      {!loading && !error && <StatusBar boardState={boardState} states={states} />}
 
-      {/* TODO: remove the text below when the MVP is ready. */}
-      <p>Still under construction! Will be completed in the next few days!</p>
     </main>
   );
 }

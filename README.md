@@ -8,7 +8,7 @@ A compact portfolio of small, self‑contained code projects that complement my 
 ![License](https://img.shields.io/github/license/dentonescu/cv-samples)
 
 ## About me
-I’m a software engineer who enjoys building neat, well‑scoped utilities and visual demos across languages (C/C++, C#, Java, Python, TypeScript/JavaScript, and Angular). I care about readable code, reproducible builds, and pragmatic architecture.
+I’m a software engineer who enjoys building neat, well‑scoped utilities and visual demos across languages (C/C++, C#, Java, Python, TypeScript/JavaScript, Angular, and React). I care about readable code, reproducible builds, and pragmatic architecture.
 
 ## Projects
 
@@ -19,7 +19,7 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 | **[null-cipher](https://github.com/dentonescu/cv-samples/tree/main/null-cipher)** | Single‑page visual demo of a simple cipher (encrypt/decrypt) in the browser. | JavaScript, HTML, CSS, Bootstrap UI |
 | **[pkixwebadm](https://github.com/dentonescu/cv-samples/tree/main/pkixwebadm)** (HTTP foundation in progress) | Certificate inventory web app pairing FastAPI with SQLite; configuration and scaffold are in place while the app factory and landing page are being implemented. | Python, FastAPI, Bootstrap UI, vendored JS tooling |
 | **[slideshow-server](https://github.com/dentonescu/cv-samples/tree/main/slideshow-server)** | Tiny Python web server that generates responsive media slideshows. | Python, HTML, JS, Docker |
-| **[triangle-peg-game-react](triangle-peg-game-react/README.md)** (in progress) | React SPA of the triangular peg solitaire game: interactive board, legal-move highlighting, undo/reset, responsive UI, Vercel-ready build; ships with a Python precompute helper and `states.json`. | React, Vite, TypeScript/JavaScript, HTML/CSS, Python (helpers) |
+| **[triangle-peg-game-react](triangle-peg-game-react/README.md)** (in progress) | React SPA of the triangular peg solitaire game: interactive board with legal-move highlighting, win/lose overlay, and precomputed `states.json`; undo/reset and polish are next. | React, Vite, TypeScript/JavaScript, HTML/CSS, Python (helpers) |
 | **[txrxcli](https://github.com/dentonescu/cv-samples/tree/main/txrxcli)** | Educational raw‑TCP remote execution demo with a C++ Linux client/server and a C#/.NET dual‑mode peer; API‑key gated, warning‑heavy, not for production. | C++17 sockets, process exec/capture, C#/.NET 8 |
 | **[WiFiEqu](https://github.com/dentonescu/cv-samples/tree/main/wifiequ)** (in progress) | Terminal Wi‑Fi channel “equalizer” visualizer with a C JSON daemon, Windows service, and Angular web UI. The Linux daemon streams live/mock readings over SSE, honours configurable refresh cadences, and secures `/api/v1/stats` with an API key. | C, ANSI/terminal, JSON APIs, C#, Angular, Docker |
 
@@ -93,7 +93,7 @@ All content is provided under the license in `/LICENSE`. You’re free to read a
 Check back regularly — new samples will be added and existing ones improved as the gallery evolves.
 
 ## Upcoming work
-- Current priority: **triangle-peg-game-react** is under active development this week; see the project entry above for details.
+- Current priority: **triangle-peg-game-react** now has a working core loop with highlighting and win/lose overlay; next up are undo/reset controls, animation polish, and broader tests.
 - **pkixwebadm**: extend the new security scaffolding with live ingestion APIs, add UI validation/feedback, and land CSRF + server-side MIME checks before circling back to container packaging.
 - **WiFiEqu**: prototype the Windows worker that mirrors the Linux API, factor shared DTO/config plumbing into a reusable C# library, and round out the Docker Compose story with health checks and metrics before pursuing CI/CD builds.
 - **Terraglean**: now tracked in [docs/terraglean.md](docs/terraglean.md); once WiFiEqu stabilises, kick off the Spring Boot/Micronaut service spike, persistence plan, and UI exploration documented there.

@@ -1,6 +1,6 @@
 # Developer notes
 
-Current status: UI prototype is tuned; Vite/React scaffold is up with Board/Hole/Peg/Position/StatusBar components and refreshed styling; Python precompute utility now emits `public/states.json` for the full 15-bit state space. States loader is lazy, status bar shows peg count, and the first click clears the starting peg. Next focus is wiring move validation/highlighting, undo/reset, and status messaging for a deployable Vercel build.
+Current status: Core play loop works. Board/Hole/Peg/Position/StatusBar are wired with bitmask logic, precomputed `public/states.json`, legal-move highlights, and end-of-game/win overlay. Python precompute still emits the 15-bit state space; lazy loader pulls it on app load. Live preview auto-deploys to [triangle-peg-game-react.vercel.app](https://triangle-peg-game-react.vercel.app) (work in progress). Next focus: undo/reset controls, richer tests, and animation polish.
 
 ## Repository layout
 ```
@@ -10,7 +10,8 @@ triangle-peg-game-react/
 ├─ precompute/            # Python helper that generates states.json
 │  └─ precompute.py
 ├─ prototype/             # static HTML/CSS layout prototype
-│  └─ triange_peg_game_ui_prototype.html
+│  ├─ triange_peg_game_ui_prototype.html
+│  └─ README.md
 ├─ img/                   # reference photos + prototype snapshot
 └─ tpg-spa/               # Vite React app
    ├─ src/App.jsx         # root component
@@ -108,13 +109,12 @@ Next possible future states of state 189:
 ![Next possible future states of state 189](img/future-states-189.png)
 
 
-## Planned components (tpg-spa/src)
-- `Board` renders the triangular grid, accepts `boardMask`, `selected`, `legalTargets`, and click handlers.
-- `Position` chooses Peg/Hole rendering and forwards clicks.
-- `Hole` renders a single position (peg or empty) and highlights when selectable/targetable.
-- `Peg` renders the peg visual.
-- `Controls` hosts reset/undo and any “show moves” toggle.
-- `StatusBar` shows peg count, move availability, and solved/no-move messages.
+## Current components (tpg-spa/src)
+- `Board` renders the triangular grid from a bitmask and forwards clicks with selection state.
+- `Position` chooses Peg/Hole rendering per position and relays events.
+- `Hole` renders an empty position and shows possible-move highlighting.
+- `Peg` renders the peg visual and selection highlighting.
+- `StatusBar` shows peg count, status text, and the end-of-game overlay.
 - Logic helpers in `logic/` stay pure and do not touch React state directly (game math + lazy states loader).
 
 ## Prototype reference
@@ -123,10 +123,10 @@ Next possible future states of state 189:
 
 ## Implementation plan (current focus)
 1) Bitmask utilities + static move list (JS module) to pair with the precomputed `states.json`.
-2) Wire Board/Hole/Peg/Position to render from the bitmask and surface click events; keep the first-click “remove peg” flow.
-3) Move application, selection + legal target highlighting, peg count, history/undo, and status messaging.
-4) Animations and responsive polish; match the prototype spacing.
-5) README/docs refresh, Vercel-ready build check, and tests beyond the states sanity check.
+2) Wire Board/Hole/Peg/Position to render from the bitmask and surface click events; keep the first-click “remove peg” flow. ✅
+3) Move application, selection + legal target highlighting, peg count, and status messaging. ✅
+4) Undo/reset controls, plus animation and responsive polish. ⏳
+5) README/docs refresh, Vercel-ready build check, and tests beyond the states sanity check. ⏳
 
 ## Deployment target
 - Vercel static hosting using `npm run build` output from Vite. Keep assets relative and avoid server-only APIs.

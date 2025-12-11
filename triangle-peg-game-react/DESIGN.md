@@ -12,14 +12,14 @@ Single-page React implementation of the classic triangular peg solitaire puzzle 
 ```
 tpg-spa/src/
 ├─ components/
-│  ├─ Board.jsx        # renders triangular grid of holes
+│  ├─ Board.jsx        # renders triangular grid of holes + forwards clicks with selection state
 │  ├─ Position.jsx     # selects Peg/Hole rendering per position
-│  ├─ Hole.jsx         # individual hole with peg/empty state
-│  ├─ Peg.jsx          # visual peg + selection/highlight
-│  ├─ Controls.jsx     # reset, undo, show moves toggle
-│  └─ StatusBar.jsx    # peg count, move availability, victory message
+│  ├─ Hole.jsx         # individual hole with highlight for possible moves
+│  ├─ Peg.jsx          # visual peg + selection highlight
+│  ├─ Controls.jsx     # reset, undo, show moves toggle (planned)
+│  └─ StatusBar.jsx    # peg count, move availability, victory message/overlay
 ├─ logic/
-│  ├─ game.js          # bitmask helpers, board math, basic messages
+│  ├─ game.js          # bitmask helpers, board math, messages, move validation
 │  └─ states.js        # lazy loader for precomputed states.json
 ├─ App.jsx             # owns state, orchestrates events
 └─ index.jsx           # entrypoint
@@ -61,7 +61,7 @@ tpg-spa/src/
 
 ## Backlog slices
 1) Static board rendering with mock data and styling. ✅
-2) Hooked-up game state with selection + legal move highlighting.
-3) Move application, history/undo, and status messaging.
-4) Animations, accessibility polish, and responsive tuning.
-5) README, screenshot placeholder, and Vercel deploy check.
+2) Hooked-up game state with selection + legal move highlighting. ✅
+3) Move application and status messaging; history/undo pending. ⏳
+4) Animations, accessibility polish, and responsive tuning. ⏳
+5) README, screenshot placeholder, and Vercel deploy check. ⏳
