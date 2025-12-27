@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
             EVENT_DRAG_OVER,
             EVENT_DRAG_LEAVE,
             EVENT_DROP,
+            FIELD_NAME_CERTIFICATES,
             HTTP_METHOD_POST,
         } = {},
         attachFilesToFormData,
@@ -79,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
              */
             let formDataDrop;
             try {
-                formDataDrop = attachFilesToFormData(files);
+                formDataDrop = attachFilesToFormData(files, FIELD_NAME_CERTIFICATES);
             } catch (error) {
                 logger.error("Failed to build FormData for dropped files.", error);
                 return;
@@ -107,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!files?.length) return;
                 let formDataClick;
                 try {
-                    formDataClick = attachFilesToFormData(files);
+                    formDataClick = attachFilesToFormData(files, FIELD_NAME_CERTIFICATES);
                 } catch (error) {
                     logger.error("Failed to build FormData for selected files.", error);
                     return;

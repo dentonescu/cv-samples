@@ -22,7 +22,8 @@ test("attachFilesToFormData appends files under certificates field", () => {
   const file = new FileCtor(["-----BEGIN CERT-----"], "cert.pem", {
     type: "application/x-pem-file",
   });
-  const formData = lib.attachFilesToFormData([file]);
-  const entries = formData.getAll(lib.constants.FIELD_NAME_CERTIFICATES);
+  const fieldName = "certificates";
+  const formData = lib.attachFilesToFormData([file], fieldName);
+  const entries = formData.getAll(fieldName);
   assert.equal(entries.length, 1);
 });

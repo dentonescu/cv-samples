@@ -18,6 +18,7 @@
     const EVENT_DRAG_OVER = "dragover";
     const EVENT_DRAG_LEAVE = "dragleave";
     const EVENT_DROP = "drop";
+    const FIELD_NAME_CERTIFICATES = "certificates";
     const HEADER_CONTENT_TYPE = "Content-Type";
     const HTTP_METHOD_GET = "GET";
     const HTTP_METHOD_POST = "POST";
@@ -49,6 +50,7 @@
         EVENT_DRAG_OVER,
         EVENT_DRAG_LEAVE,
         EVENT_DROP,
+        FIELD_NAME_CERTIFICATES,
         HEADER_CONTENT_TYPE,
         HTTP_METHOD_GET,
         HTTP_METHOD_POST,

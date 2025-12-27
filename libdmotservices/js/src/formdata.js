@@ -3,9 +3,9 @@
 
   const globalScope = root || (typeof globalThis !== "undefined" ? globalThis : window);
   const dmot = globalScope.dmot || (globalScope.dmot = {});
-  const DEFAULT_FIELD = "certificates";
+  const DEFAULT_FIELD = "files";
 
-  function attachFilesToFormData(files, targetFormData, fieldName) {
+  function attachFilesToFormData(files, fieldName, targetFormData) {
     if (!files || !files.length) {
       throw new Error("attachFilesToFormData requires at least one file.");
     }
@@ -16,7 +16,4 @@
   }
 
   dmot.attachFilesToFormData = attachFilesToFormData;
-  dmot.constants = Object.assign({}, dmot.constants, {
-    FIELD_NAME_CERTIFICATES: DEFAULT_FIELD,
-  });
 })(typeof globalThis !== "undefined" ? globalThis : this);
