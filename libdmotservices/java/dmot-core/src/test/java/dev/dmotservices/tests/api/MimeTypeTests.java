@@ -3,7 +3,6 @@ package dev.dmotservices.tests.api;
 import dev.dmotservices.api.MimeType;
 import static org.junit.jupiter.api.Assertions.*;
 
-
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -12,7 +11,7 @@ public class MimeTypeTests {
     @org.junit.jupiter.api.Test
     public void testPartialMimeTypes() {
         System.out.println("\n\ntestPartialMimeTypes():");
-        String[] partials = {"CSS", "doc", "DOCX", "gif", "htm", "jpg", "JPE", "js", "Xml"};
+        String[] partials = { "CSS", "doc", "DOCX", "gif", "htm", "jpg", "JPE", "js", "Xml" };
         for (String s : partials) {
             final MimeType mimeType = MimeType.fromPartialString(s);
             final String mimeTypeString = MimeType.extensionAsMimeTypeString(s);
@@ -27,6 +26,7 @@ public class MimeTypeTests {
         System.out.println("\n\ntestGenerateMimeTypeList()");
         final Map<String, String> mapExtMime = MimeType.fileExtensionMimeTypeStringMap();
         final Map<String, String> sortedMap = new TreeMap<>(mapExtMime);
+        int count = 0;
         for (Map.Entry<String, String> entry : sortedMap.entrySet()) {
             String key = entry.getKey().toUpperCase()
                     .replaceAll("\\.", "")
@@ -34,7 +34,10 @@ public class MimeTypeTests {
             String value = entry.getValue().toLowerCase();
             if (Character.isDigit(key.charAt(0)))
                 key = "_" + key;
-            System.out.format("%s(\"%s\"),\n", key, value);
+            if (count++ > 0) {
+                System.out.format(", ");
+            }
+            System.out.format("%s(\"%s\")", key, value);
         }
         System.out.println("\n\n");
     }
