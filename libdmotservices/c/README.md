@@ -1,7 +1,7 @@
 # libdmotservices (C)
 
 **libdmotservices-c** provides portable C utilities designed to be simple, reusable, and illustrative.  
-It includes a logging subsystem, signal generation helpers, and a terminal equalizer demo.
+It includes logging, signal generation helpers, a ring buffer, and a terminal equalizer demo.
 
 ### Project Summary
 This module demonstrates my ability to:
@@ -28,9 +28,12 @@ make test           # runs unit tests
 make example-demo   # runs example demos
 ```
 
+Note: The ring buffer includes optional C11 `_Generic` helpers, but the core API stays portable.
+
 ### Highlights
 - Static library output: `libdmotservices_c.a`
 - CMocka-based test suite
+- Generic ring buffer with typed helpers (C11 `_Generic` convenience macros)
 - ANSI terminal visualization (equalizer) with per-channel labelling and auto-hiding of unused bins
 - Clean separation of headers, sources, and examples
 
@@ -38,6 +41,13 @@ make example-demo   # runs example demos
 - Low-level systems programming and structured C design.
 - Test-driven development and cross-platform build practices.
 - Effective CLI-based visualization and data presentation.
+
+## Subfolders
+- [Linux build](linux/README.md)
+- [Linux headers](linux/include/README.md)
+- [Linux sources](linux/src/README.md)
+- [Linux tests](linux/tests/README.md)
+- [Linux examples](linux/examples/README.md)
 
 ---
 

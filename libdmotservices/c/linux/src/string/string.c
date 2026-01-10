@@ -6,7 +6,7 @@
 #include "dmot/string.h"
 
 /*
- *
+ * internals
  */
 
 // no internals yet

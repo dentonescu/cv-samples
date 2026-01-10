@@ -4,6 +4,7 @@ Developer notes for **libdmotservices** — the umbrella project that houses the
 
 ## Current stage
 - Cross-language reboot is healthy: C and Java modules ship stable APIs, the Python helpers are live, and JavaScript utilities just landed for pkixwebadm.
+- The C module now includes a generic ring buffer with typed wrappers and C11-friendly convenience macros.
 - Active work tracks language parity (Python + JS ergonomics) and shared tooling so version bumps, Make targets, and doc refreshes stay aligned across the tree.
 
 ## Current File Layout
@@ -31,14 +32,15 @@ libdmotservices/
 │  └─ linux/
 │     ├─ README.md / NOTES.md
 │     ├─ Makefile
-│     ├─ include/dmot/*.h        # Public headers (math, string, time, ...)
+│     ├─ include/dmot/*.h        # Public headers (math, ring buffer, string, time, ...)
 │     ├─ src/
 │     │  ├─ datatypes/datatypes.c
+│     │  ├─ datatypes/ringbuf.c
 │     │  ├─ math/{math.c, signals.c, mathx.d}
 │     │  ├─ string/{string.c, stringx.d}
 │     │  ├─ time/{time.c, timex.d}
 │     │  └─ util/log.c
-│     ├─ tests/                  # CMocka suites (test_math.c, ...)
+│     ├─ tests/                  # CMocka suites (test_math.c, test_ringbuf.c, ...)
 │     ├─ examples/               # Sample programs (ex_signals.c, ...)
 │     └─ img/equalizer.png
 ├─ java/
@@ -95,6 +97,7 @@ libdmotservices/
 - Version propagation relies on text replacements; ensure newline conventions remain consistent (LF).  
 - When updating shared assets (logos, docs), keep file paths stable to avoid breaking downstream references (e.g., WiFiEqu docs embed the equalizer image).
 - Python helpers are packaged via editable installs (`python -m pip install -e .`) so sibling projects can depend on them without extra path hacks.
+- The C ring buffer keeps `_Generic` helpers optional (C11) so the base API remains portable.
 
 ## Implementation Timeline
 - **2021-10 – 2023-04: Early Java library era**  

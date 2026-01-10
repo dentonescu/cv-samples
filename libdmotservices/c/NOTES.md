@@ -15,23 +15,26 @@ c/
 └─ linux/                        # Linux implementation target
    ├─ README.md / NOTES.md
    ├─ Makefile
-   ├─ include/dmot/*.h           # Public headers
+   ├─ include/dmot/*.h           # Public headers (ring buffer, math, UI, ...)
    ├─ src/                       # Library source modules
    │  ├─ datatypes/datatypes.c
+   │  ├─ datatypes/ringbuf.c
    │  ├─ math/{math.c, signals.c}
    │  ├─ string/{string.c, stringx.d}
    │  ├─ time/{time.c, timex.d}
    │  └─ util/log.c
    ├─ tests/                     # CMocka suites
+   │  ├─ test_ringbuf.c
    ├─ examples/                  # Example programs (ex_signals.c, …)
    ├─ img/equalizer.png
    └─ libdmotservices-c-linux.png
 ```
 
-## Implementation Plan
+## Implementation Plan (current focus: testing coverage + ring buffer adoption)
 1. **Core library polish**  
    - Maintain clean separation between `include/` and `src/`; avoid leaking internal headers.  
    - Expand logging helpers with structured output (severity, timestamp, component).  
+   - Keep ring buffer APIs generic and versioned; document C11 `_Generic` helpers.
    - Add configurable smoothing algorithms for the equalizer (e.g., exponential moving average vs. simple roll).
 2. **Testing coverage**  
    - Grow the CMocka suite to cover ring buffer behaviours, logging edge cases, and equalizer bounds.  
@@ -48,11 +51,13 @@ c/
 5. **Cross-project reuse**  
    - Track consumer expectations (WiFiEqu, future tools) so API changes remain backward compatible.  
    - Keep changelog entries describing new structs/functions and deprecation windows.
+   - WiFiEqu has reached MVP; plan a lightweight ring buffer adapter for later ingestion paths.
 
 ## Domain Notes
 - Equalizer API: `dmot_ui_equalizer_*` functions expect pre-normalised channel bins; maintain invariants (channel count <= `DMOT_UI_EQUALIZER_MAX_CHAN`, dBm ranges).  
 - Signal utilities: smoothing helpers and channel mapping should guard against negative frequencies and clamps; document expected behaviour on invalid input.  
 - Logging macros should default to ANSI-safe output; guard optional colour codes behind feature flags for portability.
+- Ring buffer: default read/write helpers rely on `unitSizeBytes`; `_Generic` helpers require C11 but remain optional.
 
 ## Implementation Timeline
 - **2025-10-12 – 2025-10-15: Foundations**  
@@ -63,6 +68,8 @@ c/
   Timestamp utilities, namespace-safe string helpers, and labelled channels shipped ahead of WiFiEqu integration. Successive releases added channel hiding, redraw cleanup, and high-channel-count support.
 - **2025-10-29 – 2025-11-02: Versioning & polish**  
   Semantic version helpers, documentation sweeps, and naming clean-ups rounded out the current API surface, keeping the library ready for downstream packaging.
+- **2026-01-10: Ring buffer expansion**  
+  Added a generic ring buffer with typed wrappers, C11 `_Generic` conveniences, and focused tests for wraparound and type safety.
 
 ## Testing Checklist
 - `make clean all`, `make tests`, `make test`, and `make example-demo` succeed in CI.  

@@ -35,4 +35,5 @@ All examples are self-contained and depend only on the static library.
 ## Related
 
 - Back to [Linux build](../README.md)
+- Source modules: [../src/README.md](../src/README.md)
 - Equalizer in action inside [WiFiEqu](../../../../wifiequ/linux/README.md)
