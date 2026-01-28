@@ -61,8 +61,9 @@ ensure_dependencies() {
     for pkg in build-essential pkg-config cmake ninja-build maven ant \
         libcmocka-dev libmicrohttpd-dev libnl-3-dev libnl-genl-3-dev \
         openjdk-17-jdk openjdk-21-jdk nodejs npm \
-        python3-bcrypt python3-fastapi python3-jinja2 python3-multipart python3-pip \
-        python3-pydantic python3-pydantic-settings python3-pytest python3-sqlalchemy python3-uvicorn \
+        python3-bcrypt python3-fastapi python3-flask python3-jinja2 python3-jsonschema \
+        python3-multipart python3-pip python3-pydantic python3-pydantic-settings \
+        python3-pytest python3-requests python3-sqlalchemy python3-uvicorn \
         libgtest-dev libspdlog-dev libfmt-dev
     do
         if dpkg-query -W -f='${Status}' "$pkg" >/dev/null 2>&1; then

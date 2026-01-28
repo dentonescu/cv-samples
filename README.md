@@ -18,6 +18,7 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 | **[libdmotservices](https://github.com/dentonescu/cv-samples/tree/main/libdmotservices)** | Personal multi‑language utility library with unit tests and examples. | C, Java, Python, JavaScript, Cross-language build tooling |
 | **[null-cipher](https://github.com/dentonescu/cv-samples/tree/main/null-cipher)** | Single‑page visual demo of a simple cipher (encrypt/decrypt) in the browser. | JavaScript, HTML, CSS, Bootstrap UI |
 | **[pkixwebadm](https://github.com/dentonescu/cv-samples/tree/main/pkixwebadm)** (HTTP foundation in progress) | Certificate inventory web app pairing FastAPI with SQLite; configuration and scaffold are in place while the app factory and landing page are being implemented. | Python, FastAPI, Bootstrap UI, vendored JS tooling |
+| **[pwa-llm-poc](https://github.com/dentonescu/cv-samples/tree/main/pwa-llm-poc)** | Installable PWA with a Flask backend that calls a local Ollama model for human‑readable responses. | PWA, React, Flask, Ollama, Docker |
 | **[slideshow-server](https://github.com/dentonescu/cv-samples/tree/main/slideshow-server)** | Tiny Python web server that generates responsive media slideshows. | Python, HTML, JS, Docker |
 | **[triangle-peg-game-react](triangle-peg-game-react/README.md)** (in progress) | React SPA of the triangular peg solitaire game: interactive board with legal-move highlighting, win/lose overlay, and precomputed `states.json`; undo/reset and polish are next. | React, Vite, TypeScript/JavaScript, HTML/CSS, Python (helpers) |
 | **[txrxcli](https://github.com/dentonescu/cv-samples/tree/main/txrxcli)** | Educational raw‑TCP remote execution demo with a C++ Linux client/server and a C#/.NET dual‑mode peer; API‑key gated, warning‑heavy, not for production. | C++17 sockets, process exec/capture, C#/.NET 8 |
@@ -33,15 +34,19 @@ I’m a software engineer who enjoys building neat, well‑scoped utilities and 
 |---|---|---|
 | [![pkixwebadm thumbnail](thumbnails/th-pkixwebadm-01.png)](pkixwebadm/README.md) | [![slideshow-server thumbnail](thumbnails/th-slideshow-server-01.png)](slideshow-server/README.md) | [![Triangle peg game thumbnail](thumbnails/th-triangle-peg-game-01.png)](triangle-peg-game-react/README.md) |
 
-| txrxcli | WiFiEqu | Terraglean |
+| pwa-llm-poc | txrxcli | WiFiEqu |
 |---|---|---|
-| [![txrxcli thumbnail](thumbnails/th-txrxcli-01.png)](txrxcli/README.md) | [![WiFiEqu thumbnail](thumbnails/th-wifiequ-02.png)](wifiequ/README.md) | [![Coming soon thumbnail](thumbnails/th-coming_soon.png)](docs/terraglean.md) |
+| [![pwa-llm-poc thumbnail](thumbnails/th-pwa-llm-poc-01.png)](pwa-llm-poc/README.md) | [![txrxcli thumbnail](thumbnails/th-txrxcli-01.png)](txrxcli/README.md) | [![WiFiEqu thumbnail](thumbnails/th-wifiequ-02.png)](wifiequ/README.md) |
+
+| Terraglean |  |  |
+|---|---|---|
+| [![Coming soon thumbnail](thumbnails/th-coming_soon.png)](docs/terraglean.md) |  |  |
 
 
 ## Tooling & automation
 - `dev.sh` in the repository root orchestrates dependency setup, builds, tests, installs, and demo runs from a single entrypoint. It now recognises mock vs. hardware example runs, optional interface overrides, and selective subcommands so you can rehearse exactly what the CI job performs. See the usage recipes below for common scenarios. The `--install-deps` slice now installs Node.js so libdmotservices’ JavaScript helpers and tests run consistently in CI and locally.
 - `.github/workflows/cv-samples-ci.yml` mirrors the `dev.sh` flow on GitHub Actions: dependencies → build → tests → example runs. The pipeline ensures every project stays buildable on a clean Ubuntu runner (the Wi-Fi scan demo skips gracefully when no wireless interface is available).
-- `docker-compose.yml` spins up containerised demos (`stack-index` on host port `8080`, `heapmonj-backend` on `8081`, `heapmonj-frontend` on `8082`, `null-cipher` on `8083`, `pkixwebadm` on `8084`, `slideshow-server` on `8085`, `triangle-peg-game-react` on `8086`, `wifiequ-backend` on `8087`, `wifiequ-frontend` on `8088`) using the project-specific Dockerfiles. Great for a one-command tour: `docker compose up --build`. See [Docker stack notes](docker/README.md) for the full command list, group permissions, and snap service tips.
+- `docker-compose.yml` spins up containerised demos (`stack-index` on host port `8080`, `heapmonj-backend` on `8081`, `heapmonj-frontend` on `8082`, `null-cipher` on `8083`, `pkixwebadm` on `8084`, `pwa-llm-poc-backend` on `8085`, `pwa-llm-poc-frontend` on `8086`, `slideshow-server` on `8087`, `triangle-peg-game-react` on `8088`, `wifiequ-backend` on `8089`, `wifiequ-frontend` on `8090`) using the project-specific Dockerfiles. Great for a one-command tour: `docker compose up --build`. The pwa‑llm‑poc backend expects Ollama on the host (`OLLAMA_HOST=0.0.0.0:11434`). See [Docker stack notes](docker/README.md) for the full command list, group permissions, and snap service tips.
 - `.gitattributes` files have been introduced across the projects to normalise line endings and enforce consistent attributes, making diffs reliable across platforms.
 - All major projects now ship CMakeLists alongside their original Make/Ant flows. A typical configure/build is `cmake -S <project> -B <project>/build -G Ninja && cmake --build <project>/build` with target names that mirror the Makefile habits (`*_dist`, `*_test`, example/demo helpers).
 
@@ -79,7 +84,7 @@ Skips demos requiring live hardware by setting mock mode. Handy for CI or headle
 ## How to use this repository
 - Every project folder has its own `README.md` with quick build or run instructions.
 - The shared documentation hub in [`docs/`](docs/README.md) links to deeper design notes (future work, Terraglean concept, prng-tools lab) so you can navigate without hunting through folders.
-- Prefer the Docker Compose workflow when you want to try the demos without installing runtimes directly. Install Docker (snap instructions included in [docker/README.md](docker/README.md)), run `docker compose up --build`, then visit `http://localhost:8080` (stack index), `http://localhost:8081` (heapmonj API), `http://localhost:8082` (heapmonj UI), `http://localhost:8083` (null-cipher), `http://localhost:8084` (pkixwebadm), `http://localhost:8085` (slideshow), `http://localhost:8086` (triangle peg game), `http://localhost:8087` (WiFiEqu API), and `http://localhost:8088` (WiFiEqu web UI). Use `docker compose down` when you're done. The default WiFiEqu stats token is baked into compose for convenience; change it in `docker-compose.yml` if desired.
+- Prefer the Docker Compose workflow when you want to try the demos without installing runtimes directly. Install Docker (snap instructions included in [docker/README.md](docker/README.md)), run `docker compose up --build`, then visit `http://localhost:8080` (stack index), `http://localhost:8081` (heapmonj API), `http://localhost:8082` (heapmonj UI), `http://localhost:8083` (null-cipher), `http://localhost:8084` (pkixwebadm), `http://localhost:8085` (pwa‑llm‑poc API), `http://localhost:8086` (pwa‑llm‑poc UI), `http://localhost:8087` (slideshow), `http://localhost:8088` (triangle peg game), `http://localhost:8089` (WiFiEqu API), and `http://localhost:8090` (WiFiEqu web UI). Use `docker compose down` when you're done. The default WiFiEqu stats token is baked into compose for convenience; change it in `docker-compose.yml` if desired. For pwa‑llm‑poc, Ollama must be running on the host (`OLLAMA_HOST=0.0.0.0:11434`).
 - Prefer `./dev.sh --install-deps --install-prj --build --run-tests --run-examples` for the full local check, or run the corresponding CI workflow manually from the Actions tab if you want to watch the hosted logs.
 - Code is intentionally small and instructional—suited for reading and discussion.
 - Nothing here is used in production customer systems.
@@ -98,7 +103,3 @@ Check back regularly — new samples will be added and existing ones improved as
 - **WiFiEqu**: prototype the Windows worker that mirrors the Linux API, factor shared DTO/config plumbing into a reusable C# library, and round out the Docker Compose story with health checks and metrics before pursuing CI/CD builds.
 - **Terraglean**: now tracked in [docs/terraglean.md](docs/terraglean.md); once WiFiEqu stabilises, kick off the Spring Boot/Micronaut service spike, persistence plan, and UI exploration documented there.
 - **Portfolio glue**: continue aligning DevOps expectations—multi-language builds, container images, and cross-project Compose entries—so each sample can graduate from `_private_staging` once the future work above solidifies.
-
-
-## Research incubator: prng-tools
-`prng-tools` is a long-horizon lab for studying pseudorandom number generators (PRNGs), entropy sources, and cryptographically secure randomness across languages and optional hardware. The motivation is simple curiosity: how random are the stock generators in C, Python, Java, C#, Rust, etc., how does their secure API behave across platforms, and how can one quantify and visualise those differences reproducibly? The project will live inside this repo once the early prototypes settle; for now this README captures the intent and [docs/future_work.md](docs/future_work.md) holds the deeper roadmap.

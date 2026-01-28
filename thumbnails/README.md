@@ -9,7 +9,7 @@ Reference images used by the top-level README gallery. Each PNG mirrors a projec
 | `th-slideshow-server-01.png` | [slideshow-server](../slideshow-server/README.md) |
 | `th-wifiequ-01.png` | [WiFiEqu](../wifiequ/README.md) |
 | `th-pkixwebadm-01.png` | [pkixwebadm](../pkixwebadm/README.md) |
-| `th--coming_soon.png` | Placeholder for incubating projects such as [Terraglean](../docs/terraglean.md) |
+| `th-coming_soon.png` | Placeholder for upcoming entries such as [pwa-llm-poc](../pwa-llm-poc/README.md) and [Terraglean](../docs/terraglean.md) |
 
 ## Maintenance
 - Keep filenames stable so existing Markdown links remain valid.

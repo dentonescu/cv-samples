@@ -1,10 +1,10 @@
 # Docker Stack
 
-This directory contains helper scripts for the containerised demos:
+This directory contains the static stack index used by the Docker demo.
 
-- [`wifiequ-entrypoint.sh`](wifiequ-entrypoint.sh) — performs last-minute config tweaks for the WiFiEqu daemon (injects an API token when needed, then execs the daemon).
-- [`nginx.conf`](../heapmonj/frontend/nginx.conf) — used by the heapmonj frontend image.
-> Note: WiFiEqu now ships dedicated entrypoints under `wifiequ/linux/docker/entrypoint-backend.sh` and `wifiequ/web-angular/docker/entrypoint-frontend.sh`. This folder retains legacy scripts for reference.
+The WiFiEqu entrypoints now live under:
+- `wifiequ/linux/docker/entrypoint-backend.sh`
+- `wifiequ/web-angular/docker/entrypoint-frontend.sh`
 
 ## One-command tour with Docker Compose
 
@@ -23,10 +23,12 @@ That builds the stack images and binds the services to the host:
 | `heapmonj-frontend` | `8082` | `80` | Angular heap monitor UI (nginx). |
 | `null-cipher` | `8083` | `80` | Static HTML/JS cipher demo. |
 | `pkixwebadm` | `8084` | `8080` | FastAPI certificate inventory (dev preview). |
-| `slideshow-server` | `8085` | `8080` | Serves the bundled slideshow demo. |
-| `triangle-peg-game-react` | `8086` | `80` | React SPA for the peg game (static nginx serve). |
-| `wifiequ-backend` | `8087` | `8080` | Runs the mock-mode WiFiEqu JSON API (default token baked into compose). |
-| `wifiequ-frontend` | `8088` | `80` | Serves the Angular WiFiEqu UI via nginx with stats-key injection (shares the default token). |
+| `pwa-llm-poc-backend` | `8085` | `5000` | Flask + Ollama bridge (requires host Ollama). |
+| `pwa-llm-poc-frontend` | `8086` | `80` | PWA UI (nginx). |
+| `slideshow-server` | `8087` | `8080` | Serves the bundled slideshow demo. |
+| `triangle-peg-game-react` | `8088` | `80` | React SPA for the peg game (static nginx serve). |
+| `wifiequ-backend` | `8089` | `8080` | Runs the mock-mode WiFiEqu JSON API (default token baked into compose). |
+| `wifiequ-frontend` | `8090` | `80` | Serves the Angular WiFiEqu UI via nginx with stats-key injection (shares the default token). |
 
 Useful follow-ups:
 
@@ -37,6 +39,8 @@ docker compose logs -f wifiequ-backend
 docker compose stop wifiequ-backend  # stop a single service
 docker compose down                  # stop everything and remove the containers
 ```
+
+Note: the `pwa-llm-poc-backend` service expects Ollama to be running on the host. Use `OLLAMA_HOST=0.0.0.0:11434 ollama serve` so containers can reach it.
 
 ## Installing Docker via snap (Ubuntu)
 
@@ -59,6 +63,8 @@ docker build -t wifiequ-backend -f wifiequ/Dockerfile .
 docker build -t wifiequ-frontend -f wifiequ/web-angular/Dockerfile .
 docker build -t heapmonj-backend -f heapmonj/backend/Dockerfile .
 docker build -t heapmonj-frontend -f heapmonj/frontend/Dockerfile .
+docker build -t pwa-llm-poc-backend -f pwa-llm-poc/backend/Dockerfile pwa-llm-poc
+docker build -t pwa-llm-poc-frontend -f pwa-llm-poc/frontend/llm-spa/Dockerfile pwa-llm-poc/frontend/llm-spa
 ```
 
 Those commands live in the project READMEs as well; Compose simply orchestrates both builds and runs with the correct volume mounts and environment.

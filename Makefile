@@ -16,6 +16,7 @@ GATHER := 	find "${ROOT}" -name "*.a" -not -path "*/node_modules*" -type f -exec
 			find "${ROOT}" -name "build" -not -path "*/node_modules*" -type d -exec cp -vR "{}/." "${DIST}" \; ; \
 			find "${ROOT}" -path "*/build/linux" -not -path "*/node_modules*" -type d -exec cp -vR "{}/." "${DIST}" \; ; \
 			find "${ROOT}" -name "bin" -not -path "*/node_modules*" -type d -exec cp -vR "{}/." "${DIST}" \; ; \
+			find "${ROOT}" -path "*/llm-spa/dist" -not -path "*/node_modules*" -type d -exec cp -vR "{}/." "${DIST}" \; ; \
 			find "${ROOT}" -path "*/tpg-spa/dist" -not -path "*/node_modules*" -type d -exec cp -vR "{}/." "${DIST}" \; ; \
 			find "${ROOT}" -name "*.tar.gz" -not -path "*/node_modules*" -type f -exec cp -v "{}" "${DIST}" \;
 
@@ -32,6 +33,7 @@ build-all:
 	@$(MILESTONE) "Installing libdmotservices jars into local Maven repo..."
 	@cd libdmotservices/java && mvn -DskipTests install
 	@$(MAKE) -C heapmonj clean all
+	@$(MAKE) -C pwa-llm-poc build
 	@$(MAKE) -C slideshow-server dist
 	@$(MAKE) -C triangle-peg-game-react build
 	@$(MAKE) -C txrxcli clean all
@@ -51,6 +53,7 @@ prebuild:
 docs:
 	@$(MILESTONE) "Generating documentation..."
 	@$(MAKE) -C heapmonj docs
+	@$(MAKE) -C pwa-llm-poc docs
 	@$(MAKE) -C wifiequ docs
 
 #####################################################################################
@@ -67,6 +70,7 @@ tests:
 	@$(MILESTONE) "Compiling all tests..."
 	@$(MAKE) -C libdmotservices tests
 	@$(MAKE) -C heapmonj tests
+	@$(MAKE) -C pwa-llm-poc tests
 	@$(MAKE) -C slideshow-server tests
 	@$(MAKE) -C triangle-peg-game-react tests
 	@$(MAKE) -C txrxcli tests
@@ -77,6 +81,7 @@ test: tests
 	@$(MILESTONE) "Executing all tests..."
 	@$(MAKE) -C libdmotservices test
 	@$(MAKE) -C heapmonj test
+	@$(MAKE) -C pwa-llm-poc test
 	@$(MAKE) -C slideshow-server test
 	@$(MAKE) -C triangle-peg-game-react test
 	@$(MAKE) -C txrxcli test
@@ -92,6 +97,7 @@ examples:
 	@$(MILESTONE) "Compiling all examples..."
 	@$(MAKE) -C libdmotservices examples
 	@$(MAKE) -C heapmonj examples
+	@$(MAKE) -C pwa-llm-poc examples
 	@$(MAKE) -C slideshow-server examples
 	@$(MAKE) -C triangle-peg-game-react examples
 	@$(MAKE) -C txrxcli examples
@@ -102,6 +108,7 @@ example-demo: examples
 	@$(MILESTONE) "Executing all examples and demos..."
 	@$(MAKE) -C libdmotservices example-demo
 	@$(MAKE) -C heapmonj example-demo
+	@$(MAKE) -C pwa-llm-poc example-demo
 	@$(MAKE) -C slideshow-server example-demo
 	@$(MAKE) -C triangle-peg-game-react example-demo
 	@$(MAKE) -C txrxcli example-demo
@@ -115,6 +122,7 @@ clean:
 	@$(MILESTONE) "Removing previous builds..."
 	@$(MAKE) -C libdmotservices clean || true
 	@$(MAKE) -C heapmonj clean || true
+	@$(MAKE) -C pwa-llm-poc clean || true
 	@$(MAKE) -C slideshow-server clean || true
 	@$(MAKE) -C triangle-peg-game-react clean || true
 	@$(MAKE) -C txrxcli clean || true

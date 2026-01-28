@@ -1,0 +1,78 @@
+openapi: 3.0.3
+info:
+  title: pwa-llm-poc API
+  version: 0.1.0
+  description: Minimal API contract for the PWA LLM proof of concept.
+servers:
+  - url: http://localhost:5000
+paths:
+  /api/v1/generate:
+    post:
+      summary: Generate a response from the backend LLM.
+      operationId: generateText
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateRequest'
+            examples:
+              basic:
+                value:
+                  prompt: Hello from the PWA.
+      responses:
+        '200':
+          description: Successful generation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateResponse'
+              examples:
+                basic:
+                  value:
+                    output: Hello! This is a friendly response.
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidPrompt:
+                  value:
+                    error: Prompt must be a non-empty string.
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    GenerateRequest:
+      type: object
+      required:
+        - prompt
+      additionalProperties: false
+      properties:
+        prompt:
+          type: string
+          minLength: 1
+          maxLength: 4000
+    GenerateResponse:
+      type: object
+      required:
+        - output
+      additionalProperties: false
+      properties:
+        output:
+          type: string
+          minLength: 1
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      additionalProperties: false
+      properties:
+        error:
+          type: string
